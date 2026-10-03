@@ -43,17 +43,17 @@ Note: since July 2026 Godot bans autonomous AI agents and substantial AI code fo
 ## World design
 
 - Fixed star system, hand-placed. Planets are data (seed, radius, list of places with coordinates).
-- **Planets are small but complete spheres**, seamless between space, atmosphere and ground. Starting radius about 3 km (a tunable parameter).
-- Numbers **[calculated]**: circumference about 19 km; horizon about 110 m at eye height (first-person feels flat); orbital speed about 171 m/s; orbital period about 110 s.
-- **Precision [verified, Godot docs page saved in `research/sources/godot-large-world-coordinates.md`]:** float32 step size is about 0.0002 at 2048-4096 m from the origin and about 0.0005 at 4096-8192 m. The docs call 2048-4096 the maximum recommended range for a first-person 3D game and 4096-8192 for third-person; 32768-65536 (step about 0.0039) is the maximum for any 3D game, past which double precision is usually required. Open-world games with a playable on-foot area up to 8192 x 8192 m centred on the origin stay acceptable even in first person. The docs also say: most modern AAA open-world titles do not use large world coordinates; games split into levels with loading can centre each level on the origin. A 3 km planet centred at the origin needs neither double precision nor floating origin **[calculated]**, and because we stand on the surface (about 3000 m from the centre) we are at the edge of the first-person recommendation, so planet centre at the origin and keeping the player-relevant region near the surface are worth checking in the planet spike. Floating origin only matters for space flight beyond roughly 30-60 km or several distant bodies.
+- **Planets are small but complete spheres**, seamless between space, atmosphere and ground. Radius: see `DECISIONS.md`.
+- Numbers for a 3 km research example **[calculated]**: circumference about 19 km; horizon about 110 m at eye height (first-person feels flat); orbital speed about 171 m/s; orbital period about 110 s.
+- **Precision [verified, Godot docs page saved in `research/sources/godot-large-world-coordinates.md`]:** float32 step size is about 0.0002 at 2048-4096 m from the origin and about 0.0005 at 4096-8192 m. The docs call 2048-4096 the maximum recommended range for a first-person 3D game and 4096-8192 for third-person; 32768-65536 (step about 0.0039) is the maximum for any 3D game, past which double precision is usually required. Open-world games with a playable on-foot area up to 8192 x 8192 m centred on the origin stay acceptable even in first person. The docs also say: most modern AAA open-world titles do not use large world coordinates; games split into levels with loading can centre each level on the origin. A 3 km planet (research example) centred at the origin needs neither double precision nor floating origin **[calculated]**, and because we stand on the surface (about 3000 m from the centre) we are at the edge of the first-person recommendation, so planet centre at the origin and keeping the player-relevant region near the surface are worth checking in the planet spike. Floating origin only matters for space flight beyond roughly 30-60 km or several distant bodies.
 - **Double-precision build [verified, same page]:** needs `precision=double`, recompiled editor and export templates, GDExtensions rebuilt, shaders do not use double (emulated through a different engine path), server and all clients must use the same build type, and it costs performance and memory (aimed at mid-range and high-end desktops). The docs name origin shifting as the alternative for low-end platforms but warn it adds complexity, especially in multiplayer. Terrain3D's own double-precision page calls its support experimental with one positive report, and its maximum world size is about 65.5 km **[verified, `research/sources/terrain3d-double-precision.md`]**.
 - Terrain: deterministic heightmap from a seed on a cube-sphere with chunk LOD. No voxels. A flat heightmap patch deviates from the sphere by 0.42 m at 100 m width **[calculated]**, so collision patches should be at most about 32 m wide.
 - Collision only in a ring around the player and ship (about 100-300 m **[unverified]**), `HeightMapShape3D` per patch, skirts against seams. Compute-shader readback in Godot is slow and blocking **[verified]**, so terrain height for collision should be available on the CPU.
-- Hand-built places (city, outposts) sit at fixed coordinates in a local tangent frame; terrain is flattened under them. They are normal scenes.
+- Hand-built places (city, outposts) sit at fixed coordinates in a local tangent frame; flattening the terrain under them is an idea to try. They are normal scenes.
 - Interiors: small shops stay in the open world; large or complex interiors (for example a sewer) are instanced.
 - Gravity: radial ("up" is away from the planet centre), `CharacterBody3D.up_direction` aligned; gravity, drag and atmosphere blended by altitude.
 - Depth buffer: reverse-Z exists since Godot 4.3 **[verified]**; which renderers use it is open. Test near 0.05 / far 50 km in the spike.
-- Between planets: short jump or proxy-scaled travel. Distant bodies shown as scaled proxies (skybox or separate camera).
+- Between planets: open, see `DECISIONS.md`. Distant bodies shown as scaled proxies (skybox or separate camera).
 - Multiplayer: terrain is deterministic from the seed, so only seed and later edits go over the network.
 - MVP content: 1 planet, 1 small dense city (maybe 2-3 districts), 2-3 quest outposts. The space between places must not feel empty.
 
@@ -114,7 +114,7 @@ From Gaffer on Games, "Snapshot Interpolation" (2014, still the standard referen
 ## Assets
 
 - Assets are scripts (Blender Python via `blender -b -P script.py`, or GDScript/CSG), CI builds GLB and a preview image. No MCP is needed for the PR workflow.
-- Style: flat shading with one palette texture in the Compatibility renderer. Animation is code-driven (tweens, rigid parts).
+- Style: see `DECISIONS.md`. Animation is code-driven (tweens, rigid parts).
 - Text-to-3D services (Meshy, Tripo, Rodin) are poorly suited to flat low-poly with a palette (topology, textures); some free-tier outputs are not licensed for commercial use. Hunyuan3D 2.1 excludes the EU, UK and South Korea by licence **[verified, secondary]**.
 - Placeholders: Kenney and Quaternius (CC0, no attribution required, checked in primary sources) marked `placeholder: true`. Every asset carries origin and licence metadata.
 - Pure AI output is probably not protected by copyright in the US and Germany (human authorship required) **[secondary sources; not legal advice]**.
@@ -159,7 +159,7 @@ Gaps: no Godot 4 spaceship controller with a clear licence, no Godot 4 floating-
 - PR security: only `pull_request` with a read-only token, no `pull_request_target` with checkout, pin actions to SHAs, approval for external contributors. The "Comment and Control" attack made several AI review actions leak secrets in PR comments, so AI reviewers only label, never approve, with no secrets and no shell. Builds for voters only after a maintainer label, first as web export, with artifact attestations.
 - Dev-time MCP servers (Godot MCP) are used for development as the best tool, not the safest. Most can run arbitrary code (`run_script`, `game_eval`), which is why they are not suitable for the PR gate. The automated-test MCP is designed separately.
 
-### AgentBridge (simple start)
+### AgentBridge (proposal, open)
 
 An autoload that exposes the game to bots, tests and an MCP wrapper through one narrow interface:
 - `get_state()` returns a JSON snapshot (ship position/velocity, fuel/hull, money, cargo, current contract, nearby places).

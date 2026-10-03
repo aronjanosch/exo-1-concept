@@ -121,7 +121,7 @@ Playtests start at greybox with 3-5 people, in this order: flight and landing; t
 
 ## Open design questions
 
-- Starting planet radius (3 km): tune in the planet spike.
+- Planet radius: see `DECISIONS.md`.
 - How much combat, and of what kind?
 - Is production (making goods) part of the MVP or only hauling and trading?
 - Tone and name of the "strange galaxy" (and the game; the working title is not final, see `DECISIONS.md`).
