@@ -2,6 +2,9 @@
 
 Status: DRAFT. This repo is the concept (`exo-1-concept`); code lives in a separate public repo.
 
+Name: "EXO-1" is a working title only. A game called "Exo One" already exists, so the name will change (see `DECISIONS.md`).
+Related: `CORE-LOOP.md` (loop, pillars, MVP scope), `FEASIBILITY.md` (research results, spikes), `DECISIONS.md` (decided, open, parked), `SOURCES-TO-CHECK.md`.
+
 ## Idea
 
 An open-source game built by a community. An experiment: how far does a game get when implementation is no longer the bottleneck (AI), and people provide direction, ideas and taste?

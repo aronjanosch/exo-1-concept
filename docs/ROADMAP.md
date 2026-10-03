@@ -1,6 +1,9 @@
 # Roadmap — EXO-1
 
 Status: DRAFT. Milestones are coarse on purpose. Details get worked out when a milestone starts.
+
+Name: "EXO-1" is a working title only. A game called "Exo One" already exists, so the name will change (see `DECISIONS.md`).
+Related: `CORE-LOOP.md` (loop, pillars, MVP scope), `FEASIBILITY.md` (research results, spikes), `DECISIONS.md` (decided, open, parked), `SOURCES-TO-CHECK.md`.
 Each topic is a decision plus research task, not one document per topic.
 
 Two tracks: the **experiment** (ideas, creativity, structure where needed) and the **video** (story lines and hooks). The experiment does not depend on the story.
@@ -28,6 +31,7 @@ Two tracks: the **experiment** (ideas, creativity, structure where needed) and t
 - **World generation:** procedural plus authored content, avoiding the "empty" feeling
 - **Large-world limits in Godot:** precision, floating origin, why scope stays small
 - **Bot- and AI-testable game:** the game must expose an interface so AI agents and bots can play and test it. Essential for a decentralised project, since reviewers cannot play every PR by hand
+  - **AgentBridge (to validate):** a small autoload with `get_state`, `do_action` (fixed action list), `step` and `reset(seed)`, no `eval`. Start simple; whether it is viable is decided in the first spikes (see `FEASIBILITY.md`)
 - **CI gates:** lint, format, tests, security lint, headless boot, bot playthrough through that interface, performance budget on a low-spec profile
 - **Security:**
   - risky Godot APIs (`OS.execute`, shell, file access outside `user://`, networking, GDExtension, addons) and `.tscn`/`.tres` embedding scripts
@@ -45,7 +49,7 @@ Two tracks: the **experiment** (ideas, creativity, structure where needed) and t
 
 ## Open questions
 
-- Name and trademark check
+- New name and trademark check: "EXO-1" collides with the existing game "Exo One" (see `DECISIONS.md`)
 - Concurrent feature branches at the start
 - Where voting runs: Discord, GitHub, own site
 - Telemetry details and privacy
