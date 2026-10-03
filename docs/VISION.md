@@ -6,12 +6,26 @@ Status: DRAFT. This repo is the concept (`exo-1-concept`); code lives in a separ
 
 An open-source game built by a community. An experiment: how far does a game get when implementation is no longer the bottleneck (AI), and people provide direction, ideas and taste?
 
+## Spirit
+
+- The experiment needs ideas, inspiration, creativity, and structure only where structure must be.
+- Implementation is no longer the barrier, so ideas and organization are.
+- AI can produce junk, but it can also boost good ideas and creativity. That is the part we use.
+- Nothing from other games goes into EXO-1.
+
 ## The experiment
 
+- A pioneer project. The hard part is organization, not code. We try to solve that.
+- The community can organize itself: sub-groups, branch leads, own initiatives.
 - Documented as a video series. Failure is a valid result.
 - Decisions by community vote, built via the `community-gate` framework (proposals, votes, feature branches, one PR per feature).
 - The community decides features, not security. Code gates and review are not up for a vote.
 - Released when the community votes for it. The initiator can stop the experiment at any time.
+
+## Rules
+
+- No long rulebook, on purpose. As open as possible.
+- What does not fit EXO-1 is not accepted. Vote and review decide, not a rule list.
 
 ## Frame
 
@@ -73,5 +87,5 @@ An open-source game built by a community. An experiment: how far does a game get
 ## Non-goals
 
 - No guaranteed good game.
-- No foreign trademarks, assets, or reverse-engineering of other games.
+- No foreign trademarks or assets.
 - No runtime-shared executable code.
