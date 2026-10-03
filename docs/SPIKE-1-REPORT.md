@@ -41,4 +41,6 @@ Cube-sphere terrain with quadtree LOD and skirts, chunks on worker threads; CPU 
 - All design-relevant values and behaviours in the prototype (speeds, gravity, hover assist, landing aid, boarding, terrain shape, look) are assumptions for testing, not designed. The faceted terrain look does not match the look in `DECISIONS.md`.
 - No LOD fade or geomorphing yet.
 
+Spike 2 (transition: Jolt ship without engine gravity, altitude blending of gravity, drag and atmosphere, reverse-Z test) is covered by this spike.
+
 Learnings from this spike are in `LEARNINGS.md`.
