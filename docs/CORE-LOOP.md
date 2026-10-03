@@ -63,11 +63,20 @@ Analogy to Schedule I:
 
 At most about 5 permanent elements (hull and shield, money, cargo, target arrow, speed or altitude), co-op markers at the screen edge. Test it; it may change.
 
+Ideas from Dead Space's diegetic UI **[verified, secondary article about a GDC 2013 talk, `research/sources/dead-space-ui-medium.md`]**: a holographic locator line pointing to the destination instead of a map (fits our target arrow); status shown on the ship itself (Dead Space shows health as a light bar on the suit); loading and travel wrapped into a believable element (a tram ride) instead of a loading screen; and "usability trumps aesthetics" where the two clash. Diegetic is a style option, not a requirement.
+
 ## Trade and contracts (starting values)
 
 - About 6 goods with different prices per place, cargo limit, shared wallet.
 - Saturation per sale, rotating boom goods, money sinks to blunt dominant routes. It will never be perfect and does not need to be.
+- Lessons from Starsector's designer **[verified, own blog posts from 2014 and 2018, `research/sources/starsector-*.md`]**:
+  - In a supply-and-demand simulation prices drift to equilibrium where trade is not profitable; with a 30% tariff on both ends a plain A-to-B run is unprofitable unless something disturbs the balance. Profitable runs come from events (a food shortage raises one price and destabilises the others).
+  - Avoid "spreadsheet hell": do not make the player compare every price at every market. Prices are reported as intel and the game only surfaces "interesting" ones (extremely high or low, cheap compared to other known prices, goods you carry a lot of), picked by weighted random. Price information is time-sensitive, so wandering around to note all prices is less worthwhile than using a known route.
+  - The economy was rewritten about five times. The last version dropped colony-to-colony relationships for one accessibility rating per market and a global market value split by market share, because playtesting showed the old system was too complicated ("if I find myself being confused by the system, that's Not Good"). Lesson: playtest the loop early and keep trade simple.
+  - Smuggling (black market without tariff, banned goods with higher margins, reputation loss, customs inspections) is a ready-made risk layer, parked for later.
+  - For us: few goods, events as the source of opportunities, a small curated price overview, no full simulation.
 - Contracts from templates (verb x place x modifier): delivery, hunt, escort or smuggling.
+- Schedule I's contract fields as a checklist **[verified from field names, see `REFERENCE-NOTES.md`]**: payment, required goods, delivery place, delivery time window, expiry, optional counter-offer, bonus payments. Contracts and story quests share one state machine (begin, active, complete, expire, fail).
 
 ## Co-op (simple start)
 
@@ -96,7 +105,7 @@ One file per object, validated (see `FEASIBILITY.md` for format and security rul
 - `location`: name key, faction, produces and demands (multipliers), menu tabs, flavour text key, coordinates on the planet
 - `planet`: seed, radius, list of locations
 - `faction`: relations, banned goods, penalties (later)
-- `mission_template`: type, text with placeholders, reward formula, conditions
+- `mission_template`: type, text with placeholders, reward formula, required goods, delivery place, time window, expiry, conditions (one state machine for quests and contracts)
 - `event`: trigger, effect on prices or spawns
 - Strings in separate localisation tables
 

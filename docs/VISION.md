@@ -14,7 +14,7 @@ An open-source game built by a community. An experiment: how far does a game get
 - The experiment needs ideas, inspiration, creativity, and structure only where structure must be.
 - Implementation is no longer the barrier, so ideas and organization are.
 - AI can produce junk, but it can also boost good ideas and creativity. That is the part we use.
-- Nothing from other games goes into EXO-1.
+- Learning from other games is welcome: their mechanics, ideas, published code and write-ups, and how they solved problems. We write our own code and make our own assets, data, names and texts, so the MIT and CC0 licences stay clean.
 
 ## The experiment
 

@@ -15,6 +15,7 @@ Status: living document. Date of this version: 2026-10-03. Each entry says wheth
 | Ship tuning | Not planned and out of scope. May come later. The Gummi-Ship reference is dropped entirely |
 | Assets | Scripts instead of binaries, flat shading with palette texture, CC0 placeholders (Kenney, Quaternius) marked as such. Models work via script and/or MCP, not native 3D |
 | Content format | JSON with JSON Schema, one file per object, never `.tres`. Adopted as proposed in the research, still to be reviewed in detail |
+| Inspiration | Learning from other games is welcome and encouraged (mechanics, ideas, public code, write-ups, how others implemented things). What we do not copy: code, assets, data, names or texts. Own implementation keeps the MIT and CC0 licences clean |
 | Third-party code | Build core systems ourselves, use others as inspiration, take small parts only |
 | Dev MCP | For development we use the best MCP, not the safest. Automated-test MCP is designed separately later |
 | AgentBridge | Simple start: narrow interface with `get_state`, `do_action`, `step`, `reset`. No `eval` |
