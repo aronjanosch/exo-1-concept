@@ -11,7 +11,6 @@ Ein Open-Source-Spiel, das die Community gemeinsam baut. Ein Experiment: wie wei
 - Engine: Godot
 - Lizenz: MIT, komplett offen
 - Setting: seltsame Galaxie, bewusst goofy, Grafik egal
-- Muss auf schwacher Hardware laufen
 - Kleine Gruppen spielen zusammen (Co-op)
 - Von Spielern erzeugte Inhalte sind willkommen, auch AI-generiert
 
@@ -25,9 +24,9 @@ Ein Open-Source-Spiel, das die Community gemeinsam baut. Ein Experiment: wie wei
 ## Orientierung (nur Inspiration, keine Assets, keine Namen)
 
 - Star Citizen: das Spiel, das nie fertig wird
-- Schedule 1, Valheim: simpel, goofy, läuft überall
-- No Man's Sky: Start in einem System
-
+- Schedule 1: simpel, goofy, einfaches Design, einfache Assets, gutes Gameplay, gute Systeme
+- Valheim: Auch Gameplay > Grafik
+- No Man's Sky
 ## Nicht-Ziele
 
 - Kein garantiert gutes Spiel. Scheitern ist ein gültiges Ergebnis.
