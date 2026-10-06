@@ -1,12 +1,13 @@
 # Decisions — EXO-1 (working title)
 
-Status: living document. Date of this version: 2026-10-03 (planet size added after spike 1). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
+Status: living document. Date of this version: 2026-10-04 (origin shift and cheating added after spike 5). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
 
 ## Decided
 
 | Topic | Decision |
 |---|---|
 | Engine | Godot 4, GDScript. Pin the version. No double-precision build, no custom engine build |
+| Renderer | Current choice: Forward+ with Vulkan (initiator, 2026-10-04). Best option we think fits right now, not a permanent requirement; revisit with measured performance and visual correctness. Forward+ passed the distant-surface depth tests; fastest renderer has not been established by an A/B benchmark |
 | World | Fixed hand-built system. Small but complete, seamless planets. Procedural terrain, hand-built city and outposts |
 | Planet size | Radius 5 km as a first guide value. Larger and smaller planets are possible |
 | Interiors | Small shops stay in the open world, large or complex interiors (for example a sewer) are instanced |
@@ -23,6 +24,8 @@ Status: living document. Date of this version: 2026-10-03 (planet size added aft
 | AI stance | Accepted tension with engine communities that ban AI. EXO-1 is an experiment, we document what happens |
 | Slop defence | Community plus the `community-gate` framework. Governance details (voting, Sybil protection, quorum) are worked out there |
 | Trade balance | Never perfect, and perfection is not the goal |
+| Large worlds | Origin shift (the world moves back when the player gets far from the origin). Threshold and multiplayer details open (spike 4). Source: `SPIKE-5-REPORT.md` |
+| Cheating | Not a concern; performance comes first (initiator, 2026-10-04) |
 
 ## Open
 
@@ -31,6 +34,7 @@ Status: living document. Date of this version: 2026-10-03 (planet size added aft
 - Details of the content schema (initiator wants to review).
 - AgentBridge interface (research proposal: `get_state`, `do_action`, `step`, `reset`, no `eval`; see `FEASIBILITY.md`).
 - Travel between planets: direction like No Man's Sky or Star Citizen, to be tried.
+- Multiplayer authority: client authority (each client simulates its own player and ship) is the direction to try in spike 4 (initiator, 2026-10-04: "Denke Client-Autorität"). Not decided.
 - Voter builds: desktop binary or web export.
 - Open questions in `ROADMAP.md` that this research did not touch.
 

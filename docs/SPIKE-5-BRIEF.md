@@ -9,7 +9,7 @@ Find where float32 precision breaks for our game and whether an origin shift fix
 ## Known from spike 1 (`SPIKE-1-REPORT.md`)
 
 - Planet centred at the origin: no physics jitter standing still up to 16 km from the centre; walking works at 8 km, fails at 16 km (catches on an invisible edge, likely offset collision patches; not verified).
-- Depth: Forward+ has no z-fighting to 40 km; Compatibility has z-fighting from about 500 m at cm gaps (renderer choice is open).
+- Depth: Forward+ has no z-fighting to 40 km; Compatibility has z-fighting from about 500 m at cm gaps (current choice: Forward+ with Vulkan; revisitable, see `DECISIONS.md`).
 
 ## Read first
 

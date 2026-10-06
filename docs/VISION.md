@@ -33,9 +33,10 @@ An open-source game built by a community. An experiment: how far does a game get
 ## Frame
 
 - Engine: Godot
+- Current renderer baseline: Forward+ with Vulkan; revisitable based on measured performance and visual correctness (see `DECISIONS.md`).
 - License: MIT, fully open. Original or CC0 assets only.
 - Setting: a strange galaxy, deliberately goofy. Graphics don't matter: simple lighting, simple assets.
-- Must run on weak hardware.
+- Aim for the best runtime performance; the simple look helps keep rendering costs down.
 - Gameplay and systems over graphics.
 
 ## Multiplayer
@@ -75,7 +76,7 @@ An open-source game built by a community. An experiment: how far does a game get
 | yellow: gameplay code | `game/**` | all CI gates, security lint, AI review, 1 moderator | moderator |
 | red: core | CI, `project.godot`, autoloads, networking, addons | everything above | initiator only |
 
-- CI (deterministic, carries the load): lint, format, tests, security lint, headless boot, bot playthrough through the agent interface (MCP), performance budget on a low-spec profile.
+- CI (deterministic, carries the load): lint, format, tests, security lint, headless boot, bot playthrough through the agent interface (MCP), performance regression checks.
 - AI summarizes, labels risk and checks vision fit. It never approves.
 - Merge train every 1-2 weeks. Trusted contributors can become moderators.
 - Voters should have played the build under review (proof-of-play, friction rather than security).

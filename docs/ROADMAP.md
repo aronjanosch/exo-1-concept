@@ -32,7 +32,7 @@ Two tracks: the **experiment** (ideas, creativity, structure where needed) and t
 - **Large-world limits in Godot:** precision, floating origin, why scope stays small
 - **Bot- and AI-testable game:** the game must expose an interface so AI agents and bots can play and test it. Essential for a decentralised project, since reviewers cannot play every PR by hand
   - **AgentBridge (to validate):** a small autoload with `get_state`, `do_action` (fixed action list), `step` and `reset(seed)`, no `eval`. Start simple; whether it is viable is decided in the first spikes (see `FEASIBILITY.md`)
-- **CI gates:** lint, format, tests, security lint, headless boot, bot playthrough through that interface, performance budget on a low-spec profile
+- **CI gates:** lint, format, tests, security lint, headless boot, bot playthrough through that interface, performance regression checks
 - **Security:**
   - risky Godot APIs (`OS.execute`, shell, file access outside `user://`, networking, GDExtension, addons) and `.tscn`/`.tres` embedding scripts
   - PR builds run on voters' machines: build only after review, signed CI artifacts, maybe web export as sandbox

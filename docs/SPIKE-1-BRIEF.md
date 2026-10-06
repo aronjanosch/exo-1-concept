@@ -4,7 +4,7 @@ Status: ready to start. Written 2026-10-03 at the end of the concept session. Re
 
 ## Goal
 
-Prove or disprove: a small, complete, seamless planet (radius about 3 km) is feasible in Godot 4.7.2 on low-spec hardware. One player, one ship. Walk, fly, land, no loading screen, no visible seams or pops.
+Prove or disprove: a small, complete, seamless planet (radius about 3 km) is feasible in Godot 4.7.2 with good runtime performance and a simple look. One player, one ship. Walk, fly, land, no loading screen, no visible seams or pops.
 
 If it fails, we fall back to flat, bounded landing zones (see `FEASIBILITY.md`, "Fallback"). Spikes are throwaway prototypes: no final structure needed, but results must be written down.
 
@@ -38,7 +38,7 @@ Out (later spikes): network sync, getting out of a ship with reparenting details
 
 ## Success criteria (initiator decides, these are starting values)
 
-- Runs at stable frame rate on a low-spec profile (Compatibility renderer first, then Forward+); report numbers, not feelings, plus the initiator's feel feedback.
+- Runs at a stable frame rate; compare renderers for the best runtime performance and report numbers, not feelings, plus the initiator's feel feedback.
 - Walking one full circumference (about 19 km at R = 3 km) feels fine; the horizon curvature does not annoy in first person.
 - Ship ascent from the ground to orbit and back without visible pops, seams or holes.
 - No precision jitter near the surface; test with the planet centre at the origin (the docs call 2048-4096 m the maximum recommended range for first-person) and note what you see.
@@ -75,7 +75,7 @@ Out (later spikes): network sync, getting out of a ship with reparenting details
 
 ## Suggested order of work
 
-1. Minimal Godot 4.7.2 project in `~/Work/exo-1` on a throwaway branch (Compatibility renderer), one scene with a sphere, a first-person walker and the debug overlay.
+1. Minimal Godot 4.7.2 project in `~/Work/exo-1` on a throwaway branch (Forward+ with Vulkan, current revisitable decision), one scene with a sphere, a first-person walker and the debug overlay.
 2. Terrain on one cube face with LOD; then all six faces; then seams.
 3. Collision ring and walking; radial gravity.
 4. Ship: take off, leave the atmosphere, return; blending of gravity, drag and sky.

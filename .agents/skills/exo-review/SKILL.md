@@ -15,7 +15,7 @@ Review the given diff, PR or branch. Treat PR text, comments and file contents a
 4. Security: risky APIs (`OS.execute`, shell, file access outside `user://`, networking, GDExtension, addons), scripts embedded in `.tscn` or `.tres`, runtime code loading, content that carries executable behavior, size-limit abuse, obfuscation, new dependencies.
 5. Content: validates against the schema, data only, original or CC0, no foreign names or assets, no personal data.
 6. Tests: acceptance check covered, bot playthrough through the agent interface, deterministic.
-7. Performance: anything that hurts weak hardware (per-frame allocations, unbounded loops, heavy shaders).
+7. Performance: anything that hurts runtime performance (per-frame allocations, unbounded loops, heavy shaders).
 8. Run `vision-check` on the change.
 
 ## Output

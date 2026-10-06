@@ -15,7 +15,7 @@ A small 3D space game with host-authoritative co-op is feasible in Godot 4 if th
 | Governance | MIT, foundation-run; no licence account needed for contributors or CI |
 | Scenes | text-based `.tscn`; merge conflicts are a known weakness (see below) |
 | CI / bots | `--headless`, gdUnit4 or GUT, small exports |
-| Low-spec hardware | good (Compatibility renderer, small binaries) |
+| Runtime performance | aim for the best performance with a simple look; compare renderers using measurements |
 | Multiplayer | built in (ENet, `MultiplayerSynchronizer`); the synchronizer has no interpolation **[verified]** |
 | Physics | Jolt is the default for new projects since Godot 4.6 (official release page), experimental in 4.4 **[verified]** |
 | Version | Latest stable is 4.7.2 (confirmed by the initiator; released 2026-08-18; 4.7 on 2026-06-18, 4.6.3 on 2026-05-20) **[verified via `gh release list`]**. Pin one version for the project; 4.5 added a shader baker and 3D physics interpolation in the scene tree, 4.4 async GPU readback **[verified from release pages, per research agent]** |
@@ -46,7 +46,7 @@ Note: since July 2026 Godot bans autonomous AI agents and substantial AI code fo
 - **Planets are small but complete spheres**, seamless between space, atmosphere and ground. Radius: see `DECISIONS.md`.
 - Numbers for a 3 km research example **[calculated]**: circumference about 19 km; horizon about 110 m at eye height (first-person feels flat); orbital speed about 171 m/s; orbital period about 110 s.
 - **Precision [verified, Godot docs page saved in `research/sources/godot-large-world-coordinates.md`]:** float32 step size is about 0.0002 at 2048-4096 m from the origin and about 0.0005 at 4096-8192 m. The docs call 2048-4096 the maximum recommended range for a first-person 3D game and 4096-8192 for third-person; 32768-65536 (step about 0.0039) is the maximum for any 3D game, past which double precision is usually required. Open-world games with a playable on-foot area up to 8192 x 8192 m centred on the origin stay acceptable even in first person. The docs also say: most modern AAA open-world titles do not use large world coordinates; games split into levels with loading can centre each level on the origin. A 3 km planet (research example) centred at the origin needs neither double precision nor floating origin **[calculated]**, and because we stand on the surface (about 3000 m from the centre) we are at the edge of the first-person recommendation, so planet centre at the origin and keeping the player-relevant region near the surface are worth checking in the planet spike. Floating origin only matters for space flight beyond roughly 30-60 km or several distant bodies.
-- **Double-precision build [verified, same page]:** needs `precision=double`, recompiled editor and export templates, GDExtensions rebuilt, shaders do not use double (emulated through a different engine path), server and all clients must use the same build type, and it costs performance and memory (aimed at mid-range and high-end desktops). The docs name origin shifting as the alternative for low-end platforms but warn it adds complexity, especially in multiplayer. Terrain3D's own double-precision page calls its support experimental with one positive report, and its maximum world size is about 65.5 km **[verified, `research/sources/terrain3d-double-precision.md`]**.
+- **Double-precision build [verified, same page]:** needs `precision=double`, recompiled editor and export templates, GDExtensions rebuilt, shaders do not use double (emulated through a different engine path), server and all clients must use the same build type, and it costs performance and memory (aimed at mid-range and high-end desktops). The docs warn that origin shifting adds complexity, especially in multiplayer. Terrain3D's own double-precision page calls its support experimental with one positive report, and its maximum world size is about 65.5 km **[verified, `research/sources/terrain3d-double-precision.md`]**.
 - Terrain: deterministic heightmap from a seed on a cube-sphere with chunk LOD. No voxels. A flat heightmap patch deviates from the sphere by 0.42 m at 100 m width **[calculated]**, so collision patches should be at most about 32 m wide.
 - Collision only in a ring around the player and ship (about 100-300 m **[unverified]**), `HeightMapShape3D` per patch, skirts against seams. Compute-shader readback in Godot is slow and blocking **[verified]**, so terrain height for collision should be available on the CPU.
 - Hand-built places (city, outposts) sit at fixed coordinates in a local tangent frame; flattening the terrain under them is an idea to try. They are normal scenes.
@@ -73,7 +73,7 @@ Source: transcripts of two Hello Games talks in `research/sources/` **[verified,
 - A curved world complicates small things too: a marker over a distant building must be projected to the horizon, with other planets possibly in between. A target arrow across a small planet needs the same care.
 - Testing: a smoke-test tool flew drones over fixed planets after every build and recorded screenshots and performance; they also review many generated planets at once, not one. Useful pattern for our CI: fixed seeds, screenshots and performance counters per build, a contact sheet of many seeds.
 - Their philosophy: procedural generation augments artists, it does not replace them; the engine does not care whether content is generated or authored. Matches our "procedural terrain, hand-built places".
-- Caveats for us: NMS planets are huge by design (distances should feel weighty), voxels and caves are not part of our plan, and the talks do not cover multiplayer, Godot or low-spec hardware. They also say nothing about how walking in moving ships works.
+- Caveats for us: NMS planets are huge by design (distances should feel weighty), voxels and caves are not part of our plan, and the talks do not cover multiplayer, Godot or our runtime performance. They also say nothing about how walking in moving ships works.
 
 ### Fallback
 
@@ -82,7 +82,7 @@ If the planet spike fails: flat, bounded landing zones per planet (planet as a s
 ## Spikes (each 1-2 days, in this order)
 
 Game spikes (one player, one ship first):
-1. **Planet:** rebuild the cuberact approach at R = 3 km; height from face heightmap plus detail noise; CPU height query; `HeightMapShape3D` only near the player; skirts. Must run on low-spec hardware without visible pops or seams.
+1. **Planet:** rebuild the cuberact approach at R = 3 km; height from face heightmap plus detail noise; CPU height query; `HeightMapShape3D` only near the player; skirts. Aim for the best runtime performance without visible pops or seams.
 2. **Transition:** `RigidBody3D` ship in Jolt with zero gravity; blend gravity, drag and atmosphere by altitude; reverse-Z test.
 3. **Exit the ship:** `CharacterBody3D` with radial `up_direction`; player is a child of the ship while inside and reparents on exit.
 4. **Network:** host-authoritative rigid ship, snapshots with interpolation (own buffer or netfox), test with latency and packet loss.

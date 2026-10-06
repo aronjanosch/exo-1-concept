@@ -66,10 +66,6 @@ To avoid model snapping issues when far away from the world origin, Godot's 3D r
 > **Note**
 >
 > Enabling large world coordinates comes with a performance and memory usage penalty, especially on 32-bit CPUs. Only enable large world coordinates if you actually need them.
->
-> This feature is tailored towards mid-range/high-end desktop platforms. Large world coordinates may not perform well on low-end mobile devices, unless you take steps to reduce CPU usage with other means (such as decreasing the number of physics ticks per second).
->
-> On low-end platforms, an *origin shifting* approach can be used instead to allow for large worlds without using double-precision physics and rendering. Origin shifting works with single-precision floats, but it introduces more complexity to game logic, especially in multiplayer games. Therefore, origin shifting is not detailed on this page.
 
 ## Who are large world coordinates for?[Link to this heading](https://docs.godotengine.org/en/stable/tutorials/physics/large_world_coordinates.html#who-are-large-world-coordinates-for)
 

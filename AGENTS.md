@@ -1,6 +1,6 @@
 # AGENTS.md — EXO-1
 
-DRAFT proposal. Goes into the public code repo once it exists. Read `docs/VISION.md` first.
+DRAFT proposal. Goes into the public code repo once it exists. Read `docs/VISION.md` first, and `docs/LEARNINGS.md` before running Godot, changing git state or starting a spike.
 
 ## What this project is
 
@@ -30,7 +30,8 @@ Skip a step only if its output already exists in the repo or the issue.
 - Never touch red-class paths (CI, `project.godot`, autoloads, networking, addons) unless the task is explicitly about them and flagged for the initiator.
 - Avoid risky APIs: `OS.execute`, shell, file access outside `user://`, GDExtension. Ask first.
 - Every feature must be reachable by the bot/agent interface (MCP) so CI can play it.
-- Must run on weak hardware. Simple lighting, simple assets, original or CC0 only.
+- Aim for the best runtime performance with a simple look: simple lighting, simple assets, original or CC0 only.
+- Current renderer baseline: Forward+ with Vulkan. Revisit based on measured performance and visual correctness.
 - No personal data, no real names in content, tests or issues.
 - AI output summarizes and labels. It never approves a PR.
 
@@ -43,3 +44,8 @@ Skip a step only if its output already exists in the repo or the issue.
 ## When unsure
 
 Say what you do not know, propose the smallest next step, ask one question at a time.
+
+
+## Todos & Status
+
+Offene Todos und der Projektstand gehören ins private GitHub-Project „Work“ (https://github.com/users/aronjanosch/projects/9), nicht in Markdown-Dateien. Neue Punkte per `gh project item-create 9 --owner aronjanosch` anlegen (Felder Status, Projekt, Priorität setzen); am Session-Ende das passende Item aktualisieren. Bei öffentlichen Repos keine Issues, nur Draft-Items. Keine Kundennamen oder personenbezogenen Daten eintragen.

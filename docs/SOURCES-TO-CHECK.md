@@ -23,7 +23,7 @@ The search tool is weak (US-only, rate-limited) and found **no new GDC or GodotC
 - Saved by the initiator but not usable: the Frontier forum recap (the saved file contains only the cookie banner, no thread text; try saving again with reader mode or by selecting the posts) and the Kitten Space Agency changelog (a plain developer changelog, nothing relevant, removed).
 - Hits only (not opened, treat as unverified): Overwatch gameplay architecture GDC 2017 (https://www.gdcvault.com/play/1024001/-Overwatch-Gameplay-Architecture-and), Godot 4.7 RC announcement (https://godotengine.org/article/release-candidate-godot-4-7-rc-1/; 4.7 itself is verified).
 - Nothing usable found for: Schedule I postmortem, newer trade design, minimal space HUD (only secondary literature), Star Citizen/Starfield/Space Engineers/Elite Odyssey technical talks (only wiki, press, forums).
-- Judgement from the research (unverified): the big changes since 2017 (Nanite-style virtualised geometry, mesh shaders, server meshing) are not relevant for a low-spec Godot project with 3 km planets.
+- Judgement from the research (unverified): the big changes since 2017 (Nanite-style virtualised geometry, mesh shaders, server meshing) are not relevant for a Godot project with a simple look and 3 km planets.
 
 ## Still open, by priority
 

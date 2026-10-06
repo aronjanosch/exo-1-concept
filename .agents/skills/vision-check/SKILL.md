@@ -13,7 +13,7 @@ Read `docs/VISION.md` (and `docs/ROADMAP.md` if relevant) fresh each time. Do no
 |---|---|
 | Spirit | Does it add ideas, creativity or needed structure, or is it just slop or filler? |
 | Originality | Anything taken from another game: names, assets, mechanics 1:1? |
-| Frame | Godot, MIT-compatible, original or CC0 assets, runs on weak hardware, gameplay over graphics? |
+| Frame | Godot, MIT-compatible, original or CC0 assets, aims for the best runtime performance with a simple look, gameplay over graphics? |
 | Tone | Strange, goofy galaxy? |
 | Scope | Small and within the current core loop and pillars? Does it expand scope before the baseline is solid? |
 | Multiplayer | Fits small host-authoritative co-op? No cross-server assumptions? |

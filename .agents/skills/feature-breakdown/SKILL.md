@@ -31,7 +31,7 @@ Ask one or two questions at a time. Wait for answers. Reflect back in short form
 
 ### 4. Testability
 - How could a bot play it through the agent interface and show it works?
-- Performance risk on weak hardware?
+- Runtime performance risks?
 
 ## Outputs
 
