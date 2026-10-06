@@ -9,6 +9,7 @@ Status: living document. Date of this version: 2026-10-06 (multiplayer authority
 | Engine | Godot 4, GDScript. Pin the version. No double-precision build, no custom engine build |
 | Terrain generator in Rust | Godot stays the engine. The terrain generator is written in Rust as a GDExtension (godot-rust), starting from `gen_core` of spike 6; other compute-heavy parts may follow when measured. Initiator, 2026-10-06: "wir fangen mal an aber anstatt dann immer alles wieder umzuschreiben in rust weil es doch besser funktioniert für den scale den wir haben". Spike 6: Rust 5-7x faster than GDScript on the test workload, same output, rebuild about 0.5 s with a non-LTO profile. The `AGENTS.md` hard rule on GDExtension still needs a proposal. Source: `SPIKE-6-REPORT.md` |
 | No web export | No browser game. Initiator, 2026-10-06: "web ist raus wir machen kein browser game. auf keinen fall" |
+| Platforms | Linux and Windows first; development happens on Linux. Initiator, 2026-10-07: "Wir supporten erstmal nur linux und win. lvv sogar nur windows und dann linux mit proton. aber ich etnwickel halt auf linux." Windows-only with Linux through Proton is an option, not decided. macOS is not supported for now |
 | Renderer | Current choice: Forward+ with Vulkan (initiator, 2026-10-04). Best option we think fits right now, not a permanent requirement; revisit with measured performance and visual correctness. Forward+ passed the distant-surface depth tests; fastest renderer has not been established by an A/B benchmark |
 | World | Fixed hand-built system. Small but complete, seamless planets. Procedural terrain, hand-built city and outposts |
 | Planet size | Radius 5 km as a first guide value. Larger and smaller planets are possible |
@@ -54,4 +55,4 @@ Status: living document. Date of this version: 2026-10-06 (multiplayer authority
 1. Check the open sources in `SOURCES-TO-CHECK.md` (initiator, with help from transcripts).
 2. Pick a new name and do a proper trademark check.
 3. Spike 1: planet (see `FEASIBILITY.md`), in a throwaway prototype branch in the code repo.
-4. Test-infrastructure spikes in parallel (headless speed, gdUnit4 versus GUT, lavapipe variance).
+4. Test-infrastructure spikes 9-11 in parallel (headless speed, gdUnit4 versus GUT, lavapipe variance).

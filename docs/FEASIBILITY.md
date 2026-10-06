@@ -88,10 +88,10 @@ Game spikes (one player, one ship first):
 4. **Network:** host-authoritative rigid ship, snapshots with interpolation (own buffer or netfox), test with latency and packet loss.
 5. **Float limit:** fly the ship out to 100 km and measure jitter. Build origin shifting only if needed.
 
-Test-infrastructure spikes (can run in parallel):
-6. Headless speed and stability (issue #122707) against our Godot version (4.7.x).
-7. gdUnit4 versus GUT.
-8. Software-rendering (lavapipe) variance for the performance gate.
+Test-infrastructure spikes (can run in parallel; numbered 9-11 because spikes 6 and 7 went to the generator benchmark and Rust builds):
+9. Headless speed and stability (issue #122707) against our Godot version (4.7.x).
+10. gdUnit4 versus GUT.
+11. Software-rendering (lavapipe) variance for the performance gate.
 
 ## Prior art: what we know and what we do not
 
