@@ -17,8 +17,10 @@ produce conflicting physical histories and still need a human system decision.
 with two and eight processes, a host-authority reference, independent planet
 frames, the MCP bridge and all-interface/LAN-address binding pass. Forward+
 windowed runs produced valid screenshots, no errors and no mouse capture.
-Actual two-computer LAN play and by-eye smoothness remain the documented manual
-acceptance checks in `README.md`; they were not replaced with a localhost claim.
+Two-computer LAN play passed on 2026-10-06 (host from the project, client from
+the tester build): both flew, the client carried the host as a cabin passenger.
+Independent shift and reconnect on two computers, plus by-eye smoothness, remain
+the manual acceptance checks in `README.md`.
 
 ## 1. Flight and own-input latency
 
@@ -208,13 +210,15 @@ objects/code are deserialized and the optional control bridge is localhost only.
 
 Source scene: `spikes/network/main.tscn`, launch it explicitly from the unchanged
 root project. Portable `dist/exo-spike4-source.zip` has a separate minimal project
-with this scene as its default. Godot 4.7.2 is sufficient. No binary was built:
-there are no installed export templates, and source was expressly sufficient.
+with this scene as its default. Godot 4.7.2 is sufficient. Tester builds for Linux,
+Windows and macOS come from `build_binaries.py` (official 4.7.2 templates,
+exported from the portable package; output gitignored under `build/spike4/`).
 
 Host listens on `0.0.0.0` by default, configurable `--bind`; client uses
 `--connect=HOST_IP`; **17440/UDP** by default, configurable `--port` on both ends.
 The automated LAN-address test binds all interfaces and connects through this
-machine's private non-loopback IP; it remains a **one-computer test**.
+machine's private non-loopback IP. The two-computer test above used a wired host
+with a UDP allow rule restricted to the LAN subnet.
 `README.md` contains the two-computer commands, firewall/UDP requirement, flight,
 foreign cabin, independent shift and reconnect acceptance steps. Real addresses
 are not copied to reports or logs. Reconnection gets the same owner slot after
@@ -223,8 +227,9 @@ late packets from the former lifetime are discarded. The live same-slot rejoin
 before expiry passes (`results/reconnect.json`). Stale representations expire
 after 2 s without snapshots.
 
-Manual: two physical computers, smoothness by eye, own control feel, contacts and
-passenger feel. No production design decisions, commits, pushes or PRs are made.
+Manual: two physical computers passed for flight and passenger carry; still open
+are shift/reconnect on two computers, smoothness by eye, contacts. No production
+design decisions, pushes or PRs are made.
 
 Method references: [Godot ENet peer](https://docs.godotengine.org/en/stable/classes/class_enetmultiplayerpeer.html),
 [ENet connection counters](https://docs.godotengine.org/en/stable/classes/class_enetconnection.html),
