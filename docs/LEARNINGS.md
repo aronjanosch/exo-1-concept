@@ -121,3 +121,9 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **godot-rust costs 34 s per rebuild** with LTO and one codegen unit (3.7 s for the plain Rust binary). Parallel calls from worker tasks need the `experimental-threads` feature.
 - **Parallel agents spoil timings.** Benchmarks run while two subagents compiled and ran Godot gave noisy numbers; rerun when the machine is quiet.
 - **`godot --headless --import` writes `.import` files** for tracked images into the spike tree (untracked, not part of the spike).
+
+## Rust extension builds (spike 7, 2026-10-07)
+
+- **Cross-build Windows from Linux with llvm-mingw.** Target `x86_64-pc-windows-gnullvm`, linker `x86_64-w64-mingw32-clang` from `mise install github:mstorsjo/llvm-mingw`; no root, no Microsoft SDK licence. The DLL needs `libunwind.dll`: list it under `[dependencies]` in the `.gdextension` and the export copies it.
+- **A fresh project's first headless import can abort on exit** (SIGABRT) even though the GDExtension got registered. Check `.godot/extension_list.cfg` instead of the exit code.
+- **Proton costs little for compute.** The Windows build under Proton Experimental reproduced the checksum and took 0.62 ms per chunk against 0.59 ms native. Headless only; rendering under Proton is untested.
