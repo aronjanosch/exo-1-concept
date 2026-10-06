@@ -44,8 +44,3 @@ Skip a step only if its output already exists in the repo or the issue.
 ## When unsure
 
 Say what you do not know, propose the smallest next step, ask one question at a time.
-
-
-## Todos & Status
-
-Offene Todos und der Projektstand gehören ins private GitHub-Project „Work“ (https://github.com/users/aronjanosch/projects/9), nicht in Markdown-Dateien. Neue Punkte per `gh project item-create 9 --owner aronjanosch` anlegen (Felder Status, Projekt, Priorität setzen); am Session-Ende das passende Item aktualisieren. Bei öffentlichen Repos keine Issues, nur Draft-Items. Keine Kundennamen oder personenbezogenen Daten eintragen.
