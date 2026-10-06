@@ -1,6 +1,6 @@
 # Decisions — EXO-1 (working title)
 
-Status: living document. Date of this version: 2026-10-04 (origin shift and cheating added after spike 5). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
+Status: living document. Date of this version: 2026-10-06 (multiplayer authority added after spike 4). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
 
 ## Decided
 
@@ -26,6 +26,7 @@ Status: living document. Date of this version: 2026-10-04 (origin shift and chea
 | Trade balance | Never perfect, and perfection is not the goal |
 | Large worlds | Origin shift (the world moves back when the player gets far from the origin). Shared snapshots carry planet id plus planet-relative pose, so each client shifts independently; verified on two computers (spike 4). Threshold still open. Source: `SPIKE-5-REPORT.md`, `SPIKE-4-REPORT.md` |
 | Cheating | Not a concern; performance comes first (initiator, 2026-10-04) |
+| Multiplayer authority | Client authority: each client simulates its own player and ship, a host relays snapshots (initiator, 2026-10-06, after spike 4 passed on two computers). Ships are meant to affect each other physically (initiator, 2026-10-06); the rule for who owns a contact is open, see below. Source: `SPIKE-4-REPORT.md` |
 
 ## Open
 
@@ -34,7 +35,7 @@ Status: living document. Date of this version: 2026-10-04 (origin shift and chea
 - Details of the content schema (initiator wants to review).
 - AgentBridge interface (research proposal: `get_state`, `do_action`, `step`, `reset`, no `eval`; see `FEASIBILITY.md`).
 - Travel between planets: direction like No Man's Sky or Star Citizen, to be tried.
-- Multiplayer authority: client authority (each client simulates its own player and ship) was tried in spike 4 (initiator, 2026-10-04: "Denke Client-Autorität") and works for independent flight, cabin passengers, origin shift and reconnect on two computers (`SPIKE-4-REPORT.md`, closed 2026-10-06). Contact/docking authority unsolved. Not decided.
+- Contact authority between ships: ships should affect each other physically (initiator, 2026-10-06), but with client authority each side computes a contact alone and the two histories can disagree (spike 4 fixture: 217 ms and 3 m apart). Candidates: pair rule (one fixed side computes the contact for both), migrating authority for touching/docked groups, damage-only ramming where each owner decides its own damage. Which interactions (ramming, docking, towing) and which rule: not decided.
 - Voter builds: desktop binary or web export.
 - Open questions in `ROADMAP.md` that this research did not touch.
 
