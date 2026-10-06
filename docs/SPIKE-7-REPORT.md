@@ -4,7 +4,7 @@ Date: 2026-10-07. Status: done. Steps 1-3 locally, step 4 in GitHub Actions (bot
 
 ## Answer in one line
 
-The Rust extension builds for Linux and Windows on the Linux dev machine, both exports load it and reproduce the spike-6 checksum, and the Windows build runs under Proton a few percent slower than native Linux.
+The Rust extension builds for Linux and Windows on the Linux dev machine, both exports load it and reproduce the spike-6 checksum (Linux, Proton and a GitHub Windows runner), and the Windows build runs under Proton a few percent slower than native Linux.
 
 ## How it works
 
