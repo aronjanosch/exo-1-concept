@@ -18,9 +18,9 @@ with two and eight processes, a host-authority reference, independent planet
 frames, the MCP bridge and all-interface/LAN-address binding pass. Forward+
 windowed runs produced valid screenshots, no errors and no mouse capture.
 Two-computer LAN play passed on 2026-10-06 (host from the project, client from
-the tester build): both flew, the client carried the host as a cabin passenger.
-Independent shift and reconnect on two computers, plus by-eye smoothness, remain
-the manual acceptance checks in `README.md`.
+the tester build): both flew, the client carried the host as a cabin passenger,
+an independent shift caused no jump on the other side, and a same-slot reconnect
+left no ghost ship. By-eye smoothness and contacts remain unscored in `README.md`.
 
 ## 1. Flight and own-input latency
 
@@ -227,9 +227,9 @@ late packets from the former lifetime are discarded. The live same-slot rejoin
 before expiry passes (`results/reconnect.json`). Stale representations expire
 after 2 s without snapshots.
 
-Manual: two physical computers passed for flight and passenger carry; still open
-are shift/reconnect on two computers, smoothness by eye, contacts. No production
-design decisions, pushes or PRs are made.
+Manual: two physical computers passed for flight, passenger carry, independent
+shift and reconnect; a third computer, smoothness by eye and contacts are not
+scored. No production design decisions, pushes or PRs are made.
 
 Method references: [Godot ENet peer](https://docs.godotengine.org/en/stable/classes/class_enetmultiplayerpeer.html),
 [ENet connection counters](https://docs.godotengine.org/en/stable/classes/class_enetconnection.html),
