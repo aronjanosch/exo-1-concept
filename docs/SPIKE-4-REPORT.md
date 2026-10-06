@@ -2,7 +2,7 @@
 
 Date: 2026-10-04, closed 2026-10-06. Godot 4.7.2, Jolt, Forward+/Vulkan. Throwaway
 branch `spike/4-network`, baseline `9aa3cbd`; code isolated in `spikes/network/`.
-Final state: annotated tag `spike/4-client-authority` (commit `31ad32f`), not merged.
+Final state: annotated tag `spike/4-client-authority` (commit `1deabe6`), not merged.
 Brief: concept `docs/SPIKE-4-BRIEF.md`; approved scope/assumptions: `SPEC.md`.
 Labels: **measured** (runs), **verified** (code/protocol/invariants), **assumed**
 (fixture choices), **open** (manual play or initiator decisions).
