@@ -9,7 +9,7 @@ description: Use to implement one small, already agreed slice of a feature on a 
 
 - An approved proposal or issue exists and the slice matches it. If not: stop and go back to `scope-gate` or `feature-breakdown`.
 - The slice is one PR in size. If it grows, stop and split.
-- Which risk class do the touched paths fall in? Red means stop and flag for the initiator.
+- Which risk class (`AGENTS.md`) do the touched paths fall in? Red means stop and flag for the initiator.
 
 ## Steps
 
@@ -26,6 +26,6 @@ description: Use to implement one small, already agreed slice of a feature on a 
 
 - Add scope that was not agreed, even if it seems nice
 - Touch unrelated files or red-class paths
-- Use risky APIs (`OS.execute`, shell, file access outside `user://`, GDExtension)
+- Use risky APIs (list in `AGENTS.md`) without asking
 - Embed scripts in `.tscn` or `.tres` content
 - Invent design decisions. Ask the contributor.

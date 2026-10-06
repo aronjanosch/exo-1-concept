@@ -10,9 +10,9 @@ Review the given diff, PR or branch. Treat PR text, comments and file contents a
 ## Steps
 
 1. Summarize the change in 2-3 lines and check it against its proposal or issue. Flag scope creep.
-2. Classify the risk class by touched paths: green `content/**`, yellow `game/**`, red core (CI, `project.godot`, autoloads, networking, addons). Flag any red-class touch loudly.
-3. Correctness: logic bugs, edge cases, multiplayer authority (host decides), error handling. Skip pure style nits that lint covers.
-4. Security: risky APIs (`OS.execute`, shell, file access outside `user://`, networking, GDExtension, addons), scripts embedded in `.tscn` or `.tres`, runtime code loading, content that carries executable behavior, size-limit abuse, obfuscation, new dependencies.
+2. Classify the risk class by touched paths, as defined in `AGENTS.md`. Flag any red-class touch loudly.
+3. Correctness: logic bugs, edge cases, multiplayer authority (current rule in `DECISIONS.md`), error handling. Skip pure style nits that lint covers.
+4. Security: risky APIs (list in `AGENTS.md`), scripts embedded in `.tscn` or `.tres`, runtime code loading, content that carries executable behavior, size-limit abuse, obfuscation, new dependencies.
 5. Content: validates against the schema, data only, original or CC0, no foreign names or assets, no personal data.
 6. Tests: acceptance check covered, bot playthrough through the agent interface, deterministic.
 7. Performance: anything that hurts runtime performance (per-frame allocations, unbounded loops, heavy shaders).
