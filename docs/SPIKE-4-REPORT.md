@@ -21,7 +21,9 @@ windowed runs produced valid screenshots, no errors and no mouse capture.
 Two-computer LAN play passed on 2026-10-06 (host from the project, client from
 the tester build): both flew, the client carried the host as a cabin passenger,
 an independent shift caused no jump on the other side, and a same-slot reconnect
-left no ghost ship. By-eye smoothness and contacts remain unscored in `README.md`.
+left no ghost ship. Ship contact occurred on both sides and looked plausible by
+eye; divergence between the two histories was not checked for. By-eye
+smoothness remains unscored in `README.md`.
 
 ## 1. Flight and own-input latency
 
@@ -229,8 +231,8 @@ before expiry passes (`results/reconnect.json`). Stale representations expire
 after 2 s without snapshots.
 
 Manual: two physical computers passed for flight, passenger carry, independent
-shift and reconnect; a third computer, smoothness by eye and contacts are not
-scored. No production design decisions, pushes or PRs are made.
+shift, reconnect and plausible-looking contact; a third computer and smoothness
+by eye are not scored. No production design decisions, pushes or PRs are made.
 
 Method references: [Godot ENet peer](https://docs.godotengine.org/en/stable/classes/class_enetmultiplayerpeer.html),
 [ENet connection counters](https://docs.godotengine.org/en/stable/classes/class_enetconnection.html),
