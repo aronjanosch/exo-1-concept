@@ -1,12 +1,14 @@
 # Decisions — EXO-1 (working title)
 
-Status: living document. Date of this version: 2026-10-06 (multiplayer authority added after spike 4). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
+Status: living document. Date of this version: 2026-10-06 (multiplayer authority added after spike 4; Rust generator and no web export added after spike 6). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
 
 ## Decided
 
 | Topic | Decision |
 |---|---|
 | Engine | Godot 4, GDScript. Pin the version. No double-precision build, no custom engine build |
+| Terrain generator in Rust | Godot stays the engine. The terrain generator is written in Rust as a GDExtension (godot-rust), starting from `gen_core` of spike 6; other compute-heavy parts may follow when measured. Initiator, 2026-10-06: "wir fangen mal an aber anstatt dann immer alles wieder umzuschreiben in rust weil es doch besser funktioniert für den scale den wir haben". Spike 6: Rust 5-7x faster than GDScript on the test workload, same output, rebuild about 0.5 s with a non-LTO profile. The `AGENTS.md` hard rule on GDExtension still needs a proposal. Source: `SPIKE-6-REPORT.md` |
+| No web export | No browser game. Initiator, 2026-10-06: "web ist raus wir machen kein browser game. auf keinen fall" |
 | Renderer | Current choice: Forward+ with Vulkan (initiator, 2026-10-04). Best option we think fits right now, not a permanent requirement; revisit with measured performance and visual correctness. Forward+ passed the distant-surface depth tests; fastest renderer has not been established by an A/B benchmark |
 | World | Fixed hand-built system. Small but complete, seamless planets. Procedural terrain, hand-built city and outposts |
 | Planet size | Radius 5 km as a first guide value. Larger and smaller planets are possible |
@@ -36,7 +38,7 @@ Status: living document. Date of this version: 2026-10-06 (multiplayer authority
 - AgentBridge interface (research proposal: `get_state`, `do_action`, `step`, `reset`, no `eval`; see `FEASIBILITY.md`).
 - Travel between planets: direction like No Man's Sky or Star Citizen, to be tried.
 - Contact authority between ships: ships should affect each other physically (initiator, 2026-10-06), but with client authority each side computes a contact alone and the two histories can disagree (spike 4 fixture: 217 ms and 3 m apart). Candidates: pair rule (one fixed side computes the contact for both), migrating authority for touching/docked groups, damage-only ramming where each owner decides its own damage. Which interactions (ramming, docking, towing) and which rule: not decided.
-- Voter builds: desktop binary or web export.
+- Voter builds: desktop binary or web export. Note: the game itself has no web export (decided 2026-10-06); whether that also rules out web voter builds is not decided.
 - Open questions in `ROADMAP.md` that this research did not touch.
 
 ## Parked (not now, maybe later by community vote)
