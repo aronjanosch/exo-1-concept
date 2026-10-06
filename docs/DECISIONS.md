@@ -24,7 +24,7 @@ Status: living document. Date of this version: 2026-10-04 (origin shift and chea
 | AI stance | Accepted tension with engine communities that ban AI. EXO-1 is an experiment, we document what happens |
 | Slop defence | Community plus the `community-gate` framework. Governance details (voting, Sybil protection, quorum) are worked out there |
 | Trade balance | Never perfect, and perfection is not the goal |
-| Large worlds | Origin shift (the world moves back when the player gets far from the origin). Threshold and multiplayer details open (spike 4). Source: `SPIKE-5-REPORT.md` |
+| Large worlds | Origin shift (the world moves back when the player gets far from the origin). Shared snapshots carry planet id plus planet-relative pose, so each client shifts independently; verified on two computers (spike 4). Threshold still open. Source: `SPIKE-5-REPORT.md`, `SPIKE-4-REPORT.md` |
 | Cheating | Not a concern; performance comes first (initiator, 2026-10-04) |
 
 ## Open
@@ -34,7 +34,7 @@ Status: living document. Date of this version: 2026-10-04 (origin shift and chea
 - Details of the content schema (initiator wants to review).
 - AgentBridge interface (research proposal: `get_state`, `do_action`, `step`, `reset`, no `eval`; see `FEASIBILITY.md`).
 - Travel between planets: direction like No Man's Sky or Star Citizen, to be tried.
-- Multiplayer authority: client authority (each client simulates its own player and ship) is the direction to try in spike 4 (initiator, 2026-10-04: "Denke Client-Autorität"). Not decided.
+- Multiplayer authority: client authority (each client simulates its own player and ship) was tried in spike 4 (initiator, 2026-10-04: "Denke Client-Autorität") and works for independent flight, cabin passengers, origin shift and reconnect on two computers (`SPIKE-4-REPORT.md`, closed 2026-10-06). Contact/docking authority unsolved. Not decided.
 - Voter builds: desktop binary or web export.
 - Open questions in `ROADMAP.md` that this research did not touch.
 
