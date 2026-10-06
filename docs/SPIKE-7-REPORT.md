@@ -1,6 +1,6 @@
 # Spike 7 report — Rust extension in builds and CI
 
-Date: 2026-10-07. Status: steps 1-3 done locally, step 4 (CI) written but not run (needs a push, waiting for the initiator). Code: branch `spike/rust-builds` in worktree `~/Work/exo-1-spike7`, `spikes/rust_builds/` and `.github/workflows/spike7-rust-builds.yml`. Tags: **measured**, **assumed**.
+Date: 2026-10-07. Status: done. Steps 1-3 locally, step 4 in GitHub Actions (both runs green). Code: branch `spike/rust-builds` in worktree `~/Work/exo-1-spike7`, `spikes/rust_builds/` and `.github/workflows/spike7-rust-builds.yml`. Tags: **measured**, **assumed**.
 
 ## Answer in one line
 
@@ -27,12 +27,19 @@ The Rust extension builds for Linux and Windows on the Linux dev machine, both e
 
 - The first `godot --headless --import` of a fresh project aborts on exit (SIGABRT, exit -6) although the extension is registered. The script checks `.godot/extension_list.cfg` and continues. Cause not investigated.
 
-## CI (written, not run)
+## CI (measured, GitHub Actions, private repo)
 
-Linux runner: cache cargo and tools, download Godot 4.7.2, templates and llvm-mingw, build and export both platforms, run the Linux check, upload both exports. Windows runner: download the Windows export and run the check on real Windows. Actions pinned to commit SHAs, read-only token, no secrets, spike branch only. The repo is private, so runs use the account's Actions minutes (Windows minutes count double). First run expected around 10-15 min because of the 1.2 GB templates (assumed).
+Linux runner: cache cargo and tools, download Godot 4.7.2, templates and llvm-mingw, build and export both platforms, run the Linux check, upload both exports. Windows runner (`windows-2025`): download the Windows export and run the check. Actions pinned to commit SHAs, read-only token, no secrets, spike branch only.
+
+| Run | Build job (Linux) | Windows check | Result |
+| --- | --- | --- | --- |
+| cold (first push) | 6 min 0 s | 6 s | green, checksum ok on Linux and Windows |
+| warm (manual rerun, caches hit) | 2 min 42 s | 8 s | green |
+
+Chunk time on the runners (one run, shared VMs, not a benchmark): Linux 1.30 ms, Windows 0.55 ms. The Windows build therefore also runs on real Windows (a VM), not only under Proton.
 
 ## Not covered
 
 - Rendering, input and feel under Proton; this was a headless compute check.
-- Native Windows on real hardware (the Windows runner would be a VM).
+- Native Windows on physical hardware (the Windows runner is a VM).
 - Debug builds of the extension, editor hot reload, export of the full game project.
