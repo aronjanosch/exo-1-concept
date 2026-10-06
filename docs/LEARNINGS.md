@@ -30,6 +30,7 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Frozen spike states get annotated tags `spike/<n>-<name>`** (e.g. `spike/1-planet`), releases will use `v*`, so the two never mix. Why: old states must stay checkable for videos after branches are deleted; a tag also survives squash and rebase. Tag names differ from branch names (`spike/1-planet` vs `spike/planet`) because equal names make `git checkout` ambiguous.
 - **Merge spikes normally, never squash,** or the single commits are gone. Spike code stays off `main` (throwaway, no approved proposal); an archive branch plus tags keep it reachable. Only findings go to the docs.
 - **A branch that exists only locally is not safe.** `spike/combined` with all video commits was local only until pushed. Tags protect against deleting a branch, not against losing the disk.
+- **`spike/combined` is the base for new spikes** (since 2026-10-07, at spike 7). Each spike branches from it; after review it is fast-forwarded to the finished spike and the spike's tag goes on that commit. Why: one name to branch from instead of "whichever spike was last", and the chain stays linear.
 
 ## Godot and planet tech (spike 1)
 
