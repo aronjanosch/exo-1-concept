@@ -4,7 +4,7 @@ Date: 2026-10-07. Brief: `SPIKE-10-BRIEF.md`. Code: branch `spike/bevy-network` 
 
 ## Answer in one line
 
-The Bevy network reaches spike 4's level in every area, with no new dependency; it is better in smoothness, the shared frame and the walker, and about the same elsewhere. Clock sync (2–7 ms in the first version) was fixed with a receive thread (0.013 ms). What is not solved: the contact problem (open design question) and metres of error during a hold at 400 m/s.
+The Bevy network reaches spike 4's level in every area, with no new dependency; it is better in smoothness, the shared frame and the walker, and about the same elsewhere. Clock sync (2–7 ms in the first version) was fixed with a receive thread (0.013 ms). What is not solved: the contact problem (open design question) and the hold rule (extrapolation exists as an option, off by default, needs your decision).
 
 ## Verdicts against the Godot table
 
@@ -46,6 +46,7 @@ The Bevy network reaches spike 4's level in every area, with no new dependency; 
 ## Findings
 
 - **Clock sync was the weakest part, now fixed.** First version: offset error against the true wall-clock offset 2.3 ms (2 players) to 7.4 ms (8 players), because ping and pong were handled once per 60 Hz tick on both ends (2.8 m of relative position at 400 m/s). Fix: a receive thread (`std::thread`, no dependency) stamps the arrival time at once and the host answers pings itself. Measured: **0.013 ms** (8 players), **0.001 ms** (2 players, 150 ms delay, 5 % loss); holds 0 %, net systems 0.028 ms. Windows binary rebuilt with it.
+- **Display-only extrapolation fixes the hold error (option, default off).** `--extrapolate=<ms>`: during an underrun the last state moves on with its velocity for at most that long (rotation held, never for collision). Replay on the recorded path: the 5.8 m maximum of 30 Hz/150 ms/8 players/10 % loss becomes **35.7 mm** with 50 ms; at 20 Hz/100 ms/150 ms delay/10 % loss, 8 players, 35 m / 52 m maximum becomes 58 mm / 436 mm with 100–200 ms (50 ms is not enough there); P95 unchanged. Live run, 8 players, 150 ms/10 % loss, 100 ms: 0 invalid, holds 0.01–0.06 %. Spike 4's rule is "hold, no extrapolation": this is an exception for display only; **decision for the initiator**. Data: `results/extrapolation.json`.
 - **Hold costs metres at speed.** An underrun is held, not extrapolated (spike 4 rule); at 400 m/s a 15 ms hold is 6 m. Spike 4's paths were slower.
 - **Avian: a kinematic body also integrates its velocity.** The proxy gets Position and Velocity from the sample every tick; without velocity a contact would see a standing wall.
 - **Proton:** `proton run` swallows stdout and `Z:` output paths made the run fail silently; use relative paths and result files.
