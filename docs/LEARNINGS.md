@@ -158,3 +158,17 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **bevy_lint trails Bevy by a release** (latest tested: 0.18 while Bevy 0.19 is out) and needs a pinned nightly with `rustc-dev`.
 - **Nested `claude -p` sessions are a workable blind-test harness**: `--setting-sources project --strict-mcp-config`, tools allowed by pattern, prompt on stdin (a variadic `--allowedTools` swallows a positional prompt), JSON output gives turns, duration and cost.
 - **`pkill -f <pattern>` can kill the agent's own shell** when the pattern appears in the command line; use `pkill -x <name>`.
+
+## Network in Bevy (spike 10, 2026-10-07)
+
+- **`std::net::UdpSocket` is enough for client authority.** Hello retried until accepted, ping/pong, host relay of the snapshot bytes, 2 s expiry, takeover of a silent slot: about 350 lines, no dependency. Frameworks (replicon, lightyear) are built for server authority or prediction, which this design does not use.
+- **Put the protocol in a crate without engine types.** `net_core` (snapshot, buffer, link, clock, wire, replay) runs the 96-case matrix in 4 s of `cargo test`; the live processes only add sockets.
+- **Record a real scripted run as the replay path.** The spike 9 `full` scenario (up to 400 m/s, braking, rolling) is harder than spike 4's 25 s hop, and its P95 was still 0.17 mm at 30 Hz/150 ms. Look at per-phase numbers: the brake from 400 m/s is the worst phase (8 mm).
+- **Another RNG gives other loss patterns.** "0 holds" in spike 4 does not reproduce exactly; assert a small bound, not zero.
+- **A hold is expensive at speed.** Hold, never extrapolate: 15 ms at 400 m/s is 6 m.
+- **A kinematic Avian proxy needs Position and Velocity.** Avian integrates kinematic bodies; set both each tick or contacts see a standing wall.
+- **Clock sync on a tick loop is only good to a few ms.** Ping and pong wait for the next 60 Hz tick on both ends; measured error 2–7 ms against the true offset (wall clocks of the processes). Compare the estimate with the real offset, do not trust the RTT.
+- **Whole-metre origin shifts keep far f32 positions exact.** At 200 km the f32 grid is 2^-6 m, which divides 1 m: shifting by whole metres changes the rounding error by zero. The remaining render error at 200 km is one f32 step, 7.8 mm.
+- **Count holds only when the stream resumes.** The last 0.15 s before an owner leaves would otherwise look like an underrun.
+- **`proton run` hides stdout.** Write result files with relative paths; `Z:` paths made a run exit 1 without a message.
+- **One target dir for all worktrees works** (spike 9b): a new crate and two profiles built in 1.3 minutes.
