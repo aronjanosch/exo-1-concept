@@ -47,6 +47,17 @@ The Bevy network reaches spike 4's level in every area, with no new dependency; 
 
 30 Hz send rate, 150 ms playout buffer, display-only extrapolation 100 ms during an underrun (`--extrapolate`, 0 = hold), **no ship-ship contact**: the proxy hull is on its own physics layer, ships fly through it, the walker still stands on a foreign deck (test `remote_hull_does_not_touch_ships`, foreign-ship scenario still passes). Contact ownership stays open. 60 Hz send rate was not measured.
 
+## LAN test (initiator, 2026-10-07, two computers)
+
+Flight, passenger carry, shifts and the other checks were fine ("alle tests soweit gut"); all other behaviour was consistent for the other player. One network bug: **a passenger vanished for the pilot** (could still fly along). Cause: the passenger's snapshot named its own slot as the frame instead of the owner of the ship it boarded, so the pilot composed it into the wrong ship. Fixed (`frame_owner`), covered by the foreign-ship scenario and a live run (`--board-after`: pilot shows the passenger 709 ticks, client was passenger 594 ticks, 0 invalid). The HUD now shows speed, vertical speed and altitude (also on foot).
+
+Found during the same test, **not network, to do after the spike** (Spike 9 code and design):
+
+1. Stepping out in space at about 21 km from the planet centre (about 16 km altitude, gravity is 0 there in the code) the walker falls towards the planet, on the client at 39 km as well. Not reproduced yet; a guess is that the ship's velocity towards the planet is carried out with the walker. Next step: reproduce headless, read the speed from the HUD.
+2. Braking: **X** is the brake (S is reverse thrust). Whether X should also work, or how to stop exactly, with flight assist off, to be checked.
+3. Entering a ship changes the frame (planet up to cabin up): the camera horizon jumps and the transition can be felt. Wanted: keep the world look direction and blend the horizon smoothly.
+4. In space a polar frame (up away from the planet, yaw and pitch about it) makes no sense. Needs a body-fixed frame (free 6-DOF orientation); how a walker moves in space is a design question.
+
 ## Findings
 
 - **Clock sync was the weakest part, now fixed.** First version: offset error against the true wall-clock offset 2.3 ms (2 players) to 7.4 ms (8 players), because ping and pong were handled once per 60 Hz tick on both ends (2.8 m of relative position at 400 m/s). Fix: a receive thread (`std::thread`, no dependency) stamps the arrival time at once and the host answers pings itself. Measured: **0.013 ms** (8 players), **0.001 ms** (2 players, 150 ms delay, 5 % loss); holds 0 %, net systems 0.028 ms. Windows binary rebuilt with it.
