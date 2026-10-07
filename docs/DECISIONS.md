@@ -1,6 +1,6 @@
 # Decisions — EXO-1 (working title)
 
-Status: living document. Date of this version: 2026-10-07 (multiplayer authority added after spike 4; Rust generator and no web export added after spike 6; movement on planets added after spike 8; Rust/Bevy, private project and studying other games' files added 2026-10-07). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
+Status: living document. Date of this version: 2026-10-07 (multiplayer authority added after spike 4; Rust generator and no web export added after spike 6; movement on planets added after spike 8; Rust/Bevy, private project and studying other games' files added 2026-10-07; agent tooling added after spike 9b). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
 
 ## Decided
 
@@ -33,6 +33,7 @@ Status: living document. Date of this version: 2026-10-07 (multiplayer authority
 | Floating origin (Bevy) | Own render origin: physics in f64 world space (Avian `f64`), only what the GPU sees shifts; no big_space. Bevy 0.19, Avian 0.7 f64. Initiator, 2026-10-07: "dann eigene lösung und bevy 19", confirmed with "ja". Source: `SPIKE-9-REPORT.md` |
 | Cheating | Not a concern; performance comes first (initiator, 2026-10-04) |
 | Multiplayer authority | Client authority: each client simulates its own player and ship, a host relays snapshots (initiator, 2026-10-06, after spike 4 passed on two computers). Ships are meant to affect each other physically (initiator, 2026-10-06); the rule for who owns a contact is open, see below. Source: `SPIKE-4-REPORT.md` |
+| Agent tooling (Rust/Bevy) | After spike 9b (`SPIKE-9B-REPORT.md`): of the third-party Bevy skills only the two that checked out without errors stay (`bevy-ecs-queries`, `bevy-testing`); the others are not corrected or maintained, agents look the API up in the Bevy source instead. BRP (`remote` feature) is not carried forward: the blind test showed no gain against the scenario runner, and it adds about 30 dependencies and an HTTP server (red-class). The code stays on branch `spike/bevy-tooling` as reference; revisit only for a bug the scenario runner cannot reproduce. Initiator, 2026-10-07, on this recommendation: "ja passt" |
 
 ## Open
 
