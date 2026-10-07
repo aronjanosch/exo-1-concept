@@ -2,7 +2,7 @@
 
 Status: DRAFT. This repo is the concept (`exo-1-concept`); code lives in a separate private repo (`exo-1`).
 
-**Re-orientation (2026-10-07):** EXO-1 becomes a private project with the same idea, and moves to Rust with Bevy once spike 9 passes (`DECISIONS.md`). The community, voting and video parts below stay as a possible later step.
+**Re-orientation (2026-10-07):** EXO-1 is a private project with the same idea, written in Rust with Bevy (`DECISIONS.md`). The community, voting and video parts below stay as a possible later step.
 
 Name: "EXO-1" is a working title only. A game called "Exo One" already exists, so the name will change (see `DECISIONS.md`).
 Related: `CORE-LOOP.md` (loop, pillars, MVP scope), `FEASIBILITY.md` (research results, spikes), `DECISIONS.md` (decided, open, parked), `SOURCES-TO-CHECK.md`.
@@ -34,8 +34,7 @@ An open-source game built by a community. An experiment: how far does a game get
 
 ## Frame
 
-- Engine: Godot
-- Current renderer baseline: Forward+ with Vulkan; revisitable based on measured performance and visual correctness (see `DECISIONS.md`).
+- Engine: Rust with Bevy, physics in `f64` (Avian). See `DECISIONS.md`.
 - License: MIT, fully open. Original or CC0 assets only.
 - Setting: a strange galaxy, deliberately goofy. Graphics don't matter: simple lighting, simple assets.
 - Aim for the best runtime performance; the simple look helps keep rendering costs down.
@@ -76,7 +75,7 @@ An open-source game built by a community. An experiment: how far does a game get
 |---|---|---|---|
 | green: content | `content/**` | schema, no scripts, size limits, bot playthrough | bot, after vote |
 | yellow: gameplay code | `game/**` | all CI gates, security lint, AI review, 1 moderator | moderator |
-| red: core | CI, `project.godot`, autoloads, networking, addons | everything above | initiator only |
+| red: core | CI, `Cargo.toml`, `build.rs`, `unsafe`, networking | everything above | initiator only |
 
 - CI (deterministic, carries the load): lint, format, tests, security lint, headless boot, bot playthrough through the agent interface (MCP), performance regression checks.
 - AI summarizes, labels risk and checks vision fit. It never approves.
