@@ -10,7 +10,7 @@ Done 2026-10-07. Code: branch `spike/bevy-tooling` (from tag `spike/9-bevy`), wo
 | Shared `CARGO_TARGET_DIR` for all worktrees | **Keep** (new, found while measuring sccache) | Fresh worktree builds in 8.7 s instead of 368 s |
 | mold, rebuild with `dynamic` | **Drop** | 0.93–0.95 s against 1.09–1.14 s: saves 0.18 s (limit was 0.3 s) |
 | `cargo dev` alias (`run -p exo_app --features dynamic --`) | Keep | trivial, `.cargo/config.toml` |
-| rust-analyzer via the LSP plugin | **Keep, needs a wrapper** | Type error reported 1.0–1.1 s after the edit (own LSP client). Plugin round trip itself not verified, see blocker |
+| rust-analyzer via the LSP plugin | **Keep for navigation, needs a wrapper; no error feedback after edits** | Own LSP client: type error after 1.0–1.1 s (pull diagnostic). Plugin: symbols work, **no diagnostic after an Edit** |
 | BRP (`bevy_brp_extras` + `bevy_brp_mcp` 0.22.10) | **Keep as opt-in feature, not in the default setup** | Blind test: 0 of 1 BRP session used it; both found the cause. BRP session 345 s / 21 turns / $0.38, scenario-only 107 s / 20 turns / $0.32 |
 | Bevy skills: `bevy-ecs-queries`, `bevy-testing` | **Adopt** (vendored verbatim) | 28 examples checked, 0 wrong |
 | Bevy skills: `core-concepts`, `ecs-components`, `ecs-systems`, `rendering`, `cameras`, `migration-0-18-to-0-19`, router `bevy` | **Adopt after fix** (not vendored) | 8 of ~30 wrong in `ecs-systems`, 1–3 each in the others |
@@ -42,7 +42,7 @@ Done 2026-10-07. Code: branch `spike/bevy-tooling` (from tag `spike/9-bevy`), wo
 - **Blocker found and fixed:** pacman's `rustup` installs no `rust-analyzer` proxy (`/usr/bin` has cargo, rustc, rustfmt, rustup, but no rust-analyzer), so the plugin `rust-analyzer-lsp` (command `rust-analyzer`, no options) cannot start it. Fix outside the repo: `~/.local/bin/rust-analyzer` runs `rustup run stable rust-analyzer`.
 - `rust-analyzer.cargo.targetDir` is a global key: neither `rust-analyzer.toml` in the repo nor the plugin (it has no `initializationOptions`) can set it. The wrapper therefore sets `CARGO_TARGET_DIR=~/.cache/rust-analyzer-target/<cwd>`. Checked: rust-analyzer's `cargo check` now writes there and no longer into `target/` (the `target/flycheck0` directory stopped appearing). Cost: 583 MB for the check build of the workspace, a cold start with the fresh dir took 41.6 s until quiescent (9 s warm).
 - Round trip with my own LSP client (Python, same protocol): index 9 s warm, then a deliberate `let x: u32 = "text";` sent by `didChange` was reported 1.0–1.1 s later as "expected u32, found &'static str". It comes as a **pull** diagnostic (`textDocument/diagnostic`), native, with no `cargo check`.
-- **Not verified:** the Claude Code plugin round trip. This session had no LSP tool, so I could not see what the plugin shows after an edit. To test in a session with the plugin: introduce a type error, edit, and check whether the error appears without running cargo.
+- **Plugin round trip (tested later in a session with the LSP tool):** the server starts through the plugin, `documentSymbol` works and sees the edit (the new function appeared). After an Edit that introduced `let y: u32 = "text again";` **no diagnostic was shown**, so the plugin does not replace `cargo check` for errors. Likely cause (inferred from the behaviour, plugin not read): rust-analyzer only answers pull diagnostics, which my own client had to request explicitly. `hover` on the local variable returned nothing (position may have been off, not investigated). The test line was reverted.
 
 ## Step 3: BRP
 
@@ -126,7 +126,7 @@ Proposed line for `AGENTS.md` (see below). Comparison with step 4 is by review o
 
 ## What was not done or not certain
 
-- Plugin round trip of rust-analyzer-lsp (no LSP tool in the session).
+- Why the plugin shows no diagnostics (only the behaviour was observed).
 - BRP blind test: one run per arm, run concurrently, BRP not used; Sonnet 5.5 as the debugging model.
 - sccache path-dependent misses: cause open.
 - `bevy_lint`: not installed (blocker).
