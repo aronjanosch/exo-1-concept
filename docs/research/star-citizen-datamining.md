@@ -73,6 +73,29 @@ Layout: `ships.json` (321 vehicles / 270 spaceships), `ship-items.json` (5,412 c
 
 Use it for the numbers and the schema shape; use SCLogistics for the raw record structure and curves.
 
+## 2b. Gravity and zero-G (read 2026-10-08)
+
+Read from a shallow, sparse SCLogistics clone (`PU`) in scratch space, deleted afterwards. Question: do they approach ship gravity, gravity changes and zero-G like we do (PR #10, #12 in the code repo)? Numbers only explain a knob.
+
+| Record | What it shows |
+|---|---|
+| `entities/roomsystem/roomgravity.xml` | Ship gravity is a **room volume**: `GravityAreaParams` with `gravityDirection`, `gravityMagnitude`, `uniform`, `fallOffInner`, `roomBased="1"`. Gravity belongs to the interior room, not to the whole ship. |
+| `entities/area/gravityarea.xml`, `gravitybox.xml` | The same gravity params as free volumes (box with `size`, area with shape), placeable anywhere. |
+| `entities/scitem/ships/gravitygenerator/grgn_s00_template.xml` | The **gravity generator is a ship component**: on the power network (`ItemResourceComponentParams`, power consumption), three power states by power ratio (`PowerOff` / `PowerLow` / `PowerOn`), an `Online` On/Off state switched by an interaction, heat and distortion like any component. |
+| `actor/stanceinfo/dimensions/*.xml` | `upAlignMode` per stance: `Auto` (most stances, also zero-G) or `OnlyAlignToGravity` (a few, e.g. prone). Some trail fields work "in zone space" (`keepTrailDirectionInZoneSpace`), i.e. in the physics grid's frame. |
+| `actor/actorzerogtraversalparams.xml`, `zerogtraversalgraph/` | Zero-G movement without thrusters: **push off** a surface (`maxLaunchSpeed`, a few m/s, varying by context) with a body turn over `launchRotationDuration`; grabbing handholds; a "Ironman" thruster mode (`evagraph/`). Some transitions set `resetViewOnTransition`, so not every view change is smooth there. |
+| `actor/playermovementmodifiers.xml` | `zeroGSurfaceTraversal` speed scales: moving along a surface in zero-G is its own mode. |
+| `actorgforcecomponent/actorgforcecomponent.playergforce.xml` | G-force as **stress on the body**: `tolerance`, `maxGees`, `stressMaxoutTime`, `stressRecoveryTime`, pass-out buff. Pilot side, not cabin gravity. |
+
+**Compared with EXO-1 (state after PR #12):**
+
+- Same idea: cabin gravity belongs to the interior (our cabin box), it can be switched (our LAG and G key), and the walker's up follows gravity, not the floor.
+- Theirs is more general: gravity volumes of any shape, and the generator as a powered, damageable component. Ours is the planet field plus one cabin gravity with a 0..1 level, which is enough for now.
+- Zero-G: they have push-off, handholds and thrusters; we have thrusters only (the suit).
+- Smooth transitions: the data does not say how fast their up turns on a gravity change or what happens at a ramp; that lives in code. Their zero-G graph resets the view on some transitions; we keep the view and right it slowly.
+
+**Candidates for later (not decided):** LAG as one of the ship systems on a power network when ship power comes (their three power states map onto our 0..1 level); push-off in zero-G as a simple way to leave a ship slowly without the suit; gravity volumes for stations. Nothing to adopt now, the simple version holds.
+
 ## 3. What EXO-1 takes from this
 
 - **Structure/architecture ideas** in the list above may inform our design discussions (GUID-referenced tunables, shared curves, resource networks, damage×armour as data).
