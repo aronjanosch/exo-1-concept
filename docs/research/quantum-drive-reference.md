@@ -69,3 +69,38 @@ Ratios **[calculated]**: obstruction is the radius plus about 1 % (terrain and a
 9. **Scale**: SC trips cruise about 12 s to 3 min at about 0.5c to 0.8c. With our 5 km planets (SC planets are 160 to 200 times larger) distances and speeds can shrink by the same factor and keep the same trip times. The spike agent picks our values.
 
 Not for the spike: fuel, heat, interdiction (a separate device with charge, pulse and jammer), misfires.
+
+## Mapped to our scale (start values for spike 11)
+
+Scale factor `k` = our radius / SC radius = 5 km / 800 km = **1/160** (stanton3; stanton1 would give 1/200). Rule per kind of value **[calculated]**:
+
+- **World lengths** scale with `k`. Then **speeds and accelerations scale with `k` too**, so every time and every angle stays the same. Because all lengths shrink together, the sky looks the same as in SC: a planet seen from a given number of radii away has the same angular size.
+- **Times and angles** stay (spool, calibration, cooldown, pre-arrival cue, 5° and 8°).
+- **Ship-scale values** stay, because our ships are not smaller (linking and disconnect range).
+- **Altitude rules** follow our own atmosphere, not the ratio: 2000 m scaled would be 12.5 m, which means nothing for us.
+
+Our current values (code repo `flight_core::Field`, `content/planet/recipe.json`): radius 5000 m, atmosphere top 1200 m, planet gravity ends at 6000 m altitude; the ship flies about 400 m/s.
+
+| Value | SC | Kind | Ours (start value) |
+|---|---|---|---|
+| Distance between planets (trip buckets short / medium / long) | 2e9 / 1e10 / 3e10 m | world | **12,500 / 62,500 / 187,500 km** |
+| Top speed `driveSpeed` | 1.38e8 to 2.31e8 m/s | world | **860 to 1,440 km/s** (about 1,000 km/s) |
+| Stage one acceleration | 1.5e6 to 9.1e6 m/s² | world | 9,400 to 57,000 m/s² |
+| Stage two acceleration | 9.7e6 to 2.34e7 m/s² | world | 61,000 to 146,000 m/s² |
+| Tunnel effect thresholds (VFX velocities) | 1e6 to 4e6 m/s | world | 6,250 to 25,000 m/s |
+| Spline roll distance / rollback rotation distance | 250 km / 2,450 km | world | 1.6 km / 15.3 km |
+| Short-hop mode (`splineJumpParams`) top speed | 5e5 m/s | world | 3,125 m/s |
+| Obstruction radius | radius + about 1 % | world, but terrain-bound | **radius + highest terrain** (our relief is a larger share of the radius than SC's) |
+| Arrival radius | 1.05 to 1.56 radii | world, but atmosphere-bound | **above the atmosphere: 5000 + 1200 + margin, about 7 km (1.4 radii)**, inside SC's range |
+| Adoption radius (planet frame zone) | 130 to 350 radii (planets) | world | 650 to 1,750 km; must stay below half the distance to the next planet |
+| Minimum altitude, maximum pressure | 2000 m, 0.4 | atmosphere | **one rule: above the atmosphere top (1200 m)** |
+| `engageSpeed` | 1500 m/s | ship | about our ship's top speed (meaning guessed) |
+| Spool up / calibration delay / calibration | 4 s / 1.5 s / 5 to 10 s | time | same |
+| Cooldown | 5.5 to 41 s | time | same, start low (about 5 s) for testing |
+| Calibration angle / warning angle | 5° / 8° | angle | same |
+| Pre-arrival cue | 5 / 10 / 21 / 50 s | time | same |
+| Linking range / disconnect range | 10 km / 20 km | ship | same (2 to 4 of our radii, fine in orbit) |
+
+What stays the same as in SC **[calculated]**: cruise about 12 s (short) to 3 min (long), ramp-up about 7 to 25 s, braking distance about 1,000 radii.
+
+What changes for us **[calculated]**: at 1,000 km/s and 60 Hz a ship moves about 17 km per physics tick, more than three of our planet radii. Obstruction and arrival checks have to sweep along the path, never test single points. Terrain at the target has to be ready from the start of the ramp-down: about 10 s before arrival at these values.
