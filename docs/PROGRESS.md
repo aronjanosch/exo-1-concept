@@ -41,3 +41,4 @@ Dated log of what happened, for the video track (B1/B2) and for anyone joining l
 - 10-06: spike 4 closed after a two-computer LAN test, tag `spike/4-client-authority` (`SPIKE-4-REPORT.md`); client authority decided. Spike 6 benchmarked the terrain generator, GDScript versus Rust (`SPIKE-6-REPORT.md`); Rust generator and no web export decided.
 - 10-07: spike 7 built the Rust extension for Linux and Windows locally and in CI (`SPIKE-7-REPORT.md`); Linux ships native. `spike/combined` became the base branch for spikes. Spike 8 built the procedural planet in a cloud run (`SPIKE-8-REPORT.md`); walking anywhere decided.
 - 10-07: decision to go fully Rust with Bevy after a validation spike (spike 9, `SPIKE-9-BRIEF.md`), networking as spike 10, EXO-1 re-oriented as a private project (`DECISIONS.md`).
+- 10-07: spike 9b brief (agent tooling for Rust and Bevy: build speed, rust-analyzer, BRP, Bevy skills), starts after spike 9 is frozen (`SPIKE-9B-BRIEF.md`).
