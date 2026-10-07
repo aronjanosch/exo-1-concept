@@ -128,3 +128,11 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Cross-build Windows from Linux with llvm-mingw.** Target `x86_64-pc-windows-gnullvm`, linker `x86_64-w64-mingw32-clang` from `mise install github:mstorsjo/llvm-mingw`; no root, no Microsoft SDK licence. The DLL needs `libunwind.dll`: list it under `[dependencies]` in the `.gdextension` and the export copies it.
 - **A fresh project's first headless import can abort on exit** (SIGABRT) even though the GDExtension got registered. Check `.godot/extension_list.cfg` instead of the exit code.
 - **Proton costs little for compute.** The Windows build under Proton Experimental reproduced the checksum and took 0.62 ms per chunk against 0.59 ms native. Headless only; rendering under Proton is untested.
+
+## Procedural planet (spike 8, 2026-10-07)
+
+- **Vertex-centred cube-face images make seams impossible by construction.** Why: both faces interpolate the same samples on a shared edge. How to apply: any baked per-face field on a cube sphere (heights, biomes, moisture) gets the edge samples (N+1 per side), not texel centres.
+- **A one-millimetre agreement test at 5 km is limited by 32-bit numbers, not by the generator.** Why: a float32 position at 5000 m has 0.5 mm resolution and a 32-bit direction 0.3 mm of lateral position; times slope that is 1-2 mm. How to apply: do geometry in f64 (Rust), make chunk centres f32-exact, give tests a double-precision query (`height_at_xyz`).
+- **Size biome wavelengths by walking distance, not by planet size.** Why: five minutes at 1.8 m/s is 540 m; the research wavelength (2.5 km) gave one biome change per 926 m. How to apply: choose region frequencies so the median stretch is about half the intended walk (0.0008 to 0.001 gave 271 m).
+- **Headless settle loops must not count frames under `--fixed-fps`.** Why: frames run faster than the worker threads. How to apply: wait until pending jobs are empty, with a wall-clock limit.
+- **Aim the sea-level percentile at the height the player sees.** Why: the rule ran on the macro field (70 % land), but the crust bands have a positive mean, so the full height gave 79.7 % land. How to apply: compute the percentile over the full height function, or report both.

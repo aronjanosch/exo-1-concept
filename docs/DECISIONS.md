@@ -1,6 +1,6 @@
 # Decisions — EXO-1 (working title)
 
-Status: living document. Date of this version: 2026-10-06 (multiplayer authority added after spike 4; Rust generator and no web export added after spike 6). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
+Status: living document. Date of this version: 2026-10-07 (multiplayer authority added after spike 4; Rust generator and no web export added after spike 6; movement on planets added after spike 8). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
 
 ## Decided
 
@@ -13,6 +13,7 @@ Status: living document. Date of this version: 2026-10-06 (multiplayer authority
 | Renderer | Current choice: Forward+ with Vulkan (initiator, 2026-10-04). Best option we think fits right now, not a permanent requirement; revisit with measured performance and visual correctness. Forward+ passed the distant-surface depth tests; fastest renderer has not been established by an A/B benchmark |
 | World | Fixed hand-built system. Small but complete, seamless planets. Procedural terrain, hand-built city and outposts |
 | Planet size | Radius 5 km as a first guide value. Larger and smaller planets are possible |
+| Movement on planets | Walking anywhere is possible; the player decides whether to walk or take the ship. Natural obstacles (steep slopes, water) may stop a walker, no path around them is guaranteed. Initiator, 2026-10-07: "die möglichkeit gibts auch zu Füß muss er selbst wissen ob er das machen will. warum sollte er das nicht amchen können? wenn es natürliche hindernisse gibt dann kann er halt nicht weiter". Source: `SPIKE-8-REPORT.md` |
 | Interiors | Small shops stay in the open world, large or complex interiors (for example a sewer) are instanced |
 | Scale | City is small, dense and simple, like Schedule I |
 | Players | One player, one ship first. More players after the core works |
@@ -40,6 +41,7 @@ Status: living document. Date of this version: 2026-10-06 (multiplayer authority
 - Travel between planets: direction like No Man's Sky or Star Citizen, to be tried.
 - Contact authority between ships: ships should affect each other physically (initiator, 2026-10-06), but with client authority each side computes a contact alone and the two histories can disagree (spike 4 fixture: 217 ms and 3 m apart). Candidates: pair rule (one fixed side computes the contact for both), migrating authority for touching/docked groups, damage-only ramming where each owner decides its own damage. Which interactions (ramming, docking, towing) and which rule: not decided.
 - Voter builds: desktop binary or web export. Note: the game itself has no web export (decided 2026-10-06); whether that also rules out web voter builds is not decided.
+- Planet generator after spike 8: site spacing (24 sites leave a 3.4 km worst gap; denser or more even?), sea-level rule (70 % on the macro field or on the full height), which biome row is the broken rim. Source: `SPIKE-8-REPORT.md`.
 - Open questions in `ROADMAP.md` that this research did not touch.
 
 ## Parked (not now, maybe later by community vote)
