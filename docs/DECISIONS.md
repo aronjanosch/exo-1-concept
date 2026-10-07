@@ -30,6 +30,7 @@ Status: living document. Date of this version: 2026-10-07 (multiplayer authority
 | Slop defence | Community plus the `community-gate` framework. Governance details (voting, Sybil protection, quorum) are worked out there |
 | Trade balance | Never perfect, and perfection is not the goal |
 | Large worlds | Origin shift (the world moves back when the player gets far from the origin). Shared snapshots carry planet id plus planet-relative pose, so each client shifts independently; verified on two computers (spike 4). Threshold still open. Source: `SPIKE-5-REPORT.md`, `SPIKE-4-REPORT.md` |
+| Floating origin (Bevy) | Own render origin: physics in f64 world space (Avian `f64`), only what the GPU sees shifts; no big_space. Bevy 0.19, Avian 0.7 f64. Initiator, 2026-10-07: "dann eigene lösung und bevy 19", confirmed with "ja". Source: `SPIKE-9-REPORT.md` |
 | Cheating | Not a concern; performance comes first (initiator, 2026-10-04) |
 | Multiplayer authority | Client authority: each client simulates its own player and ship, a host relays snapshots (initiator, 2026-10-06, after spike 4 passed on two computers). Ships are meant to affect each other physically (initiator, 2026-10-06); the rule for who owns a contact is open, see below. Source: `SPIKE-4-REPORT.md` |
 
