@@ -16,7 +16,7 @@ The spike agent picks the distances between the planets and the warp speeds, wit
 
 ## Values and scale (decided, `DECISIONS.md` "World values and scale")
 
-- Each planet's content file holds its radius and its quantum travel radii (obstruction, arrival, frame zone) in absolute metres. A missing value is derived from the radius (start: arrival 1.4 R, obstruction R plus highest terrain).
+- Each planet's content file holds its radius and its quantum travel radii (obstruction, arrival, frame zone) in absolute metres, every value set explicitly, nothing derived from the radius. Start values for our 5 km planets: arrival about 7 km from the centre, obstruction radius plus highest terrain.
 - System values (planet distances, drive top speed, accelerations, effect thresholds) in one place in metres. No global scale factor.
 - Start values: the "Mapped to our scale" table in `research/quantum-drive-reference.md`.
 
