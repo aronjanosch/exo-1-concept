@@ -23,8 +23,9 @@ The spike agent picks the distances between the planets and the warp speeds, wit
 
 ## Read first
 
-1. `LEARNINGS.md`, `SPIKE-9-REPORT.md` (render origin, f64 physics), `SPIKE-8-REPORT.md` (generation cost), `SPIKE-10-REPORT.md` (frames, hold error at speed).
-2. Code repo `AGENTS.md`, `README.md` (Run) and `WORKSPACE.md`.
+1. `research/quantum-drive-reference.md` (Star Citizen's quantum drive records: states, knobs, per-body radii, spline path), `research/interplanetary-travel.md`.
+2. `LEARNINGS.md`, `SPIKE-9-REPORT.md` (render origin, f64 physics), `SPIKE-8-REPORT.md` (generation cost), `SPIKE-10-REPORT.md` (frames, hold error at speed).
+3. Code repo `AGENTS.md`, `README.md` (Run) and `WORKSPACE.md`.
 
 ## Where to work
 
