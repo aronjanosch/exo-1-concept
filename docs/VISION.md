@@ -2,6 +2,8 @@
 
 Status: DRAFT. This repo is the concept (`exo-1-concept`); code lives in a separate public repo.
 
+**Re-orientation (2026-10-07):** EXO-1 becomes a private project with the same idea, and moves to Rust with Bevy once spike 9 passes (`DECISIONS.md`). The community, voting and video parts below are not updated yet; what stays is open.
+
 Name: "EXO-1" is a working title only. A game called "Exo One" already exists, so the name will change (see `DECISIONS.md`).
 Related: `CORE-LOOP.md` (loop, pillars, MVP scope), `FEASIBILITY.md` (research results, spikes), `DECISIONS.md` (decided, open, parked), `SOURCES-TO-CHECK.md`.
 
