@@ -167,7 +167,7 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Another RNG gives other loss patterns.** "0 holds" in spike 4 does not reproduce exactly; assert a small bound, not zero.
 - **A hold is expensive at speed.** Hold, never extrapolate: 15 ms at 400 m/s is 6 m.
 - **A kinematic Avian proxy needs Position and Velocity.** Avian integrates kinematic bodies; set both each tick or contacts see a standing wall.
-- **Clock sync on a tick loop is only good to a few ms.** Ping and pong wait for the next 60 Hz tick on both ends; measured error 2–7 ms against the true offset (wall clocks of the processes). Compare the estimate with the real offset, do not trust the RTT.
+- **Clock sync on a tick loop is only good to a few ms; a receive thread fixes it.** Ping and pong waited for the next 60 Hz tick on both ends: error 2–7 ms against the true offset (wall clocks of the processes). A thread that stamps arrival time and lets the host answer pings itself: 0.013 ms (8 players). Compare the estimate with the real offset, do not trust the RTT. Sockets cloned with `try_clone` share the non-blocking flag, so the thread blocks and the game thread sends.
 - **Whole-metre origin shifts keep far f32 positions exact.** At 200 km the f32 grid is 2^-6 m, which divides 1 m: shifting by whole metres changes the rounding error by zero. The remaining render error at 200 km is one f32 step, 7.8 mm.
 - **Count holds only when the stream resumes.** The last 0.15 s before an owner leaves would otherwise look like an underrun.
 - **`proton run` hides stdout.** Write result files with relative paths; `Z:` paths made a run exit 1 without a message.

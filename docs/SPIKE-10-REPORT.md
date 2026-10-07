@@ -4,7 +4,7 @@ Date: 2026-10-07. Brief: `SPIKE-10-BRIEF.md`. Code: branch `spike/bevy-network` 
 
 ## Answer in one line
 
-The Bevy network reaches spike 4's level in every area, with no new dependency; it is better in smoothness, the shared frame and the walker, and about the same elsewhere. Where it is not clearly better: clock sync is only good to about 2–7 ms, and the contact problem is unchanged (open design question).
+The Bevy network reaches spike 4's level in every area, with no new dependency; it is better in smoothness, the shared frame and the walker, and about the same elsewhere. Clock sync (2–7 ms in the first version) was fixed with a receive thread (0.013 ms). What is not solved: the contact problem (open design question) and metres of error during a hold at 400 m/s.
 
 ## Verdicts against the Godot table
 
@@ -45,7 +45,7 @@ The Bevy network reaches spike 4's level in every area, with no new dependency; 
 
 ## Findings
 
-- **Clock sync is the weakest part.** Offset error against the true wall-clock offset: 2.3 ms (2 players) to 7.4 ms (8 players), the cause being that ping and pong are handled once per 60 Hz tick on both ends. The error shifts one client's ships against another's: at 400 m/s 7 ms is 2.8 m of relative position. Godot has the same structure; not measured there. Fix if it matters: receive thread with arrival timestamps, or `SO_TIMESTAMP`.
+- **Clock sync was the weakest part, now fixed.** First version: offset error against the true wall-clock offset 2.3 ms (2 players) to 7.4 ms (8 players), because ping and pong were handled once per 60 Hz tick on both ends (2.8 m of relative position at 400 m/s). Fix: a receive thread (`std::thread`, no dependency) stamps the arrival time at once and the host answers pings itself. Measured: **0.013 ms** (8 players), **0.001 ms** (2 players, 150 ms delay, 5 % loss); holds 0 %, net systems 0.028 ms. Windows binary rebuilt with it.
 - **Hold costs metres at speed.** An underrun is held, not extrapolated (spike 4 rule); at 400 m/s a 15 ms hold is 6 m. Spike 4's paths were slower.
 - **Avian: a kinematic body also integrates its velocity.** The proxy gets Position and Velocity from the sample every tick; without velocity a contact would see a standing wall.
 - **Proton:** `proton run` swallows stdout and `Z:` output paths made the run fail silently; use relative paths and result files.
