@@ -1,6 +1,6 @@
 # Spike 5 brief — float limit and origin shift (handoff for a new session)
 
-Status: ready to start. Written 2026-10-03 after spike 1. Spike 4 (network) follows in the same session afterwards; write its brief when spike 5 is done.
+Status: done, result in `SPIKE-5-REPORT.md`. Kept as the record of what was asked.
 
 ## Goal
 

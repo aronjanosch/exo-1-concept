@@ -28,13 +28,12 @@ Loose list of what we learned while working, for humans and agents. Source mater
 ## Git and spike states
 
 - **Frozen spike states get annotated tags `spike/<n>-<name>`** (e.g. `spike/1-planet`), releases will use `v*`, so the two never mix. Why: old states must stay checkable for videos after branches are deleted; a tag also survives squash and rebase. Tag names differ from branch names (`spike/1-planet` vs `spike/planet`) because equal names make `git checkout` ambiguous.
+- **Name spike branches without the number so the freeze tag can carry it.** Branch `spike/4-network` blocked the usual tag name `spike/4-network`; the freeze became `spike/4-client-authority`. Follow spike 1's pattern: branch `spike/<name>`, tag `spike/<n>-<name>`.
 - **Merge spikes normally, never squash,** or the single commits are gone. Spike code stays off `main` (throwaway, no approved proposal); an archive branch plus tags keep it reachable. Only findings go to the docs.
 - **A branch that exists only locally is not safe.** `spike/combined` with all video commits was local only until pushed. Tags protect against deleting a branch, not against losing the disk.
 - **`spike/combined` is the base for new spikes** (since 2026-10-07, at spike 7). Each spike branches from it; after review it is fast-forwarded to the finished spike and the spike's tag goes on that commit. Why: one name to branch from instead of "whichever spike was last", and the chain stays linear.
 
 ## Godot and planet tech (spike 1)
-
-- **Current renderer choice (initiator, 2026-10-04): Forward+ with Vulkan.** Revisit based on measured performance and visual correctness. Distant-surface depth precision is tested; a performance win over other renderers is not yet established.
 
 - Derivative flat normals (`cross(dFdx, dFdy)`) are zero on sub-pixel triangles; `normalize()` gives NaN and it survives `mix(..., 0)`. Guard the length.
 - Skirts must use the smooth normal, or they show as dark lines.
@@ -43,7 +42,7 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - Tangent-frame collision patches with curvature baked into the heights avoid the flat-plane error; let them overlap.
 - Distance tests for the collision ring must ignore terrain amplitude (compare on the base sphere), or the ring grows about 5x.
 - Depth: Forward+ uses reverse-Z with a float buffer (no z-fighting to 40 km); Compatibility behaves like a classic 24-bit buffer (z-fighting from about 500 m at cm gaps).
-- Precision: no physics jitter standing still up to 16 km from the origin; walking breaks at 16 km (likely patch offsets), fine at 8 km.
+- Precision: no physics jitter standing still up to 16 km from the origin. The walking stop at 16 km was the parked ship, not precision (spike 5, below).
 - On a small planet "straight" flight leaves the planet in seconds. Horizon follow: add angular rate `up x v / r`. A levelling force fights intended climbs.
 - Ring/LOD bursts on teleport cause 60-140 ms frames; continuous movement does not.
 
@@ -110,7 +109,6 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **A rejoining owner restarts its snapshot sequence.** A newer shared timestamp plus a lower sequence must reset its display history and reject queued packets from the old lifetime. Otherwise the old history can reject the new packets as duplicates or interpolate a teleport. The live same-slot reconnect before the two-second expiry is tested.
 - **Tester binaries come from the portable source package, not the worktree.** `build_binaries.py` unpacks `dist/exo-spike4-source.zip`, writes `export_presets.cfg` there and exports headless, so the root `project.godot` and the gitignore stay untouched. Needs the official 4.7.2 templates (1.2 GB tpz, folder `4.7.2.stable`, Arch's Godot accepts them). Presets without `include_filter`/`exclude_filter` print errors but still export; universal macOS refuses to export unless `textures/vram_compression/import_etc2_astc=true`; the macOS zip names the `.app` after `config/name`, not the export path. Keep `build_source.py`'s copy list in sync with `preload`s in `spikes/planet` (the newer flight code added `flight_hud.gd` and the stale package failed to compile `ship.gd`).
 - **An agent session may run outside the Hyprland environment.** Without `HYPRLAND_INSTANCE_SIGNATURE` the wrapper falls back to plain `godot`, which fails with "Can't create the Wayland display server". Export `HYPRLAND_INSTANCE_SIGNATURE=$(ls -t /run/user/1000/hypr | head -1)` and `WAYLAND_DISPLAY=wayland-1` before `godot-agent`. To run an exported binary through the wrapper, put a `godot` symlink to it first in PATH; never write through such a symlink (one `cat > shim` overwrote the binary with a self-calling script).
-- **Name spike branches without the number so the freeze tag can carry it.** Branch `spike/4-network` blocked the usual tag name `spike/4-network`; the freeze became `spike/4-client-authority`. Follow spike 1's pattern: branch `spike/<name>`, tag `spike/<n>-<name>`.
 
 ## Generator benchmark, GDScript versus Rust (spike 6, 2026-10-06)
 

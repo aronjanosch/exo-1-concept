@@ -59,7 +59,6 @@ Status: living document. Date of this version: 2026-10-07 (multiplayer authority
 
 1. Check the open sources in `SOURCES-TO-CHECK.md` (initiator, with help from transcripts).
 2. Pick a new name and do a proper trademark check.
-3. Spike 1: planet (see `FEASIBILITY.md`), in a throwaway prototype branch in the code repo.
-4. Spike 9: Bevy validation (`SPIKE-9-BRIEF.md`). Replaces the earlier plan for Godot test-infrastructure spikes 9-11 (headless speed, gdUnit4 versus GUT, lavapipe variance); headless speed is part of spike 9.
-5. Spike 10: networking in Bevy (client authority and snapshots as in spike 4), after spike 9. Initiator, 2026-10-07: "Netzwerk als Spike 10". Brief still to write.
-6. After spike 9: rewrite the code repo `AGENTS.md` for Rust/Bevy and the private project.
+3. Spike 9: Bevy validation (`SPIKE-9-BRIEF.md`). Replaces the earlier plan for Godot test-infrastructure spikes 9-11 (headless speed, gdUnit4 versus GUT, lavapipe variance); headless speed is part of spike 9.
+4. Spike 10: networking in Bevy (client authority and snapshots as in spike 4), after spike 9. Initiator, 2026-10-07: "Netzwerk als Spike 10". Brief still to write.
+5. After spike 9: rewrite the code repo `AGENTS.md` for Rust/Bevy and the private project.

@@ -1,6 +1,6 @@
 # Spike 1 brief — planet (handoff for a new session)
 
-Status: ready to start. Written 2026-10-03 at the end of the concept session. Read this first, then the files listed below.
+Status: done, result in `SPIKE-1-REPORT.md`. Kept as the record of what was asked.
 
 ## Goal
 

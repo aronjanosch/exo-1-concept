@@ -1,6 +1,6 @@
 # Spike 7 brief — Rust extension in builds and CI (handoff for a new session)
 
-Status: ready to start. Written 2026-10-07. Follows the decision to write the terrain generator in Rust (`DECISIONS.md`, 2026-10-06). Platforms: Linux and Windows, development on Linux; Windows-only with Linux through Proton is an option (`DECISIONS.md`, 2026-10-07).
+Status: done, result in `SPIKE-7-REPORT.md`. Kept as the record of what was asked.
 
 ## Goal
 

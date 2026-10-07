@@ -34,3 +34,10 @@ Dated log of what happened, for the video track (B1/B2) and for anyone joining l
 - These live only on the dev machine; copy what the video needs before cleaning up.
 - Clip `~/Videos/exo-1-clips/2026-10-04-ship-tumbles-low-cruise.mp4` (20 s): the test bot's low cruise with the new ship inertia rolls the ship upside down; found while merging spikes 3 and 5.
 - Clip `~/Videos/exo-1-clips/2026-10-04-ship-lands-into-space.mp4` (33 s): same bug, worse: the ship skims the ground upside down, then "lands" into space because down in ship space now points up.
+
+## 2026-10-04 to 2026-10-07 — spikes 4, 6, 7, 8 and the move to Rust
+
+- 10-04: assisted-flight experiments on `spike/assisted-flight` (findings in `LEARNINGS.md`); spike 4 (client authority, LAN) started on `spike/4-network`.
+- 10-06: spike 4 closed after a two-computer LAN test, tag `spike/4-client-authority` (`SPIKE-4-REPORT.md`); client authority decided. Spike 6 benchmarked the terrain generator, GDScript versus Rust (`SPIKE-6-REPORT.md`); Rust generator and no web export decided.
+- 10-07: spike 7 built the Rust extension for Linux and Windows locally and in CI (`SPIKE-7-REPORT.md`); Linux ships native. `spike/combined` became the base branch for spikes. Spike 8 built the procedural planet in a cloud run (`SPIKE-8-REPORT.md`); walking anywhere decided.
+- 10-07: decision to go fully Rust with Bevy after a validation spike (spike 9, `SPIKE-9-BRIEF.md`), networking as spike 10, EXO-1 re-oriented as a private project (`DECISIONS.md`).

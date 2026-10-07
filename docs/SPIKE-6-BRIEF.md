@@ -1,6 +1,6 @@
 # Spike 6 brief — terrain generator: GDScript versus Rust (handoff for a new session)
 
-Status: ready to start. Written 2026-10-06. Benchmark only, no engine decision. Variant B (GDExtension) approved by the initiator on 2026-10-06, spike branch only.
+Status: done, result in `SPIKE-6-REPORT.md`. Kept as the record of what was asked.
 
 ## Goal
 

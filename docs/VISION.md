@@ -1,6 +1,6 @@
 # Vision — EXO-1
 
-Status: DRAFT. This repo is the concept (`exo-1-concept`); code lives in a separate public repo.
+Status: DRAFT. This repo is the concept (`exo-1-concept`); code lives in a separate private repo (`exo-1`).
 
 **Re-orientation (2026-10-07):** EXO-1 becomes a private project with the same idea, and moves to Rust with Bevy once spike 9 passes (`DECISIONS.md`). The community, voting and video parts below are not updated yet; what stays is open.
 
@@ -43,7 +43,7 @@ An open-source game built by a community. An experiment: how far does a game get
 
 ## Multiplayer
 
-- Small co-op groups (about 2-5 players), host-authoritative: one player hosts.
+- Small co-op groups (about 2-5 players). Client authority: each client simulates its own player and ship, one player hosts and relays snapshots (`DECISIONS.md`, 2026-10-06).
 - No peer-to-peer mesh, no central MMO.
 - Players can run their own persistent server: their own galaxy.
 - Shared markets across servers: not planned, maybe later if the community votes for it.

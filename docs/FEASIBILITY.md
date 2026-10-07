@@ -2,7 +2,7 @@
 
 Status: DRAFT. Result of research passes on 2026-10-03. Facts are marked **[verified]** (checked in a primary source), **[calculated]**, or **[unverified]** (general knowledge, secondary sources or guess). Unverified points must be checked in a spike or in the primary source before we rely on them. Links that could not be fetched are collected in `SOURCES-TO-CHECK.md`.
 
-Decisions taken from this research live in `DECISIONS.md`.
+Decisions taken from this research live in `DECISIONS.md`; where they differ, `DECISIONS.md` wins. Since then: client authority instead of host authority (2026-10-06), fully Rust with Bevy once spike 9 passes (2026-10-07), so the Godot sections below are the reasoning of 2026-10-03.
 
 ## Verdict
 
@@ -88,10 +88,7 @@ Game spikes (one player, one ship first):
 4. **Network:** host-authoritative rigid ship, snapshots with interpolation (own buffer or netfox), test with latency and packet loss.
 5. **Float limit:** fly the ship out to 100 km and measure jitter. Build origin shifting only if needed.
 
-Test-infrastructure spikes (can run in parallel; numbered 9-11 because spikes 6 and 7 went to the generator benchmark and Rust builds):
-9. Headless speed and stability (issue #122707) against our Godot version (4.7.x).
-10. gdUnit4 versus GUT.
-11. Software-rendering (lavapipe) variance for the performance gate.
+Planned Godot test-infrastructure spikes (headless speed against issue #122707, gdUnit4 versus GUT, lavapipe variance) were dropped on 2026-10-07; spike 9 is now the Bevy validation, spike 10 networking in Bevy (`DECISIONS.md`).
 
 ## Prior art: what we know and what we do not
 

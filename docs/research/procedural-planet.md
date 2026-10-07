@@ -2,8 +2,6 @@
 
 Research note for the terrain spike. This is not a proposal, not an approved design, and not a decision about fiction, balance, or biome names. Those stay with people.
 
-`docs/VISION.md` is not in this repo (the README points at `exo-1-concept`, which was not available here). Where this note assumes something the vision might contradict, it is marked as an assumption.
-
 Nothing below is a mechanic, asset, or name to copy. Other games are evidence about scale, pipeline order, and which knobs matter. The shell pipeline at the end is an original assembly of public techniques: noise on a sphere, a finite graph, chunked meshes, and scatter rules stored as data.
 
 ## 1. What 6 km actually is

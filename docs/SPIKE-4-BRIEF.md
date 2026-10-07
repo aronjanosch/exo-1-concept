@@ -1,6 +1,6 @@
 # Spike 4 brief — network (handoff for a new session)
 
-Status: draft, written 2026-10-04 after spike 5. Needs the initiator's go before it starts.
+Status: done, result in `SPIKE-4-REPORT.md`. Kept as the record of what was asked.
 
 ## Goal
 
