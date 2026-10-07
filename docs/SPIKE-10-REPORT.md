@@ -43,6 +43,10 @@ The Bevy network reaches spike 4's level in every area, with no new dependency; 
    - Who owns a contact, a docking, a passenger on a pushed ship, and what a client does when the owner says otherwise, are all undecided.
 7. **Two computers (prepared).** Linux and Windows release builds (`build/spike10/exo-spike10-{linux,windows}.zip`, about 31 MB each zipped; exe 129/118 MB), commands and acceptance steps in `NETWORK.md`. A Windows client under Proton joined a Linux host (20 s, 59.4 ticks/s, 0 invalid). Reconnect checked locally with three processes: same slot rejoins after 1 s, the host accepts the new address, the observer shows no ghost. The initiator runs flight, passenger carry, independent shift and reconnect on two computers.
 
+## Defaults for the first LAN test (initiator, 2026-10-07: "okay machen wir so", after my recommendation; an experiment, not a settled design)
+
+30 Hz send rate, 150 ms playout buffer, display-only extrapolation 100 ms during an underrun (`--extrapolate`, 0 = hold), **no ship-ship contact**: the proxy hull is on its own physics layer, ships fly through it, the walker still stands on a foreign deck (test `remote_hull_does_not_touch_ships`, foreign-ship scenario still passes). Contact ownership stays open. 60 Hz send rate was not measured.
+
 ## Findings
 
 - **Clock sync was the weakest part, now fixed.** First version: offset error against the true wall-clock offset 2.3 ms (2 players) to 7.4 ms (8 players), because ping and pong were handled once per 60 Hz tick on both ends (2.8 m of relative position at 400 m/s). Fix: a receive thread (`std::thread`, no dependency) stamps the arrival time at once and the host answers pings itself. Measured: **0.013 ms** (8 players), **0.001 ms** (2 players, 150 ms delay, 5 % loss); holds 0 %, net systems 0.028 ms. Windows binary rebuilt with it.
