@@ -1,6 +1,6 @@
 # Spike 11 brief — two planets and a warp
 
-Status: draft, waiting for the initiator. Written 2026-10-08. Research: `research/interplanetary-travel.md`. Initiator, 2026-10-08: "der warp zwischen planeten muss funktionieren das muss ja auch nicht umbedingt eine richtige bewegung durch den echten raum sein da können wir ruhig trixen"; "ja spike und dann ggf. den spike übernehmen"; "Wir wollen so nah ran anden quatum drive wie es für einen Spike"; "die abständer kann der agent im spike selbst definieren, vorbild star citizen, no mans sky und andere games".
+Status: ready to start. Written 2026-10-08. Research: `research/interplanetary-travel.md`. Initiator, 2026-10-08: "der warp zwischen planeten muss funktionieren das muss ja auch nicht umbedingt eine richtige bewegung durch den echten raum sein da können wir ruhig trixen"; "ja spike und dann ggf. den spike übernehmen"; "Wir wollen so nah ran anden quatum drive wie es für einen Spike"; "die abständer kann der agent im spike selbst definieren, vorbild star citizen, no mans sky und andere games".
 
 ## Goal
 
@@ -35,7 +35,7 @@ The spike agent picks the distances between the planets and the warp speeds, wit
 
 ## Where to work
 
-- Code repo, branch `spike/11-warp` in its own worktree `~/Work/exo-1-spike11`, from `main` after `fix/5-walker-falls-in-space` is merged (it changes walker movement in space). Freeze tag at the end: `spike/11-warp`.
+- Code repo, branch `spike/11-warp` in its own worktree `~/Work/exo-1-spike11`, from `main` (at least `c953922`, which has the fixes for #5 to #9 and #11). Freeze tag at the end: `spike/11-warp`.
 - Commit small and often. Push only after the initiator says yes.
 
 ## Architecture
