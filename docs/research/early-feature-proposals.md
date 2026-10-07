@@ -1,22 +1,26 @@
 # Early feature proposals: LAG as data, boost capacitor, minimal HUD
 
-Proposal, opened 2026-10-08. Three small things worth adding at the current stage, each derived from the Star Citizen records read in `docs/research/star-citizen-vs-exo1-mapping.md`. Status: **proposal, not decided.** The initiator decides; the design gaps are listed per feature so they can be answered before anything is built.
+Proposal, opened 2026-10-08. Three small things worth adding at the current stage, each derived from the Star Citizen records read in `docs/research/star-citizen-vs-exo1-mapping.md`. Status: **proposal, not decided** for B and D; A and F landed in the code repo the same day and are marked DONE. The initiator decides; the design gaps are listed per feature so they can be answered before anything is built.
 
 The philosophy here is the opposite of Star Citizen: we take the *idea* and cut it to a stub. Values below are assumptions for a playtest, not design. Nothing is taken from their code, data, names or texts.
 
 ## Why these three, now
 
-The code today is a flight/walk/net tech demo. The HUD is debug text (`exo_app/src/view.rs:203`), the cabin has a hard-coded gravity constant (`exo_app/src/walker.rs:193`), and boost is a flat multiplier (`flight_core/src/lib.rs:256`). The three below are the smallest changes that make the existing systems read as a *game*: the ship interior becomes a real place with its own gravity, flying gets a resource to manage, and both become visible. All are self-contained, need no new dependencies, and fit the "every feature gets a scripted scenario" rule.
+The code today is a flight/walk/net tech demo. The HUD is debug text (`exo_app/src/view.rs:203`), the cabin has a hard-coded gravity constant (`exo_app/src/walker.rs:193`), and boost is a flat multiplier (`flight_core/src/lib.rs:329`). The three below are the smallest changes that make the existing systems read as a *game*: the ship interior becomes a real place with its own gravity, flying gets a resource to manage, and both become visible. All are self-contained, need no new dependencies, and fit the "every feature gets a scripted scenario" rule.
 
 The other candidates (walker speed ladder, ship power on/off, zero-G suit, and the core loop itself) are recorded at the end so the thinking is not lost.
 
+> **Status update (same day).** While this was written, PR #10 and PR #12 in the code repo landed LAG-as-data (a `flight_core::Lag` with a 0..1 level, ramp, `G` toggle, and the level sent in the snapshot) and the zero-G suit (`walker.rs` `weightless`, suit HUD line). So **Feature A below is done**, and **Feature F is done**. Only **B (boost capacitor)** and **D (minimal HUD)** remain open. A is kept for the record, with what actually shipped noted.
+
 ---
 
-## Feature A — Cabin gravity (LAG) as data, with ramp and on/off
+## Feature A — Cabin gravity (LAG) as data, with ramp and on/off [DONE, kept for record]
 
 ### Now
 
-`exo_app/src/walker.rs:191-198`: inside a cabin the walker is handed `up = DVec3::Y` and `g = 9.81`, a hard-coded branch. There is no ramp, and no link to landed/flying state. `DECISIONS.md` ("Cabin gravity (LAG)") already decided the behaviour: off while landed, up over about 1 s after take-off, on in flight (also upside down), `G` forces it in a landed ship.
+At the time of writing: `exo_app/src/walker.rs:191-198` handed the walker `up = DVec3::Y` and `g = 9.81` inside a cabin, a hard-coded branch, with no ramp and no link to landed/flying state. `DECISIONS.md` ("Cabin gravity (LAG)") had already decided the behaviour: off while landed, up over about 1 s after take-off, on in flight (also upside down), `G` forces it in a landed ship.
+
+**Shipped since:** `flight_core::Lag` (level 0..1, `full()`, `toggle()`), cabin gravity mixed into the walker (`walker.rs` `cabin_gravity`, `cabin_up`), and the level sent to other players in the snapshot (PR #12). This matches the sketch below closely; no further work needed here except the open questions, which the shipped code already answers.
 
 ### Star Citizen
 
@@ -42,9 +46,9 @@ Makes the decided LAG real and data-shaped, supports upside-down flight for free
 
 ### Open questions (for the initiator)
 
-1. Magnitude in a cabin: a fixed value, or the planet's gravity at the ship?
-2. Ramp: ~1 s time constant (assumption), or a fixed ramp per state?
-3. Do remote players' ships (proxies) get LAG too, or is it cosmetic on the local ship only for now?
+1. Magnitude in a cabin: a fixed value, or the planet's gravity at the ship? *(Shipped: planet's gravity at the ship.)*
+2. Ramp: ~1 s time constant (assumption), or a fixed ramp per state? *(Shipped: a level with a ramp.)*
+3. Do remote players' ships (proxies) get LAG too, or is it cosmetic on the local ship only for now? *(Shipped: the level is sent in the snapshot.)*
 
 ---
 
@@ -118,15 +122,15 @@ The largest "this feels like a game" change for a greybox, and it forces us to n
 
 - **C. Walker speed ladder + throttle.** SC: per-stance speed *sets* (`actor/stanceinfo/speeds/stand.xml`: slow/mid/fast walk, slow/fast run, sprint, ADS, ...) and an analog throttle (`playerspeedthrottle/`). Simplified: one ordered speed ladder with a shift key. Fits the decided "tap W = slow step, hold = full" and crouch/sprint later.
 - **E. Ship power on/off (one resource).** SC: a typed resource network with producer/consumer nodes and per-state deltas (`itemresourcenetwork/itemresourcenetworkglobal.xml`). Simplified: one `powered` flag + spin-up time gating thrusters, LAG (Feature A) and lights. Gives the decided "ship on/off / more ship systems" its first form.
-- **F. Zero-G suit movement.** SC: zero-G as a stance with its own speeds/dimensions plus a small Attach/Detach/Launch graph (`zerogtraversalgraph/`, `actorzerogtraversalparams`). Simplified: the already-decided suit keys in weightlessness, modelled as a stance. Closes a decided feature.
+- **F. Zero-G suit movement. [DONE, kept for record]** SC: zero-G as a stance with its own speeds/dimensions plus a small Attach/Detach/Launch graph (`zerogtraversalgraph/`, `actorzerogtraversalparams`). Simplified: the already-decided suit keys in weightlessness, modelled as a stance. **Shipped since:** `walker.rs` handles `weightless` (suit thrust/boost/brake/roll, no fuel) with a suit HUD line (PR #10). Our version does not yet model push-off or handholds, which stayed the SC "candidate for later".
 - **Tier 3 — the core loop.** Landing sites → interaction verb → pick up/deliver cargo → shared wallet, per `CORE-LOOP.md`. This is the real MVP and the next milestone; it depends on the content schema and is bigger than a single add.
 
 ## Suggested batch
 
-A + B + D together: LAG makes the interior a place, the boost capacitor makes flying better, the HUD makes both visible — and the HUD needs B anyway. C, E and F slot in after; Tier 3 is the next milestone.
+~~A + B + D~~. With A and F already shipped, the remaining small work is **B (boost capacitor)** and **D (minimal HUD)**, and the HUD should show the boost charge. C and E slot in after; Tier 3 is the next milestone.
 
 ## References
 
 - Mapping and file list: `docs/research/star-citizen-vs-exo1-mapping.md`.
 - Data sources and hygiene: `docs/research/star-citizen-datamining.md`.
-- Our current code: `crates/flight_core/src/lib.rs:117` (`ShipController`), `:256` (boost), `crates/exo_app/src/walker.rs:191-198` (cabin gravity), `crates/exo_app/src/view.rs:167` (HUD).
+- Our code at the time of writing: `crates/flight_core/src/lib.rs:117` (`ShipController`), `:329` (boost), `crates/exo_app/src/walker.rs:191-198` (cabin gravity), `crates/exo_app/src/view.rs:167` (HUD).
