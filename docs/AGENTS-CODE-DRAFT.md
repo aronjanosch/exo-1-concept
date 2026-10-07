@@ -27,6 +27,7 @@ Skip a step only if its output already exists in the repo or the issue.
 
 ## Architecture
 
+- Layout: one Cargo workspace at the repo root, every crate in `crates/`, content in `content/` (the Bevy asset root).
 - Simulation lives in `*_core` crates without Bevy types, in `f64`, tested with plain `cargo test`. Physics-facing logic talks to the world through a small trait (pattern: `walker_core::World` with `sweep` and `depenetrate`).
 - The Bevy crate is glue: rendering, input, camera, HUD, physics bodies, scenarios.
 - Physics runs in `f64` world space (Avian with `f64`); only the render origin shifts.
