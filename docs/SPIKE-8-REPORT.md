@@ -1,6 +1,6 @@
 # Spike 8 report — the procedural planet
 
-Date: 2026-10-07. Status: cloud run done, local look-and-feel check by the initiator still open; not frozen yet (no tag, `spike/combined` not fast-forwarded). Code and full report: branch `spike/planet-gen` (commit `0bfd853`) in the code repo, `spikes/planet_gen/REPORT.md`, raw outputs in `spikes/planet_gen/results/`, 9 screenshots in `spikes/planet_gen/shots/`. Brief: `spikes/planet_gen/BRIEF.md` on the same branch. Tags: **measured**, **calculated**, **assumed**.
+Date: 2026-10-07. Status: done. Frozen as tag `spike/8-planet-gen`, `spike/combined` fast-forwarded to it (2026-10-07). The local Godot check was dropped: the engine moves to Bevy once spike 9 passes, and spike 9 judges the planet's look again. Code and full report: branch `spike/planet-gen` (commit `0bfd853`) in the code repo, `spikes/planet_gen/REPORT.md`, raw outputs in `spikes/planet_gen/results/`, 9 screenshots in `spikes/planet_gen/shots/`. Brief: `spikes/planet_gen/BRIEF.md` on the same branch. Tags: **measured**, **calculated**, **assumed**.
 
 ## Answer in one line
 
@@ -51,7 +51,7 @@ The cloud session raised two region frequencies so a five-minute walk crosses bi
 - Which biome row is the broken rim: today a landform id from noise plus the escarpment.
 - `is_on_floor()` gaps: small issue for when jumping, footsteps or animation depend on it.
 
-## Local check (initiator)
+## Local check (dropped 2026-10-07, kept for reference)
 
 1. Orbit (O): can you point at basin, rim and plateau? The rim is only 2 km long and may be hard to see from 15 km.
 2. On foot: escarpment and plateau slope stop the walker; walk to them.
@@ -59,4 +59,3 @@ The cloud session raised two region frequencies so a five-minute walk crosses bi
 4. Frame rate with the canopy on the dev machine.
 5. Start the Windows export once (Proton is enough).
 
-After the check: fast-forward `spike/combined` to `0bfd853` and tag `spike/8-planet-gen`.
