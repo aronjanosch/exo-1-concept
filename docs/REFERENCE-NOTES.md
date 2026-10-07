@@ -32,6 +32,10 @@ The code uses the FishNet networking library, and quest end calls take a flag fo
 
 A quest has a title, subtitle, description, an ID, a flag to track it on start, an expiry visibility, auto-completion when all entries are done, an XP reward, a list of entries, an icon and a map point of interest. Useful checklist for our `mission_template` schema.
 
+## Star Citizen (datamined mechanics only, no assets)
+
+Full note: `docs/research/star-citizen-datamining.md`. Sources: `painlabs/SCLogistics` (raw DataCore XML, assets stripped) and `StarCitizenWiki/scunpacked-data` (parsed JSON). Read 2026-10-08; nothing stored. We read how a shipped space game structures systems — IFCS (flight controller + ESP aim assist), mining (charge vs. mass against an optimal window), six-channel damage types vs. armour resistance macros, power routing as Bezier curves, resource-network consumption/generation. Ideas only; no numbers, names or files copied.
+
 ## Starsector, Dead Space, NMS, Gaffer, Godot docs
 
 See `CORE-LOOP.md` and `FEASIBILITY.md`; saved copies in `research/sources/`.
