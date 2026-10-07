@@ -145,3 +145,16 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **An invisible Bevy window still renders**, so screenshots need neither a visible window nor focus (`Window { visible: false }`, Hyprland/Wayland). The shell of an agent session may lack `WAYLAND_DISPLAY`; export `WAYLAND_DISPLAY=wayland-1` and `XDG_RUNTIME_DIR`.
 - **The Omarchy screensaver on the agent workspace spoils frame times** (mean jumped from 6.94 to 16.7 ms). Check `hyprctl clients` for `org.omarchy.screensaver` on workspace 7 before trusting a windowed measurement.
 - **Edition 2024 reserves `gen`**; a field named `gen` from older code (spike 8 used it) needs renaming.
+
+## Agent tooling for Rust and Bevy (spike 9b, 2026-10-07)
+
+- **A shared `CARGO_TARGET_DIR` makes a fresh worktree build in 8.7 s instead of 6 min.** Why: registry crates are fingerprinted without the workspace path; only the own crates rebuild. How to apply: one target dir for all worktrees of a spike; no two cargo runs at once. sccache gave nothing in fresh worktrees (394 s warm against 368 s without it; 119 of 378 crates miss by path, cause open).
+- **A mise shim cannot be `build.rustc-wrapper`.** Cargo runs rustc in directories without the mise config, and the shim fails with "No version is set for shim". Put the real tool directory on `PATH` (`mise activate`).
+- **pacman's rustup has no `rust-analyzer` proxy**, so the Claude Code plugin finds nothing. A two-line wrapper (`rustup run stable rust-analyzer`) fixes it; `cargo.targetDir` is a global key, only the client or the environment can set it (`CARGO_TARGET_DIR` in the wrapper).
+- **mold saves 0.18 s on a 1.1 s dynamic-link rebuild**, not worth a setting.
+- **`-fuse-ld=mold` with an absolute path fails with gcc 16**; use the name with mold on `PATH`.
+- **BRP bought nothing on a bug the scenario runner reproduces in 15 s.** The session with 52 BRP tools was slower (345 s against 107 s) and did not call one. Keep it for bugs that only show in a running window. It needs the windowed app, `Reflect` on every type you want to see, and it is red-class (HTTP server on localhost).
+- **Third-party skills still contain wrong API examples**: 8 of about 30 in `bevy-ecs-systems`, 13 of about 60 in `bevy-porting`; two skills were clean (28 of 28). Check examples against the registry source before vendoring.
+- **bevy_lint trails Bevy by a release** (latest tested: 0.18 while Bevy 0.19 is out) and needs a pinned nightly with `rustc-dev`.
+- **Nested `claude -p` sessions are a workable blind-test harness**: `--setting-sources project --strict-mcp-config`, tools allowed by pattern, prompt on stdin (a variadic `--allowedTools` swallows a positional prompt), JSON output gives turns, duration and cost.
+- **`pkill -f <pattern>` can kill the agent's own shell** when the pattern appears in the command line; use `pkill -x <name>`.
