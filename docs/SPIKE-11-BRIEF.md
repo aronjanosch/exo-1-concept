@@ -14,6 +14,12 @@ As close to Star Citizen's quantum travel as a spike allows (research note, veri
 
 The spike agent picks the distances between the planets and the warp speeds, with Star Citizen, No Man's Sky and other games as reference (initiator, 2026-10-08). Write the chosen values and the reasoning into the report (sky size of the other planet, travel time, speed); the research note has a starting table. 200 km (spike 4) is too short. Keep them as settings so the initiator can change them after flying.
 
+## Values and scale (decided, `DECISIONS.md` "World values and scale")
+
+- Each planet's content file holds its radius and its quantum travel radii (obstruction, arrival, frame zone) in absolute metres. A missing value is derived from the radius (start: arrival 1.4 R, obstruction R plus highest terrain).
+- System values (planet distances, drive top speed, accelerations, effect thresholds) in one place in metres. No global scale factor.
+- Start values: the "Mapped to our scale" table in `research/quantum-drive-reference.md`.
+
 ## Not decided (the spike makes them settings, the initiator picks)
 
 - Warp duration and feel (follows from the distances and the speed curve).
