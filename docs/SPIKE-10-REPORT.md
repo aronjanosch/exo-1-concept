@@ -72,10 +72,10 @@ Transport choice (above); 30 Hz, 150 ms buffer, 144-byte format, slots 1–8, 2 
 
 ## Open
 
-- Contact, docking and passenger ownership (initiator).
-- Clock sync accuracy (above).
-- Manual play on two computers (not run by me); feel of 150 ms-old remote ships.
-- Process CPU is read from `/proc` and is 0 on Windows.
-- Windows rendering untested; only the headless client under Proton ran.
-- Remote walker capsule and proxy hull are shown in the window, but I did not look at a windowed multi-process run.
+- Contact, docking and passenger ownership (initiator); first test runs without ship-ship contact.
+- 60 Hz send rate not measured.
+- Manual play on two computers: done by the initiator (flight, passenger carry, shifts fine, one bug fixed, see above); reconnect, fault injection on the real LAN and windowed multi-process visuals were not reported separately.
+- Windows: only a headless client under Proton ran here; process CPU is read from `/proc` and is 0 on Windows. The initiator's second computer ran the Linux or Windows build as given in `NETWORK.md`.
+- Internet play (port forwarding) not measured; localhost and LAN only.
 - `bevy_replicon`, `renet2`, `lightyear` not tried (assumption above).
+- Four points from the LAN test for after the spike (see above).
