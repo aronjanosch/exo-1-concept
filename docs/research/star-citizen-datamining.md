@@ -96,6 +96,8 @@ Read from a shallow, sparse SCLogistics clone (`PU`) in scratch space, deleted a
 
 **Candidates for later (not decided):** LAG as one of the ship systems on a power network when ship power comes (their three power states map onto our 0..1 level); push-off in zero-G as a simple way to leave a ship slowly without the suit; gravity volumes for stations. Nothing to adopt now, the simple version holds.
 
+Follow-up: `docs/research/star-citizen-vs-exo1-mapping.md` reads our crates against these records, area by area, and says what is worth learning. `docs/research/early-feature-proposals.md` turns the closest matches into proposals (LAG as data, boost capacitor, minimal HUD).
+
 ## 3. What EXO-1 takes from this
 
 - **Structure/architecture ideas** in the list above may inform our design discussions (GUID-referenced tunables, shared curves, resource networks, damage×armour as data).

@@ -12,6 +12,8 @@ Status: list for manual checking, cleaned up on 2026-10-03. Saved copies live in
 | GUT in CI (single-author blog post) | `FEASIBILITY.md`, CI |
 | Schedule I modding-aid repo (names and fields only, nothing stored) | `REFERENCE-NOTES.md`, `CORE-LOOP.md` |
 | Star Citizen datamined mechanics: `gitlab.com/painlabs/SCLogistics` (raw DataCore, no assets) and `github.com/StarCitizenWiki/scunpacked-data` (JSON); read 2026-10-08, nothing stored | `docs/research/star-citizen-datamining.md` |
+| Star Citizen records mapped to our crates (gravity volumes/LAG, flight capacitor, stance sets, resource network); read 2026-10-08 | `docs/research/star-citizen-vs-exo1-mapping.md` |
+| Early feature proposals derived from that (LAG as data, boost capacitor, minimal HUD); proposal 2026-10-08 | `docs/research/early-feature-proposals.md` |
 | Godot docs on large world coordinates, Terrain3D double-precision notes, Gaffer on Games snapshot interpolation | `FEASIBILITY.md`, precision and network sync |
 | Godot issues #122707, #112976, proposals #4925, #1281 (read via `gh`) | `FEASIBILITY.md`; corrected the "headless stall" claim |
 

@@ -36,6 +36,10 @@ A quest has a title, subtitle, description, an ID, a flag to track it on start, 
 
 Full note: `docs/research/star-citizen-datamining.md`. Sources: `painlabs/SCLogistics` (raw DataCore XML, assets stripped) and `StarCitizenWiki/scunpacked-data` (parsed JSON). Read 2026-10-08; nothing stored. We read how a shipped space game structures systems — IFCS (flight controller + ESP aim assist), mining (charge vs. mass against an optimal window), six-channel damage types vs. armour resistance macros, power routing as Bezier curves, resource-network consumption/generation. Ideas only; no numbers, names or files copied.
 
+Mapping to our crates: `docs/research/star-citizen-vs-exo1-mapping.md`. Highest-interest matches: gravity as a volume/room (LAG and planet fields), boost as a capacitor plus input-deflection curves (flight feel), per-stance speed and dimension sets plus a zero-G stance/graph (walker and the planned suit), and the resource network (future ship power/on-off). Their netcode is not in the records, so `net_core` keeps the Gaffer/Overwatch sources.
+
+Early feature proposals from that mapping: `docs/research/early-feature-proposals.md` (cabin LAG as data, boost as a capacitor, minimal HUD; plus recorded-but-not-proposed speed ladder, ship power, zero-G suit, core loop). Proposal, not decided.
+
 ## Starsector, Dead Space, NMS, Gaffer, Godot docs
 
 See `CORE-LOOP.md` and `FEASIBILITY.md`; saved copies in `research/sources/`.
