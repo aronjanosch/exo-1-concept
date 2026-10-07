@@ -1,6 +1,6 @@
 # Decisions — EXO-1 (working title)
 
-Status: living document. Date of this version: 2026-10-07 (multiplayer authority added after spike 4; Rust generator and no web export added after spike 6; movement on planets added after spike 8; Rust/Bevy, private project and studying other games' files added 2026-10-07; agent tooling added after spike 9b). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
+Status: living document. Date of this version: 2026-10-07 (multiplayer authority added after spike 4; Rust generator and no web export added after spike 6; movement on planets added after spike 8; Rust/Bevy, private project and studying other games' files added 2026-10-07; agent tooling added after spike 9b; movement in space and walking feel added after the spike 10 fixes). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
 
 ## Decided
 
@@ -15,6 +15,8 @@ Status: living document. Date of this version: 2026-10-07 (multiplayer authority
 | World | Fixed hand-built system. Small but complete, seamless planets. Procedural terrain, hand-built city and outposts |
 | Planet size | Radius 5 km as a first guide value. Larger and smaller planets are possible |
 | Movement on planets | Walking anywhere is possible; the player decides whether to walk or take the ship. Natural obstacles (steep slopes, water) may stop a walker, no path around them is guaranteed. Initiator, 2026-10-07: "die möglichkeit gibts auch zu Füß muss er selbst wissen ob er das machen will. warum sollte er das nicht amchen können? wenn es natürliche hindernisse gibt dann kann er halt nicht weiter". Source: `SPIKE-8-REPORT.md` |
+| Movement in space | A walker outside a ship in zero gravity keeps its velocity (it drifts with the ship it left) and moves with suit thrusters, same keys as the ship (WASD, Space/Ctrl, Q/E roll, Shift boost, X brake to rest), free orientation in all axes. Initiator, 2026-10-07: "der walker soll sich im weltraum dann auch irgendwann mit ausrüstung bewegen können." The suit works only in zero gravity for now; initiator, 2026-10-07: "Ne wir machen einfach erst in schwerelosigkeit." Starting values (thrust 2 m/s², boost x3, brake 4 m/s², roll 1.5 rad/s, no fuel), initiator: "die werte passen erstmal". Source: issues #5, #8 |
+| Walking feel | Walking and stopping ease in (15 m/s², start value), so a tap of W is a slow step and a player can step out of a ship carefully. Initiator, 2026-10-07: "der spieler braucht eine kurze beschleunigung und tapping von w heißt dass man langsam raus gehen würde. weil sont hat man immer diese 5m/s und das ist ein harter übergang". Entering or leaving a cabin keeps the look direction; the horizon blends over 0.4 s (start value). Source: issue #7 |
 | Interiors | Small shops stay in the open world, large or complex interiors (for example a sewer) are instanced |
 | Scale | City is small, dense and simple, like Schedule I |
 | Players | One player, one ship first. More players after the core works |
