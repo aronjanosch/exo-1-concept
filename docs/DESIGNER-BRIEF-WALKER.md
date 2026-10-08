@@ -23,6 +23,9 @@ The figure is only the look (the **character model**). Movement and collision st
 
 ## The process
 
+Use the live MCP workflow in the code repo's `art/README.md`; see `DECISIONS.md`
+(“Live Blender (MCP)”, adopted as the standard workflow on 2026-10-08).
+
 1. **Blockouts** (done 2026-10-08): four figures from one shared body-plan script, `art/walker/walker.py` on the code repo branch `feat/walker-blockouts`: Norb (human), Glibbo, Zorp, Wobbel. The initiator picked **Norb**.
 2. **Norb, built like Schedule I** (in progress): one seamless base body from a joint skeleton (Blender skin modifier and subdivision), no face. On top: eyes with upper and lower lids, brows, nose and ears in 3D; mouth, blush, freckles and the clothes (collar, seams, print, belt, pockets, laces) painted on a texture the script generates. The Suit zone is painted in grey so the slot colour multiplies on top. Hairstyles from a small library (mop, mullet, side part, spikes): a short cap plus chunky locks, melted into one smooth surface.
 3. **Character builder**: base body and parts split from a recipe (proportions, colours, eyes, hairstyle, painted layers), Norb as the first recipe; aliens get their own base bodies and parts.
@@ -50,4 +53,3 @@ There is no animation yet: remote players slide over the ground in one pose. Pic
 ## Open
 
 - **Outlines.** Dark outlines carry much of the cartoon look (for example an inverted hull). They cost some performance and are a separate decision.
-- **Live view while iterating.** Blender 5.2.1 LTS is installed on the initiator's desktop, so the scripts run headless there. A live connection (blender-mcp: the agent drives the open Blender and gets viewport screenshots) would be a new dependency, the initiator's call. Without it, the script renders the review images itself.

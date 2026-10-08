@@ -145,3 +145,15 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **A broad text replace can hit a second, identical block.** Replacing `bm.to_mesh; bm.free()` also changed the eyelid helper, which then overwrote the body's ray-cast data; the symptom (the second eye missing) was far from the cause. Check every match of a replace.
 - **`intersect_ray_tri(..., clip=False)` hits the infinite plane**, not the triangle; face parts landed on the crown. Use `clip=True`.
 - **Two-point NURBS tubes vanish.** A NURBS spline of order 2 with two points makes no geometry under a bevel; use a POLY spline for straight tubes. A bevel ring has 4 + 2 × resolution sides; at 8 sides the 45° steps cross a 40° sharp-edge angle and the tube looks faceted.
+
+## Character model polish (2026-10-08)
+
+- **Simplify before cutting clothing colour boundaries.** Decimating Norb after assigning materials produced visibly jagged sleeves and belt borders even with the material delimiter enabled. Simplify the plain body first, then bisect clothing boundaries and unwrap. The resulting human models have 5,430 triangles including the hairstyle and face parts.
+- **Angle thresholds can mark simplification edges as hard.** Voxel-remeshed, decimated organic surfaces developed visible lighting facets under smooth-by-angle. Clear sharp edges between organic faces (skin, eyes, pupils), while retaining the angle rule on clothing and accessories.
+- **Joining does not normalise the origin.** A joined collection inherits the active primitive's origin. Reset it to the foot coordinate frame, then translate mesh vertices so their lowest point is z=0 before positioning a review lineup.
+
+## Live MCP character refinement (2026-10-09)
+
+- **Compare the live study with a fresh script build.** Norb's jaw and side-part smoothing, then the lower mop crown, were explored in live Blender through MCP and transferred to `refine_norb` in the source script. Both reproduction checks compared 2,799 live-study vertex positions with the rebuilt mesh and measured a maximum nearest-vertex distance of 0 m. The human variants remain at 5,430 triangles.
+- **Strong smoothing can erase the haircut.** Five passes flattened the side part; two passes at factor 0.4 kept its broad swept shape. The mop needed a separate crown-height adjustment relative to the scalp.
+- **A file load invalidates the executing context's screen.** After `open_mainfile` inside an MCP command, `bpy.context.screen` was `None`; get the new screen from `bpy.context.window_manager.windows[0].screen` before setting viewport angles.
