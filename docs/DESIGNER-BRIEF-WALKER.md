@@ -32,7 +32,7 @@ There is no animation yet: remote players slide over the ground in one pose. Pic
 - **Scale and axes:** 1 unit = 1 m. About 1.8 m tall. Origin at the feet, centred. In Blender the figure faces −Y (towards the viewer in the default front view). Exported with "+Y Up" it then faces +Z in glTF, and the game turns it by 180° to Bevy's forward (−Z).
 - **Colour per slot:** one material named exactly `Suit`. The game replaces its base colour per slot from an 8-colour palette, so the design has to work in any bright colour. Other materials (visor, boots, trim) keep their own flat colours.
 - **Name tag:** an empty named `NameTag` where the tag should float, about 0.3 m above the head.
-- **Budget:** a few thousand triangles at most. Flat colours per material or vertex colours. No textures, no armature, no shape keys. Flat versus smooth shading: open, see below.
+- **Budget:** about 3,000–5,000 triangles, a guide value (`DECISIONS.md`, triangle budgets); round parts get enough segments for a clean silhouette. Flat colours per material or vertex colours. No textures, no armature, no shape keys. Smooth shading with hard edges (`DECISIONS.md`, shading).
 - **Export:** apply modifiers, selected objects only, no cameras or lights.
 
 ## Done when
@@ -43,5 +43,4 @@ There is no animation yet: remote players slide over the ground in one pose. Pic
 
 ## Open
 
-- **Flat or smooth shading.** `DECISIONS.md` (assets) says smooth shading; an earlier version of this brief said flat shading. The initiator decides; the blockouts can show both.
 - **Live view while iterating.** Blender 5.2.1 LTS is installed on the initiator's desktop, so the scripts run headless there. A live connection (blender-mcp: the agent drives the open Blender and gets viewport screenshots) would be a new dependency, the initiator's call. Without it, the script renders the review images itself.

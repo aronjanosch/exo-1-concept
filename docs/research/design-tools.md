@@ -29,6 +29,16 @@ Read from plugin names, the URP settings and avatar field names; nothing copied.
 - **Characters:** a base body tinted by skin colour, shaped by height, weight and gender sliders; faces and clothes are tinted texture layers stacked on the body; eyes, eyelids, eyebrows and hair are separate parts; accessories carry their own colour. Distant characters become impostors (flat pictures).
 - **Takeaway for us:** the geometry and textures are simple, but the mood comes from a fairly heavy lighting and post stack (ambient occlusion, fog, GI, grading). Bevy has counterparts (SSAO, distance and volumetric fog, bloom, tonemapping and grading); how much of it we afford is a performance question.
 
+## What the game's own assets show (local extract, 2026-10-08)
+
+The initiator owns the game. AssetRipper 2.0.0 (GPL-3, installed with mise) exported its primary content into the concept repo's `research/local/schedule-i/` (gitignored, never committed, 8.4 GB: 5,217 glTF models, 2,974 textures). Measured with a throwaway Blender script on a sample of 61 files; nothing is copied.
+
+- **Shading: smooth with hard edges.** Round things carry smooth normals (base body 4 % flat corners, head 8 %, round props 0 %); boxy things (walls, trims, windows, small parts) are 100 % flat, which on 90° edges is just hard edges. That is variant 3 of our shading test.
+- **Not as low poly as it looks.** The base body has about 8,600 triangles, the head about 4,300, one complete NPC about 4,700 (lower LOD) with 5 materials and 2 textures. Lower LODs go down to about 100. A house LOD0 has about 34,000.
+- **Textures, not flat colours.** Shared texture atlases with albedo, ambient occlusion, normal and metallic maps (`Atlas1`–`Atlas5`); one custom fog shader.
+- **Bought packs.** 173 of 3,642 meshes carry the `SM_<Category>_<Name>_01` naming of commercial low-poly asset packs (vehicles, props, houses, weapons); which packs is not verified.
+- **Takeaway:** the simple look comes from simple shapes and colours, smooth shading with hard edges, texture atlases and a heavy light and post stack, not from very low triangle counts.
+
 ## Sources
 
 - https://github.com/ahujasid/blender-mcp
