@@ -12,3 +12,4 @@ Private copies of third-party material, saved for research. Keep this repo priva
 - `godot-large-world-coordinates.md`: official Godot docs, precision tables and double-precision build notes
 - `terrain3d-double-precision.md`: Terrain3D docs on double precision (experimental)
 - `gaffer-snapshot-interpolation.md`: Gaffer on Games, snapshot interpolation (2014)
+- `space-games-new-wave-summary.md`: summary of a YouTube video (https://youtu.be/WfxSQCZYloE) on the new wave of space games (Space Reign, Dreadnought Tartarus, NTL: No Time Left, Solar Expanse)
