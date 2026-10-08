@@ -5,26 +5,28 @@ Related: code repo issue #32 (the plumbing that loads this file), `GLOSSARY.md` 
 
 ## What we need
 
-How other players look in EXO-1: one figure that every player wears. Each slot shows it in its own colour, with a name tag above the head. It is seen from 2 m (in a cabin) to about 60 m (across a landing pad).
+How other players look in EXO-1: for milestone B, one figure that every player wears. Each slot shows it in its own colour, with a name tag above the head. It is seen from 2 m (in a cabin) to about 60 m (across a landing pad). Choosing a species per player comes later (code repo #, see `DECISIONS.md`, figure style).
 
 The figure is only the look (the **character model**). Movement and collision stay with the walker, a capsule 1.8 m tall and 0.35 m in radius. The figure must sit inside that space, roughly.
 
 ## Feel
 
-- **Goofy, chunky, readable.** The setting is a strange galaxy and the goofy tone is a feature. The figure should make a friend laugh a bit when it floats past the cabin window.
-- **Simple look, great feel.** Few shapes, flat colours, a strong silhouette. No textures needed, no fine detail that disappears at 30 m.
-- **Original.** Build our own figure. It must not resemble a known game, film or brand character, and nothing is copied from a model library unless it is CC0. Invented names only, no personal data.
+- **Creatures, not objects.** Humans and aliens in the spirit of adult cartoon sci-fi (Rick and Morty as the style reference, nothing taken over 1:1). Initiator, 2026-10-08: "lass mal mehr richtung rick and morty aliens und menschen gehen. keine objekte".
+- **One body plan, one absurd twist.** Mostly a human build (head, torso, two arms, two legs, everyday clothes), plus one strange deviation: a single big eye, eye stalks, a lump for a head, tentacles for legs, extra arms, no neck.
+- **Extreme proportions.** Stilt legs under a heavy body, a big head on a thin body, a creature that is mostly head and legs.
+- **The eyes carry the joke.** Big white round eyes with small dot pupils, often a bit cross-eyed or uneven.
+- **Everyday clothes in space.** T-shirt, jacket, bathrobe, coat. The clothes are the `Suit` material and take the slot colour; skin keeps its own colour.
+- **Colours.** Saturated but slightly dirty: mustard, salmon, poison green, purple. Flat colours, no textures.
+- **Readable.** A strong silhouette that still reads at 60 m; no fine detail that disappears at 30 m.
+- **Original.** Build our own creatures. They must not resemble a known character from the show or anywhere else, and nothing is copied from a model library unless it is CC0. Invented names only, no personal data.
 
 ## The process
 
-1. **Three quick blockouts**, each in its own direction. Show a render from the front, the side and three quarters, plus one at 30 m against a dark sky. Starting ideas, change them freely:
-   - **The Thermos**: a round tank body, a dome helmet that is too big, stubby legs, a little antenna.
-   - **The Mailbox**: a boxy suit, a visor like a slot, a backpack like a small boiler.
-   - **The Pear**: bottom-heavy, tiny arms, a round porthole visor, hover boots instead of feet.
+1. **Three or four quick blockouts** from one shared body-plan script (torso, legs, arms, head, eyes as parameters): one human and several aliens. Show a render from the front, the side and three quarters, plus one at 30 m against a dark sky.
 2. **The initiator picks one** (or a mix) and says what to push further.
 3. **The final model and the export**, checked against the contract below.
 
-There is no animation yet: remote players slide over the ground in one pose. Pick a pose and shapes that do not look broken when they slide. Hover boots, a floaty stance or a pose that hides the feet all work.
+There is no animation yet: remote players slide over the ground in one pose. Pick a pose and shapes that do not look broken when they slide. A floaty stance, a hover belt or legs that hide the feet all work.
 
 ## Technical contract (must match code repo issue #32)
 
@@ -43,4 +45,5 @@ There is no animation yet: remote players slide over the ground in one pose. Pic
 
 ## Open
 
+- **Outlines.** Dark outlines carry much of the cartoon look (for example an inverted hull). They cost some performance and are a separate decision.
 - **Live view while iterating.** Blender 5.2.1 LTS is installed on the initiator's desktop, so the scripts run headless there. A live connection (blender-mcp: the agent drives the open Blender and gets viewport screenshots) would be a new dependency, the initiator's call. Without it, the script renders the review images itself.
