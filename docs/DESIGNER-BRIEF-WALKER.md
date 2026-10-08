@@ -5,7 +5,7 @@ Related: code repo issue #32 (the plumbing that loads this file), `GLOSSARY.md` 
 
 ## What we need
 
-How other players look in EXO-1: for milestone B, one figure that every player wears. Each slot shows it in its own colour, with a name tag above the head. It is seen from 2 m (in a cabin) to about 60 m (across a landing pad). Choosing a species per player comes later (code repo #, see `DECISIONS.md`, figure style).
+How other players look in EXO-1: for milestone B, one figure that every player wears. Each slot shows it in its own colour, with a name tag above the head. It is seen from 2 m (in a cabin) to about 60 m (across a landing pad). Choosing a species per player comes later (code repo #59, see `DECISIONS.md`, figure style).
 
 The figure is only the look (the **character model**). Movement and collision stay with the walker, a capsule 1.8 m tall and 0.35 m in radius. The figure must sit inside that space, roughly.
 
