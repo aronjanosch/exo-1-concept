@@ -21,6 +21,12 @@ Status: living document. Date of this version: 2026-10-07 (multiplayer authority
 | Interiors | Small shops stay in the open world, large or complex interiors (for example a sewer) are instanced |
 | Scale | City is small, dense and simple, like Schedule I |
 | World values and scale | No global scale constant. Each planet carries its radii (obstruction, arrival, frame zone) in its content file as absolute metres, like Star Citizen's per-body records, every value set explicitly, nothing derived from the radius (initiator, 2026-10-08: "macht das star citizen auch mit den derived from planet radius, wenn nicht lassen wir das auch erstmal weg. simplizität"; the SC records set every value per body). System values (distances between planets, quantum drive speed and acceleration) sit in one place in metres, so a later change of the standard planet size is one change there. Atmosphere and terrain stay per planet recipe. Initiator, 2026-10-08, after being asked whether to build a scale constant or keep it simple: "ja lass uns das auch machen". Source: `research/quantum-drive-reference.md` |
+| Travel time | "No more than about 30 s without input or an event" (`CORE-LOOP.md`) is a guide value for the start, never a hard limit. Initiator, 2026-10-08: "das harte limit mit 30 skunden bitte als hartes limit entferne [...] das soll ein richtert für den Anfang sein. Ja mit 30 sek weiter machen, aber wenn es 45 oder mal 55 dauert ist auch okay." |
+| Quantum drive: where it may start | Only above 1.5 times the planet's atmosphere height (per planet, so larger planets with a higher atmosphere get a higher limit). Initiator, 2026-10-08: "sagen wir 1,5x der atmosphäre. so können wir je nach größe des planetes gehen. große planeten haben auch eine höhere athmosphäre." |
+| Quantum drive: emergency exit | The pilot can leave a running warp early, as in Star Citizen. Initiator, 2026-10-08: "So wie bei Star Citizen, kann man das doch auch oder? Bitte übernehemen". Star Citizen's records show only the status message (`ship_quantumdriveemergencyexit`), no tuning values; the behaviour is ours to define |
+| Quantum drive: arrival | The ship arrives heading straight at the target planet, looking at its centre, at a good distance outside the atmosphere with the planet clearly in front. Initiator, 2026-10-08: "Man soll direkt auf den planeten zufliegen so dass man im prinzip auf seinen mittelpunkt oder kern guckt mit einem guten abstand von der athmosphäre weg aber den plaeten deutlich vor sich hat" |
+| Planets in spike 11 | Two practically identical planets (same radius and atmosphere, different seed). Different radii and atmospheres are a separate feature later. Initiator, 2026-10-08: "Ja gerne andere Radien und andere Atmosphären. aber das ist ein anderes Feature würde ich sagen. Für den Spike einfach 2 planeten nehmen die quasi identisch sind." |
+| Local extracts from other games | Star Citizen records (SCLogistics clone, sparse) live permanently in the concept repo under `research/local/` (gitignored, never committed or published). Initiator, 2026-10-08: "den bitte dauerhaft und gitignored irgendwo ablegen, vll ins concept?" |
 | Players | One player, one ship first. More players after the core works |
 | Flight | Arcade, starting values only, tune by feel. Long flights are fine if there is something to do on board |
 | Ship tuning | Not planned and out of scope. May come later. The Gummi-Ship reference is dropped entirely |
@@ -48,13 +54,14 @@ Status: living document. Date of this version: 2026-10-07 (multiplayer authority
 - AgentBridge interface (research proposal: `get_state`, `do_action`, `step`, `reset`, no `eval`; see `FEASIBILITY.md`).
 - Travel between planets: direction like No Man's Sky or Star Citizen, to be tried.
 - Contact authority between ships: ships should affect each other physically (initiator, 2026-10-06), but with client authority each side computes a contact alone and the two histories can disagree (spike 4 fixture: 217 ms and 3 m apart). Candidates: pair rule (one fixed side computes the contact for both), migrating authority for touching/docked groups, damage-only ramming where each owner decides its own damage. Which interactions (ramming, docking, towing) and which rule: not decided.
-- Data from other games' files (decided: look, understand, reimplement): whether values read locally may serve as validation targets in tests, and where such local extracts live (outside the repo, gitignored). The game's terms of use forbid extraction.
+- Data from other games' files (decided: look, understand, reimplement; local extracts live in `research/local/`, see "Local extracts from other games"): whether values read locally may serve as validation targets in tests. The game's terms of use forbid extraction.
 - Voter builds: desktop binary or web export. Note: the game itself has no web export (decided 2026-10-06); whether that also rules out web voter builds is not decided.
 - Planet generator after spike 8: site spacing (24 sites leave a 3.4 km worst gap; denser or more even?), sea-level rule (70 % on the macro field or on the full height), which biome row is the broken rim. Source: `SPIKE-8-REPORT.md`.
 - Open questions in `ROADMAP.md` that this research did not touch.
 
 ## Parked (not now, maybe later by community vote)
 
+- Group quantum jump (several ships linked, jump when all are ready; Star Citizen's party quantum travel). Initiator, 2026-10-08: "lassen wir erstmal weg"
 - Ship tuning and building
 - Ship classes (slow simple drone-like ship versus fast heavy FPV-racer-like ship)
 - Second faction, reputation, black market, employees and autopilot freighters

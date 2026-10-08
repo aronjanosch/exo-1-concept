@@ -1,6 +1,6 @@
 # Quantum drive: what Star Citizen's records show (for spike 11)
 
-Research note, 2026-10-08. Read from `gitlab.com/painlabs/SCLogistics` (branch `PU`, snapshot about 2026-04), cloned into scratch space and not stored; how to get it: `research/star-citizen-datamining.md`. Only what spike 11 needs. Other systems are covered in a separate note.
+Research note, 2026-10-08. Read from `gitlab.com/painlabs/SCLogistics` (branch `PU`, snapshot about 2026-04), local sparse clone in `research/local/sc-logistics` (gitignored; widen with `git sparse-checkout add <dir>`); how to get it: `research/star-citizen-datamining.md`. Only what spike 11 needs. Other systems are covered in a separate note.
 
 Rule: we take the **structure** (states, knobs, ratios). Numbers are quoted **[verified from the file]** to show scale, not as values to reuse. Whether read values may serve as targets is still open in `DECISIONS.md`. Where a field's meaning is not obvious from the record, it is marked **[meaning guessed]**.
 
