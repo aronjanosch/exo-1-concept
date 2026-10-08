@@ -135,3 +135,13 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **Code that never ran in a window hides look bugs no check finds.** Round 1's cabin "window" was an opaque plate in front of a solid wall, and the tunnel streaks sat inside the closed cabin; both compiled and passed every check. How: the first windowed run is part of the work, with a screenshot of every phase and a look at each.
 - **Scripted actions must not depend on a phase being long enough.** A 2.2 s walk fit a 2.2 s cruise by luck; when it did not, the key stayed held and the walker pressed into the wall (422 depenetrations). How: let a started action finish on its own clock and release every key at the end of the step.
 - **A drop point on a path that was checked at the start is free of planets**, so an emergency exit only has to check other ships there; moving the point on along the path until it is clear keeps it on the checked curve.
+
+## Figures in Blender by script (walker blockouts, 2026-10-08)
+
+- **Primitives joined into one mesh still read as parts.** For people, build one seamless body: a joint skeleton with radii through Blender's skin modifier plus subdivision gives clean quads and a body that can be rigged later.
+- **Colour zones need cut edges.** Colouring whole faces by nearest bone gives zigzag hems; bisect the faces of that bone at the hem plane first, and pick the nearest bone by distance minus its radius, or torso faces near the arm turn into sleeve.
+- **Painting by surface position works without an artist.** Unwrap (scale the head up before unwrapping to give the face more texels), rasterise every UV triangle to learn each texel's 3D position, then paint with masks over those positions; bleed the colours into empty texels. Write sRGB, the material colours are linear.
+- **Hair from loose locks shows every seam.** A short cap cut off the scalp plus chunky locks, then a voxel remesh, a smooth and a decimate, gives one surface that reads as a sculpted haircut. Only for parts without a texture: the remesh drops the UVs.
+- **A broad text replace can hit a second, identical block.** Replacing `bm.to_mesh; bm.free()` also changed the eyelid helper, which then overwrote the body's ray-cast data; the symptom (the second eye missing) was far from the cause. Check every match of a replace.
+- **`intersect_ray_tri(..., clip=False)` hits the infinite plane**, not the triangle; face parts landed on the crown. Use `clip=True`.
+- **Two-point NURBS tubes vanish.** A NURBS spline of order 2 with two points makes no geometry under a bevel; use a POLY spline for straight tubes. A bevel ring has 4 + 2 × resolution sides; at 8 sides the 45° steps cross a 40° sharp-edge angle and the tube looks faceted.

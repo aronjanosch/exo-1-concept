@@ -23,11 +23,14 @@ The figure is only the look (the **character model**). Movement and collision st
 
 ## The process
 
-1. **Three or four quick blockouts** from one shared body-plan script (torso, legs, arms, head, eyes as parameters): one human and several aliens. Show a render from the front, the side and three quarters, plus one at 30 m against a dark sky.
-2. **The initiator picks one** (or a mix) and says what to push further.
-3. **The final model and the export**, checked against the contract below.
+1. **Blockouts** (done 2026-10-08): four figures from one shared body-plan script, `art/walker/walker.py` on the code repo branch `feat/walker-blockouts`: Norb (human), Glibbo, Zorp, Wobbel. The initiator picked **Norb**.
+2. **Norb, built like Schedule I** (in progress): one seamless base body from a joint skeleton (Blender skin modifier and subdivision), no face. On top: eyes with upper and lower lids, brows, nose and ears in 3D; mouth, blush, freckles and the clothes (collar, seams, print, belt, pockets, laces) painted on a texture the script generates. The Suit zone is painted in grey so the slot colour multiplies on top. Hairstyles from a small library (mop, mullet, side part, spikes): a short cap plus chunky locks, melted into one smooth surface.
+3. **Character builder**: base body and parts split from a recipe (proportions, colours, eyes, hairstyle, painted layers), Norb as the first recipe; aliens get their own base bodies and parts.
+4. **The final model and the export**, checked against the contract below.
 
-There is no animation yet: remote players slide over the ground in one pose. Pick a pose and shapes that do not look broken when they slide. A floaty stance, a hover belt or legs that hide the feet all work.
+Still open on Norb: the head flows into the neck like a cone; nose and ears show seams against the body.
+
+There is no animation yet: remote players slide over the ground in one pose. Pick a pose and shapes that do not look broken when they slide.
 
 ## Technical contract (must match code repo issue #32)
 
@@ -35,7 +38,7 @@ There is no animation yet: remote players slide over the ground in one pose. Pic
 - **Scale and axes:** 1 unit = 1 m. About 1.8 m tall. Origin at the feet, centred. In Blender the figure faces −Y (towards the viewer in the default front view). Exported with "+Y Up" it then faces +Z in glTF, and the game turns it by 180° to Bevy's forward (−Z).
 - **Colour per slot:** one material named exactly `Suit`. The game replaces its base colour per slot from an 8-colour palette, so the design has to work in any bright colour. Other materials (visor, boots, trim) keep their own flat colours.
 - **Name tag:** an empty named `NameTag` where the tag should float, about 0.3 m above the head.
-- **Budget:** about 3,000–5,000 triangles, a guide value (`DECISIONS.md`, triangle budgets); round parts get enough segments for a clean silhouette. Flat colours per material or vertex colours. No textures, no armature, no shape keys. Smooth shading with hard edges (`DECISIONS.md`, shading).
+- **Budget:** about 3,000–5,000 triangles, a guide value (`DECISIONS.md`, triangle budgets); Norb is at about 12,000 for now. Flat colours plus one painted texture for the body (`DECISIONS.md`, character build). No armature, no shape keys yet. Smooth shading with hard edges (`DECISIONS.md`, shading).
 - **Export:** apply modifiers, selected objects only, no cameras or lights.
 
 ## Done when
