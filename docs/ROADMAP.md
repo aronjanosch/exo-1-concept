@@ -3,6 +3,7 @@
 Status: DRAFT. Milestones are coarse on purpose. Details get worked out when a milestone starts.
 
 **Re-orientation (2026-10-07):** private project, Rust with Bevy once spike 9 passes (`DECISIONS.md`). Track A milestones and Track B stay as a possible later step.
+**Update (2026-10-08):** the code repo plans its work in GitHub milestones A to E (map issue #18 in `exo-1`, order and decisions in `DECISIONS.md`). The tracks below stay as the older, Godot-era picture.
 Related: `CORE-LOOP.md` (loop, pillars, MVP scope), `FEASIBILITY.md` (research results, spikes), `DECISIONS.md` (decided, open, parked), `SOURCES-TO-CHECK.md`.
 Each topic is a decision plus research task, not one document per topic.
 
