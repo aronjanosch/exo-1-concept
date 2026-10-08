@@ -54,6 +54,8 @@ Pick destination → **spool up** → **align** and **calibrate** (course held w
 | Planet (stanton3) | 800 km | 807.1 km | 880 km | 20 km | 2.83e8 m |
 | Moon (stanton2b) | 295 km | 299 km | 460 km | 10 km | 1.18e6 m |
 
+**Speed at the exit:** no record sets one (searched all records of build 4.7.2 for exit, arrival, ramp-down and quantum speed fields). The drive's low end is `engageSpeed` 1,500 m/s; `VFXExitEffectVelocity` (1e6 m/s) only ends the look. The tutorial strings say what happens after: "Quantum Travel will automatically end when you are near your destination" and "After exiting Quantum Travel, check your speed. If Cruise Control is still active, press [...] to regain manual control." So after the exit the normal flight control owns the speed; the drop-out itself lives in code, not in the records.
+
 Ratios **[calculated]**: obstruction is the radius plus about 1 % (terrain and atmosphere), arrival 1.05 to 1.56 radii, adoption (the zone where a ship joins the body's frame) about 130 to 350 radii for planets and 4 for this moon.
 
 ## What spike 11 takes from this
