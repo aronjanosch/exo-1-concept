@@ -86,3 +86,74 @@ A warping ship was replayed through the real snapshot path (wire format, interpo
 ## Files (code repo, branch `spike/11-warp`)
 
 `crates/warp_core/` (registry, drive, path, tests, network replay), `content/system/system.json` (all values), `crates/exo_app/src/warp.rs` (the drive in the game, planet swap), `scenario.rs` (`warp`), `terrain.rs` (rebuild for another planet), `view.rs` (distant planets, tunnel, course ring, HUD, frame log), `crates/net_core/src/snapshot.rs` (limits, frame change).
+
+## Round 2
+
+Date: 2026-10-08. Brief: `SPIKE-11-ROUND-2-BRIEF.md`. Same branch `spike/11-warp`, worktree `~/Work/exo-1-spike11`, commits `a908f4a` (drive, registry, network, scenario) and `0d4b9ef` (what the first windowed run showed), plus README. Machine: the initiator's desktop (RTX 5070 Ti, Vulkan, Hyprland), windowed runs floating 1600 × 900 on workspace 7, no screensaver on it.
+
+### Answer in one line
+
+**The warp now runs in a window and passes there:** `warp` scenario 0 failures with vsync and without, `cargo t` and `cargo scenario` pass. The target has a HUD marker from orbit, the ship arrives 12 km from Cinder's centre with the nose 0.000° off it, Cinder's terrain is drawn 2 s after the exit (27 chunks), an emergency exit at mid-flight leaves the ship in open space at 400 m/s, and a frame costs 1.4 ms on average in every phase (without vsync).
+
+### What changed
+
+| Item | What I did | Checked by |
+|---|---|---|
+| 1 Target visible | HUD marker per planet: a box at its place on screen, name and distance (`12,500 km`); the jump target's box is larger and coloured, `>` in front. Hidden when the camera is within 100 km of the planet (its terrain is drawn) or the planet is behind the camera. One icon kind only (we have only planets). | screenshots `*-spooling`, `*-cruise-*`, `emergency-dropped*` |
+| 2 Travel time a guide value | No time limit anywhere; the scenario prints "flight 25.2 s (guide value 30 s)" and checks only that a flight happened. No speed scaling for long trips. | `warp.txt` |
+| 3 Where a jump may start | `atmosphere_height` (1,200 m) and `jump_altitude_factor` (1.5) per planet in `system.json`; refused below 1,800 m above the radius of the nearest planet. The game's atmosphere (`Field`) also comes from the file now. | scenario: refused at 600, 1,300 and 1,790 m, allowed at 1,810 m; unit test |
+| 4 Emergency exit | Hold J for 1 s during ramp-up, cruise or ramp-down → phase `EmergencyDrop` → `PostRampDown` → cooldown. Values below. | scenario and unit tests |
+| 5 Arrival facing the planet | Exit point on the line from the target's centre to where the jump started, at `arrival_radius` 12,000 m; the path's end tangent points at the centre (comes in radially), the 40° turn is gone; tangent departure kept. At the hand-over the nose is turned along the exit velocity, so at the centre. | scenario: nose 0.000° off (tolerance 2°), 11,993 m from the centre one tick later, 5,793 m above the atmosphere top; unit test: last 50 km within 1° of radial |
+| 6 Planets identical | Unchanged (seed 1337 and 4242, same radius and atmosphere); every value per planet in the file. | |
+| 7 Cabin view | Streaks visible through the window (cause in F8). | `a2b-cruise-cabin` |
+| F1 | `net_core::Limits { planets, ship_position, ship_speed }`; the receiver drops a snapshot it does not admit, `to_frame_of` returns false for an unknown id instead of indexing. | unit test; scenario: ids 2, 7, 255 and 2³²−1 dropped, no panic |
+| F2 | Limits derived from the loaded system: largest distance between centres plus the largest frame zone (13,500 km now), twice the top speed (2,000 km/s). | test: all 13,334 snapshots of the 187,500 km trip admitted (farthest 186,500 km of 188,500 allowed); the old 1e8 m limit would have refused it |
+| F3 | `PLANET_CENTRES`, `to_world`, `to_planet` removed from `net_core`; centres come from the system. | |
+| F4 | `Drive::exit()` is the end of the current path, rebuilt every tick until the ramp-up; the ship is checked against it. | unit test: exit point moves when the ship drifts while spooling, ship lands on the new one within 1e-6 m; scenario: 0.00 m on the arrival tick (tolerance 10 m: placed exactly, plus at most one tick at exit speed) |
+| F5 | `--radius` is optional; the file wins. | |
+| F6 | `obstruction_margin` and the jump altitude per planet, none drive-wide. | |
+| F7 | `--distance` shrinks a frame zone that reaches past half the distance to 45 % of it (printed), refuses a distance whose half is not above the largest arrival radius. | unit test |
+| F8 | Cause: the "window" was an opaque glass plate in front of a solid front wall, and the streaks were camera children inside a closed box. The wall is now drawn as four pieces around a 3.6 × 1.0 m opening (one collider as before), the glass is 12 % opaque, the streaks are placed on a tube around the camera along the direction of travel. The all-blue ramp-down shot of round 1: the walker had walked into the front wall and the camera looked at the plate from 0.3 m. | `a2b-cruise-cabin`, `a2b-exit` |
+| F9 | Ground and altitude only within 100 km of the planet's centre; HUD line and markers use the same target (`System::effective_target`). | screenshots |
+| F10 | Screenshots on the tick after the arrival and 2 s later; check that the terrain resource is for the target and has visible chunks. | scenario |
+| C1–C5 | `System::effective_target` (skips the planet whose frame zone the ship is in, used by drive and HUD); `Phase::holds_ship`; `PlanetId(u8)` with `System::id` for checked ids; `warp_step` split into `warp_input`, `warp_drive`, `planet_swap`, `warp_telemetry`, the telemetry and the obstacle hook in `WarpTelemetry`, which only scenarios insert; no default ids, `PlanetRes::load` only from a registry entry. | |
+
+### Values chosen and why
+
+- **Emergency exit:** hold time 1 s (a tap of J must not end a flight; J also starts and cancels). Drop: from the current speed to the exit speed (400 m/s) in 3 s along the path, constant deceleration (from 1,000 km/s that is about 333 km/s², 3.3 times the normal stage-two braking, and about 1,500 km of path). Measured: 3.08 s, dropped 8,745 km from Hearth, 3,755 km from Cinder, in no frame zone. **Drop point check:** planets cannot be there (the whole path was checked before the start); if another ship is within its radius of the drop point, the point moves on along the path in 1 km steps (`emergency_clear_step`) until clear, at most to the exit point. Cooldown afterwards: the normal 5 s. All four values in `system.json`. A jump from the drop point goes straight (no planet to leave from) and arrived at Cinder after 14.7 s of flight.
+- **Arrival:** 12,000 m from the centre as in the brief. Note that the ship then flies at 400 m/s straight at the planet; with flight assist on and no input it is down to 286 m/s after 2 s with the pilot seated, 100 m/s with nobody at the controls (both measured). At 400 m/s without braking the ground is about 17 s away.
+- **Jump altitude:** measured from the nearest planet (also in open space, where it never bites).
+- **Frame zone clamp:** 45 % of the distance, so the two zones keep a gap.
+- **Tolerances in the checks:** end point 10 m on the tick after, nose 2°.
+
+### Frame time per phase (measured, windowed, `--no-vsync`)
+
+Mean frame time 1.34–1.44 ms in every phase of all four flights (about 700 fps): spooling 1.39, calibrating 1.38, ramp-up 1.38, cruise 1.39, ramp-down 1.39, emergency drop 1.39, first 2 s after the exit 1.38–1.44 ms. Frames with a screenshot are left out. With vsync (144 Hz display) every phase sits at 6.94 ms. Worst single frames:
+
+| Flight | Spooling | Ramp-up | Cruise | Ramp-down | Exit, first 2 s |
+|---|---|---|---|---|---|
+| Hearth → Cinder, cabin view | 11.7 | 24.4 | 25.4 | 26.0 | 25.4 |
+| Cinder → Hearth, chase view | 11.6 | 15.8 | 15.6 | 15.7 | 13.3 |
+| Emergency exit | 10.2 | 16.0 | 16.5 | 16.6 (drop) | 12.0 |
+
+The terrain of the new planet: swap 0.02–0.04 ms, six root chunks 6.1–6.4 ms on the frame after the swap (round 1 guessed 15 ms in the container), target bake 151–165 ms on a pool thread. Memory: 712 MB at the first swap, 739 MB at the second and third.
+
+### Screenshots
+
+`~/Work/exo-1-spike11/target/scenario/warp-round2/` (local, not committed; `warp.txt` is the scenario report): `a2b-spooling`, `a2b-rampup`, `a2b-cruise-cabin`, `a2b-rampdown`, `a2b-exit`, `a2b-exit-2s` (walker in the cabin), `b2a-*` with `b2a-cruise-outside` (chase camera), `emergency-*` with `emergency-emergencydrop`, `emergency-dropped`, `emergency-dropped-2s`, and `drop2b-*` (on from the drop point).
+
+### Found on the way
+
+- **Things placed around the camera must follow the render origin of this frame.** Streaks, impostors and the course ring were set relative to the origin before it moved in `PostUpdate`; at 1,000 km/s that is about 7 km per frame, so the streaks were gone in the cruise shots and the impostor was off by a few degrees. They have a `WorldPose` now.
+- **The walk in the cabin only fit the cruise by luck** (2.2 s walk, 2.2 s cruise). In the first run of round 2 it did not, W stayed held and the walker pressed into the front wall: 422 depenetrations and 99.2 % deck contact. The walk now finishes on rails; 0 depenetrations, 100 % contact.
+- **Two worktrees on different commits sharing one `CARGO_TARGET_DIR` overwrite each other's own crates:** after a comparison run of round 1 the spike build linked stale `warp_core` artifacts and failed with type errors. Touching the sources fixed it.
+
+### Still open
+
+1. **Long trips** (75 s at 62,500 km, 200 s at 187,500 km): unchanged, as decided for this round.
+2. **Arrival on the night side:** the sun is fixed, the arrival point faces where the jump came from, so the planet can fill the window dark (`a2b-exit`).
+3. **Worst frames of 24–26 ms in the cabin-view flight** and an 11.6 ms frame in almost every phase (also before any jump): cause not looked into.
+4. **Memory grows from swap to swap** (712 → 739 MB); not tracked down. After an emergency drop the old planet stays the simulation's planet (no frame zone at the drop point), with its terrain loaded.
+5. **Marker:** one kind of icon, nothing at the screen edge for a planet behind the camera; Star Citizen scales icons with distance (`maxIconScaleRange`), we do not.
+6. **Emergency exit during the ramp-down** close to the exit point ends at the exit point (the drop never overshoots it); then it is an arrival in all but name. Interdiction, fuel, heat, events, group jump: not this round.
+7. Not run: a remote warping ship near the receiver's walker (round 1, open point), Windows, the static build (CI).
