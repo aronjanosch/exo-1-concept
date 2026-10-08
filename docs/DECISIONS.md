@@ -89,6 +89,7 @@ Status: living document. Date of this version: 2026-10-08 (roadmap, flight feel,
 - Second faction, reputation, black market, employees and autopilot freighters
 - Newtonian simulator direction (Star Citizen style)
 - More planets and own-galaxy servers
+- Federated galaxy (shared markets across servers), researched 2026-10-08: a federation of self-hosted star systems (host-authoritative per system, low-rate cross-border traffic: signed character/receipt transfer, offer-only market boards, directory + allowlists) is viable without Star Citizen-style infrastructure, verified against OpenSimulator Hypergrid, Mastodon and the Dual Universe shutdown. Host-side authority for anything with value (inventory, mining yields, credits) is the one early decision to take before the economy exists; blockchain stays parked for the double-spend-between-distrusting-hosts case only. Research: `research/federated-mmo-feasibility.md`. Not decided; revisit at milestone E or by community vote. Initiator, 2026-10-08: "geteilte galaxie wäre super nice", "interstellarer raum [...] das sind dann ladescreens"
 
 ## Next steps
 
