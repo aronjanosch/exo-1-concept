@@ -19,7 +19,15 @@ Target look: simple, like Schedule I (chunky shapes, flat colours, light and haz
 | Meshy, Tripo, Rodin | Text and image to 3D services | Dense meshes with PBR textures, the opposite of our look. Meshy free plan: CC BY 4.0 (credit required), not CC0 |
 | TRELLIS.2 (Microsoft, MIT for code and weights) | Local image-to-3D model | Needs at least 24 GB VRAM (the initiator's GPU has 16 GB); high-resolution PBR output needs cleanup. Maybe later as an idea generator |
 | Blockbench (GPL) | Free box and low-poly modeller with glTF export | Good for boxy figures, but a second tool next to Blender without a clear gain for script-driven work |
-| `Skippeh/ScheduleOne_UnityProject` | Modding project with the game's prefabs, meshes and shaders, no licence | Not a source of anything. For the Schedule I look, game screenshots are the better reference |
+| `Skippeh/ScheduleOne_UnityProject` | Modding project: stripped scripts, plugin list and render pipeline settings, no meshes or textures, no licence | Says nothing about modelling or shading. It shows the render stack (see below). For the look itself, game screenshots are the reference |
+
+## What carries the Schedule I look (read from the modding repo, 2026-10-08)
+
+Read from plugin names, the URP settings and avatar field names; nothing copied. The assets themselves are not in the repo, so flat versus smooth shading cannot be read there.
+
+- **Render stack:** Unity URP, Forward+, HDR, soft shadows from the sun to 70 m in 3 cascades. Renderer features: screen-space ambient occlusion, volumetric fog, god rays, decals, an outline feature, grass bending. Plugins add more ambient occlusion (HBAO), screen-space GI (RadiantGI), height fog, volumetric light beams, a sky system, stylized grass and water, and colour grading with LUTs (Beautify).
+- **Characters:** a base body tinted by skin colour, shaped by height, weight and gender sliders; faces and clothes are tinted texture layers stacked on the body; eyes, eyelids, eyebrows and hair are separate parts; accessories carry their own colour. Distant characters become impostors (flat pictures).
+- **Takeaway for us:** the geometry and textures are simple, but the mood comes from a fairly heavy lighting and post stack (ambient occlusion, fog, GI, grading). Bevy has counterparts (SSAO, distance and volumetric fog, bloom, tonemapping and grading); how much of it we afford is a performance question.
 
 ## Sources
 
