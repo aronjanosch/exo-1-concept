@@ -27,6 +27,7 @@ Loose list of what we learned while working, for humans and agents. Source mater
 ## Git and spike states
 
 - **Frozen spike states get annotated tags `spike/<n>-<name>`** (e.g. `spike/1-planet`), releases will use `v*`, so the two never mix. Why: old states must stay checkable for videos after branches are deleted; a tag also survives squash and rebase. Tag names differ from branch names (`spike/1-planet` vs `spike/planet`) because equal names make `git checkout` ambiguous.
+- **A finished milestone gets an annotated tag `milestone/<letter>-<name>` on its merge commit into `main`** (first: `milestone/p-planets-with-character` on `7e92b3d`, 2026-10-09; the earlier sprint state is `sprint/1-4-foundation`). Why: the end of a milestone is a state to come back to (playtest, video) after its branch is gone. How: merge, tag the merge commit, push the tag, then delete the branch.
 - **Name spike branches without the number so the freeze tag can carry it.** Branch `spike/4-network` blocked the usual tag name `spike/4-network`; the freeze became `spike/4-client-authority`. Pattern: branch `spike/<name>`, tag `spike/<n>-<name>`.
 - **Merge spikes normally, never squash,** or the single commits are gone. Spike code stays off `main` (throwaway, no approved proposal); an archive branch plus tags keep it reachable. Only findings go to the docs.
 - **A branch that exists only locally is not safe.** `spike/combined` with all video commits was local only until pushed. Tags protect against deleting a branch, not against losing the disk.
@@ -51,6 +52,17 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Terrain upload, not generation, was the first limit.** At depth 8 and 350 m/s the 4-uploads-per-frame cap (240/s) saturated before any worker did.
 - **Measure the demand before choosing the language.** Test workload (7 noise calls per vertex, scatter, 35x35 grid): the former scripting language 3.3 ms per chunk, Rust 0.65 ms, but the LOD asked for at most 114 chunks/s while 4 script threads gave about 1000/s. A 5-7x language gap did not matter at 9x headroom. Numbers and caveats: `SPIKE-6-REPORT.md`.
 - The `fastnoise-lite` crate 1.1.1 ships no licence file; upstream Auburn/FastNoiseLite is MIT.
+
+- **Planet look, milestone P (2026-10-08):**
+  - Earth's scattering per metre over our 1.2 km atmosphere gives no visible sky. Size it to Earth's vertical optical depth instead (Rayleigh blue about 0.26, so about 0.64 per km here); four times that already made the planet pastel from orbit.
+  - A UV-sphere sea at 5 km radius sags up to 1.5 m below sea level between its vertices, so the coastline misses the terrain. Build the sea per terrain chunk at the same LOD. A dipped skirt on transparent water shows as a dark line along every chunk edge.
+  - The largest nearest-neighbour gap between sites grows when sites are spread evenly (best-candidate sampling), so it is the wrong number for "a short hike finds the next". Measure coverage: distance from random land points to the nearest site, worst and median.
+  - Rock-by-slope thresholds from other games (25-40 degrees) showed no rock at all: our noise terrain has almost no slopes that steep. Look at the slope distribution before choosing thresholds.
+  - The 1 mm collision test mixed the generator's error (0.3 mm) with the scene's f32-rounded frame origin (up to 1.3 mm on new terrain). Assert the two separately.
+  - Frame times on a shared machine: parallel builds or a Blender run raised ground frame times 1.5-2x. Check the load average and other game windows before trusting a run.
+  - Two worktrees of different commits on one `CARGO_TARGET_DIR` confuse cargo: path crates get the same artifact names, freshness is by mtime, so a build in one tree used the other tree's `planet_core` and `target/debug/exo_app` stayed the other tree's binary. Use a separate target dir for an old commit, or touch the sources and check the binary afterwards.
+  - WGSL: `patch` is a reserved word; the shader fails at pipeline build with only a log line, and the material silently draws nothing different.
+
 
 ## Ships, walking inside, origin shift (spikes 3 and 5)
 
