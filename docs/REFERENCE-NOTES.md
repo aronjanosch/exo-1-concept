@@ -4,7 +4,7 @@ Status: living document, in our own words. We learn from how others built things
 
 ## Schedule I (from a public modding-aid repo with stripped scripts)
 
-Source: `Skippeh/ScheduleOne_UnityProject`, read on 2026-10-03: class and field names only, all method bodies are removed. The repo has no licence and is not from the developers; nothing from it is stored in this repo. Everything below is **[verified from names and fields]** unless marked otherwise. Behaviour, numbers and units are **[unverified]**.
+Source: `Skippeh/ScheduleOne_UnityProject`, read on 2026-10-03: we read class and field names only; all method bodies are removed. The repo also holds the game's own prefabs, meshes, materials and shaders (checked 2026-10-08); we use none of them, also not as art reference (game screenshots serve that better). The repo has no licence and is not from the developers; nothing from it is stored in this repo. Everything below is **[verified from names and fields]** unless marked otherwise. Behaviour, numbers and units are **[unverified]**.
 
 ### Scope map (what a full game of this type contains)
 

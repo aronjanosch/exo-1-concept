@@ -110,6 +110,8 @@ From Gaffer on Games, "Snapshot Interpolation" (2014, still the standard referen
 
 ## Assets
 
+Update 2026-10-08: the model source is a Blender Python script only (`DECISIONS.md`), and the tool research of that day (`research/design-tools.md`) replaces the text-to-3D notes below.
+
 - Assets are scripts (Blender Python via `blender -b -P script.py`, or GDScript/CSG), CI builds GLB and a preview image. No MCP is needed for the PR workflow.
 - Style: see `DECISIONS.md`. Animation is code-driven (tweens, rigid parts).
 - Text-to-3D services (Meshy, Tripo, Rodin) are poorly suited to flat low-poly with a palette (topology, textures); some free-tier outputs are not licensed for commercial use. Hunyuan3D 2.1 excludes the EU, UK and South Korea by licence **[verified, secondary]**.

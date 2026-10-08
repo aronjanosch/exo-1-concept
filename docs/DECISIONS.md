@@ -1,6 +1,6 @@
 # Decisions — EXO-1 (working title)
 
-Status: living document. Date of this version: 2026-10-08 (roadmap, flight feel, menu and figure added 2026-10-08; multiplayer authority added after spike 4; Rust generator and no web export added after spike 6; movement on planets added after spike 8; Rust/Bevy, private project and studying other games' files added 2026-10-07; agent tooling added after spike 9b; movement in space and walking feel added after the spike 10 fixes). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
+Status: living document. Date of this version: 2026-10-08 (roadmap, flight feel, menu, figure and model source added 2026-10-08; multiplayer authority added after spike 4; Rust generator and no web export added after spike 6; movement on planets added after spike 8; Rust/Bevy, private project and studying other games' files added 2026-10-07; agent tooling added after spike 9b; movement in space and walking feel added after the spike 10 fixes). Each entry says whether it is decided, open or parked. Details and sources: `FEASIBILITY.md`, `CORE-LOOP.md`.
 
 ## Decided
 
@@ -62,6 +62,7 @@ Status: living document. Date of this version: 2026-10-08 (roadmap, flight feel,
 | HUD | At most four permanent elements (mode, speed, altitude near a planet, boost); brake, LAG, warp and gravity-off only when relevant; debug lines behind F3. Initiator, 2026-10-08: "ja". Spec: issue #24 |
 | Menu and settings | The host assigns the slot; a player name (random goofy default) travels in the hello and a roster; the pause menu never stops the game. Settings live in `config/` next to the executable; volume is a placeholder until audio lands. Initiator, 2026-10-08: "ja", and "audio kann ja schonmal als platzhalter rein". Spec: issues #30, #31 |
 | Figure for other players | The look is made by the initiator with a designer agent in Blender, as a glTF file; the code builds the plumbing and a placeholder first. Initiator, 2026-10-08: "mache ich dediziert mit einem designer agent und blender denke ich damit was witziges raus kommt". Brief: `DESIGNER-BRIEF-WALKER.md`, spec: issue #32 |
+| Model source | A model's source in the repo is only a Blender Python script; the agent writes it, Blender runs it headless and exports the `.glb` into `content/`. No `.blend` is committed. The initiator reviews the result in Blender (opens the generated file, does not edit it as the source). Initiator, 2026-10-08: "a, nur python skript zumindest für mich bin kein 3d artist aber kannes ja in belnder reviewen." Tool research: `research/design-tools.md` |
 
 ## Open
 

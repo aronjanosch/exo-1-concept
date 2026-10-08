@@ -62,7 +62,7 @@ The search tool is weak (US-only, rate-limited) and found **no new GDC or GodotC
 
 | What | Where | Why |
 |---|---|---|
-| Meshy terms of service | Meshy website | Returned 404; licence info only from comparison pages |
+| Meshy terms of service | Meshy website | Pricing docs (read 2026-10-08): free-plan output is CC BY 4.0 (credit Meshy), paid plans private; not CC0, so it does not fit our asset licence. Full terms text still unread |
 | Tripo free-tier output licence | Tripo terms and pricing page | Sources contradict each other (non-commercial versus CC BY 4.0) |
 | Hunyuan3D 2.1 licence territories | Licence text | Reported to exclude the EU, UK and South Korea; secondary source |
 | Kenney and Quaternius packs actually used | Licence file inside each pack | Per-pack details not checked |
