@@ -14,6 +14,7 @@ The figure is only the look (the **character model**). Movement and collision st
 - **Creatures, not objects.** Humans and aliens in the spirit of adult cartoon sci-fi (Rick and Morty as the style reference, nothing taken over 1:1). Initiator, 2026-10-08: "lass mal mehr richtung rick and morty aliens und menschen gehen. keine objekte".
 - **One body plan, one absurd twist.** Mostly a human build (head, torso, two arms, two legs, everyday clothes), plus one strange deviation: a single big eye, eye stalks, a lump for a head, tentacles for legs, extra arms, no neck.
 - **Extreme proportions.** Stilt legs under a heavy body, a big head on a thin body, a creature that is mostly head and legs.
+- **Details with character, not surface noise.** Lids, brows, hands, clothes with collars, cords and belts add life; warts and bumps do not. Initiator, 2026-10-08: "weniger warzen auf den aliens. das sind keine interessanten details."
 - **The eyes carry the joke.** Big white round eyes with small dot pupils, often a bit cross-eyed or uneven.
 - **Everyday clothes in space.** T-shirt, jacket, bathrobe, coat. The clothes are the `Suit` material and take the slot colour; skin keeps its own colour.
 - **Colours.** Saturated but slightly dirty: mustard, salmon, poison green, purple. Flat colours, no textures.
