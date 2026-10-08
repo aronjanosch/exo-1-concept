@@ -140,7 +140,7 @@ The terrain of the new planet: swap 0.02–0.04 ms, six root chunks 6.1–6.4 ms
 
 ### Screenshots
 
-`~/Work/exo-1-spike11/target/scenario/warp-round2/` (local, not committed; `warp.txt` is the scenario report): `a2b-spooling`, `a2b-rampup`, `a2b-cruise-cabin`, `a2b-rampdown`, `a2b-exit`, `a2b-exit-2s` (walker in the cabin), `b2a-*` with `b2a-cruise-outside` (chase camera), `emergency-*` with `emergency-emergencydrop`, `emergency-dropped`, `emergency-dropped-2s`, and `drop2b-*` (on from the drop point).
+`~/Work/exo-1/target/scenario/spike11-warp-round2/` (local, not committed; `warp.txt` is the scenario report): `a2b-spooling`, `a2b-rampup`, `a2b-cruise-cabin`, `a2b-rampdown`, `a2b-exit`, `a2b-exit-2s` (walker in the cabin), `b2a-*` with `b2a-cruise-outside` (chase camera), `emergency-*` with `emergency-emergencydrop`, `emergency-dropped`, `emergency-dropped-2s`, and `drop2b-*` (on from the drop point).
 
 ### Found on the way
 
