@@ -74,6 +74,14 @@ Found by the review subagent and fixed:
 - **The scenario read the touchdown speed too late.** The contact flag comes a step after the contact, and the solver has cut the approach by then (1.56 m/s shown for a 2.0 m/s touchdown). It now takes the largest sink of the last 0.25 s before the flag.
 - **Decoupled on the ground the axis ship glided.** The ground hold now always damps and strips sideways speed, as in the classic model.
 
+## First playtest (initiator, 2026-10-09)
+
+"habe das neue flugmodell etwas getest. es ist viel besser als das alte. Presicion ist aber viel zu langsam." An impression, not yet a decision to replace the classic model.
+
+Precision mode after that (placeholders, commit 47fedf8 on `spike/ifcs`): full below 5 m instead of 15, off above 40 m instead of 80, 15 m/s along the ground instead of 4, touchdown 3 m/s instead of 2, full turn rates. Landing from 100 m: 6.1 s to touchdown instead of 12.8 s (classic 10.1 s), sink at touchdown 3.2 m/s.
+
+Star Citizen switches its landing mode by hand (a toggle, which also limits the turn rate), ours comes on by itself near the ground. That difference is a likely reason it felt slow; see TODO d.
+
 ## Open for the initiator
 
 - TODO(initiator) a) Every value in `ship_axis.json` (caps, accelerations, decays, band, G tolerances).
