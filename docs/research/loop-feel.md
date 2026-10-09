@@ -339,8 +339,7 @@ Method note: found via web search; summaries of the pages I could fetch (marked 
    https://www.gamedeveloper.com/design/a-design-discussion-on-death-stranding
    Delivery gets depth from four coupled systems: package weight/arrangement, terrain traversal, load balance (bad stacking makes you fall, damages cargo) and shared structures. The route itself is the puzzle; the cargo constrains it. Lesson: make the carried thing change how you move.
 
-2. Kojima, "Death Stranding's Design Philosophy" (GDC 2020 session page)
-   https://gdconf.com/news/hideo-kojima-will-reveal-his-death-stranding-design-philosophy-gdc-2020
+2. The director, "Death Stranding's Design Philosophy" (GDC 2020 session page)
    Frames the whole game as "ropes not sticks": delivery exists to connect places and people. Walking is made interesting (balance, stamina) rather than skipped. Lesson: give the haul a meaning (who is waiting) and make the in-between physical.
 
 3. Death Stranding, community structures/likes (see source 1 and the GDC AI postmortem page)
@@ -379,11 +378,11 @@ Not found: a good primary write-up on Schedule I design. Skipped rather than gue
 
 #### 2. Reward feedback and "juice"
 
-11. "Juice It or Lose It", Jonasson and Purho, GDC Europe 2012
+11. "Juice It or Lose It", GDC Europe 2012
     https://www.youtube.com/watch?v=Fy0aCDmgnxg (talk; background summary: https://www.psu.com/news/why-winning-feels-so-good-reward-design-from-arcades-to-balatro/)
     Same rules, much more feedback: every action gets animation, sound, particles, tiny delays. Lesson: feedback is layered on moments (pick up, load, take-off, delivery), not added in one summary screen.
 
-12. "The Art of Screenshake", Jan Willem Nijman (Vlambeer)
+12. "The Art of Screenshake", a Vlambeer developer
     https://www.youtube.com/watch?v=AJdEqssNZ-U (overview: https://infovore.org/?p=5275)
     Step by step list of cheap tricks (camera kick, hit pause, sound layering, anticipation, permanence). Lesson: add feedback in many small independent layers and judge each by feel; for a ship, thrust, landing gear contact and cargo thump are the "gun shots".
 

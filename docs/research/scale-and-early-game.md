@@ -13,7 +13,7 @@ Source tags: [C] community wiki/forum/press, [O] official dev statement (relayed
 | Game / body | Radius (km) | Note | Source |
 |---|---|---|---|
 | EXO-1 (ours) | 5 | | |
-| Star Citizen Hurston | 1000 (diam. 2000; one source says 2370) | "1/6 scale"; Roberts: 2000 km in-game = 12,000 km lore [C, quoting O] | https://starcitizen.tools/Hurston , https://www.dualshockers.com/star-citizen-hurston/ |
+| Star Citizen Hurston | 1000 (diam. 2000; one source says 2370) | "1/6 scale"; studio head: 2000 km in-game = 12,000 km lore [C, quoting O] | https://starcitizen.tools/Hurston , https://www.dualshockers.com/star-citizen-hurston/ |
 | SC microTech | 1000 | [C] | https://starcitizen.tools/MicroTech_(planet) |
 | SC ArcCorp | 800 | [C] | https://starcitizen.tools/ArcCorp_(planet) |
 | SC Daymar | 295 | moon [C] | https://starcitizen.tools/Daymar |
@@ -25,7 +25,7 @@ Source tags: [C] community wiki/forum/press, [O] official dev statement (relayed
 | Space Engineers | 30-60 (diam. 60-120) | moons 9.5 (diam. 19); gravity 0.25-1.2 g; fixed, non-rotating [C] | https://spaceengineers.wiki.gg/wiki/Planets |
 | Kerbal Space Program Kerbin | 600 | Earth 6,353 -> "a bit less than 1/10"; 1 g kept; atmosphere 70 km not scaled [C] | https://wiki.kerbalspaceprogram.com/wiki/Kerbin (search summary), https://forum.kerbalspaceprogram.com/topic/164573-on-the-physical-properties-of-kerbin-in-stock-122-ksp |
 | Outer Wilds | ~0.3-1.7 (Brittle Hollow 308 m, Hourglass Twins ~1740 m) | astrophysicist's measurement [C]; hand-made, pole to pole in minutes | https://thephysicsmill.com/2024/09/20/an-astrophysicist-attempts-to-measure-the-physics-of-outer-wilds/ |
-| Starfield | n/a | landing area is a ~1 km tile; edge = invisible wall; "kilometer-sized tiles wrapped around the planet" (Todd Howard, IGN) [O via press] | https://www.tweaktown.com/news/93080/starfield-leaks-show-planetary-exploration-isnt-as-seamless-bethesda-said/ |
+| Starfield | n/a | landing area is a ~1 km tile; edge = invisible wall; "kilometer-sized tiles wrapped around the planet" (the game director, via IGN) [O via press] | https://www.tweaktown.com/news/93080/starfield-leaks-show-planetary-exploration-isnt-as-seamless-bethesda-said/ |
 | Elite Dangerous Odyssey | real size (~Earth-like, 1:1 galaxy) | no per-planet km found; settlements are "human scale" on full-size planets [C/press] | https://gamespot.com/articles/new-elite-dangerous-odyssey-dev-diary-reveals-more/1100-6481068/ |
 | Empyrion | not spherical; playfields 8x4 up to 64x32 km (32-2048 km2); big ones "60+ min to circle on foot" | [C] | https://empyriongame.com/faq/ , https://www.moddb.com/news/alpha-80-out-now |
 
