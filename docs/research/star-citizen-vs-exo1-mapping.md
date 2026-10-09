@@ -113,6 +113,20 @@ Keep that shape in mind: it is the same "content is data, one thing per file" di
 
 **Worth learning.** (a) A **density/budget class per content category** is a clean way to bound what we stream and spawn; it maps onto our scatter rules and future POIs. (b) Day/night temperature and atmosphere as **per-planet data** fits our recipe direction and our "climate is a bias, not stripe" finding. (c) Pad sizes as data are worth copying in spirit when we do authored landing sites.
 
+### Surface records, read 2026-10-08
+
+Sparse checkout of `harvestable/`, `densityclasses/`, `entities/environment/`, `creatures/`, `procedurallayout/` (local, gitignored). The records hold **no** terrain, biome, ecosystem or weather data; surfaces are authored in level data. What they show is the layer around the terrain. Specs built on it: code repo #65 (scatter), #70 (sites), #73 (fauna), #75 (caves).
+
+- **Scatter is a two-level weighted pick.** `HarvestableProviderPreset` per body: `harvestableGroups` (`groupName`, `groupProbability`), each with elements (`harvestable`, `relativeProbability`, `clustering`, `geometries` tag for the visual variant). Biomes do not repeat lists: `areas` hold per-element `modifiers` (multipliers, 0 = off) over the one planet-wide list.
+- **Clusters are their own preset**: `probabilityOfClustering` plus weighted shapes of `minSize/maxSize` (count) and `minProximity/maxProximity` (spacing). No radius field; extent follows from count and spacing.
+- **Placement filters live on the item** (`transformParams`: `minSlope/maxSlope`, `minElevation/maxElevation`, `terrainNormalAlignment`, scale, z offset), though the shipped records leave slope and elevation at defaults.
+- **Authored slots carry tags**; a tag picks a table, with fill probability and a "deepest" override as a depth/reward gradient.
+- **Density classes are clutter caps**, not streaming: at most N entities of a class inside radius R, plus lifetimes, with per-location overrides.
+- **Terrain-edit primitives** sorted by `sortOrder`: smoothing (`size`, `rollOff`, `strength`), push/pull (`pull`, `steepness`, `rimRadius`), rectangle (`rollOff`, `dishEffect`), a noise wrapper with seed. "Flatten under a building" is a rectangle with roll-off.
+- **Planet root is a component bag** (`proceduralentity.xml`): atmosphere (pressure, temperature, humidity), weather (`maximumWindSpeed`, gusts, drop-off with elevation), harvestable provider, audio biome switch.
+- **Fauna**: boids with states (`maxLinearSpeed`, rules: alignment, cohesion, separation, terrain/ocean/actor repel) and transitions (random, proximity, alerted). Biome keying by duplicated classes, no table.
+- **Caves**: `ProceduralLayoutGraph`, a tag-filtered room graph (`Start`, element nodes with `MinElementsToGenerate/MaxElementsToGenerate`, `ChanceOfGeneration`, `Mandatory`, `outputLinks`), no geometry in the record.
+
 ## 8. Networking — `net_core`
 
 **Honest note:** Star Citizen's netcode is **not** shipped as DataCore records; there is nothing here to read in the way there is for flight or mining. The closest records are `characterserializationpresets/` (what character state is serialized) and `longtermpersistence/` (what persists), plus the density classes above for streaming. Our snapshot/interpolation/clock work (`net_core`) has **no meaningful Star Citizen match** and should keep drawing on the Gaffer and Overwatch sources already in `SOURCES-TO-CHECK.md`. The one transferable idea: `characterserializationpresets` treats "what is worth sending" as an explicit, named set — a good prompt to keep our snapshot fields intentional rather than incidental.

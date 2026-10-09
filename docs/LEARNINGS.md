@@ -63,7 +63,6 @@ Loose list of what we learned while working, for humans and agents. Source mater
   - Two worktrees of different commits on one `CARGO_TARGET_DIR` confuse cargo: path crates get the same artifact names, freshness is by mtime, so a build in one tree used the other tree's `planet_core` and `target/debug/exo_app` stayed the other tree's binary. Use a separate target dir for an old commit, or touch the sources and check the binary afterwards.
   - WGSL: `patch` is a reserved word; the shader fails at pipeline build with only a log line, and the material silently draws nothing different.
 
-
 ## Ships, walking inside, origin shift (spikes 3 and 5)
 
 - Walker as a child of the ship, velocity relative to the ship, ship ignoring the walker's layer: holds up to about 400 m/s with roll (mm drift).
@@ -163,6 +162,13 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **Simplify before cutting clothing colour boundaries.** Decimating Norb after assigning materials produced visibly jagged sleeves and belt borders even with the material delimiter enabled. Simplify the plain body first, then bisect clothing boundaries and unwrap. The resulting human models have 5,430 triangles including the hairstyle and face parts.
 - **Angle thresholds can mark simplification edges as hard.** Voxel-remeshed, decimated organic surfaces developed visible lighting facets under smooth-by-angle. Clear sharp edges between organic faces (skin, eyes, pupils), while retaining the angle rule on clothing and accessories.
 - **Joining does not normalise the origin.** A joined collection inherits the active primitive's origin. Reset it to the foot coordinate frame, then translate mesh vertices so their lowest point is z=0 before positioning a review lineup.
+
+## City kit in Blender (2026-10-08)
+
+- **Blender 5.2's glTF export hides vertex colours in `COLOR_1`.** With materials on the mesh, the defaults (`export_vertex_color="MATERIAL"` or `"ACTIVE"`, `export_all_vertex_colors=True`) write a white `COLOR_0` and move the paint to `COLOR_1`; Bevy only reads `COLOR_0`, so the model turns white. Export with `export_vertex_color="NAME"`, `export_vertex_color_name=<layer>`, `export_all_vertex_colors=False`, then check the accessor. Blender's own glTF import ignores `COLOR_0` as well, so a re-import looks white even when the file is right.
+- **Re-import the exports into one review scene.** A street of the exported `.glb` files showed the colour bug that the per-model renders, made from the live scene, could not show.
+- **A support check catches real gaps.** "Island touches the ground or a supported island" (bounding boxes, 2 cm tolerance) found a sign floating 10 cm in front of its wall. Edge split cuts each face into its own island, which the bounding-box test still handles.
+- **Live Blender over the MCP:** `read_factory_settings` in a live Blender would also reset the add-ons, the MCP add-on among them (expected, not tried). City scripts therefore clear only their own collection when they run live.
 
 ## Live MCP character refinement (2026-10-09)
 
