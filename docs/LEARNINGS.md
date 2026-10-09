@@ -208,3 +208,11 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **A turn cap from the rate's sign alone is wrong in reverse.** Which tolerance a turn loads depends on rate × velocity (nose up while flying backwards pulls the velocity down), plus what the thrusters already hold against gravity. How: build the needed acceleration as a vector and scale the rates to keep it inside the limit box.
 - **Read a touchdown speed before the contact flag.** The flag comes a step after the contact, and Avian's speculative contacts have cut the approach by then (1.56 m/s shown for 2.0 m/s). How: keep the last 0.25 s of sink and take the largest.
 - **One speed cap for every direction changes the feel more than any limit.** With a single cruise cap (stick in a ball), strafing and climbing reach four to five times the classic model's per-axis speeds; only the lower acceleration makes them slower to reach.
+
+## Mesh orientation checks (2026-10-09)
+
+- **Check closed islands separately.** A small inverted TV screen or limb can hide inside a positive whole-model signed volume. Check consistent edge winding, nonmanifold edges and signed volume per island before edge splitting; allow intentional open shells. Verify exported triangle normals against corner normals as well.
+- **Rounded footprints need a radius limit.** A 10 cm radius in a 4 cm deep City TV screen crossed its own outline. Require radius no greater than half the smaller footprint dimension; the repaired screens use 1.5 cm.
+- **Skin can fold acute branch junctions.** Norb's wrist/thumb branch produced folded and detached hands. Recalculating normals alone passed the volume checks while a live face-orientation view still showed the fold. Keep the arm and palm as one connected Skin surface and use rounded thumb primitives at the skeleton positions. The repaired human variants have 5,648 triangles (spiked hair 5,646).
+- **Decimation can leave a collapsed face pair.** The spiked hair contained two opposite faces sharing the same vertices, enclosing no volume. Remove only that exact remnant, then validate the final mesh.
+- **Make Blender errors fail the command.** Use `--python-exit-code 1` for generators and Blender regression tests so a Python validation failure cannot look like a successful export.
