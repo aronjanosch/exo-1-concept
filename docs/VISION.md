@@ -7,6 +7,10 @@ Status: DRAFT. This repo is the concept (`exo-1-concept`); code lives in a separ
 Name: "EXO-1" is a working title only. A game called "Exo One" already exists, so the name will change (see `DECISIONS.md`).
 Related: `CORE-LOOP.md` (loop, pillars, MVP scope), `FEASIBILITY.md` (research results, spikes), `DECISIONS.md` (decided, open, parked), `SOURCES-TO-CHECK.md`.
 
+## The game
+
+Build a crime empire in a goofy, brutal galaxy (Rick and Morty's tone): start broke, make and sell invented contraband with hands-on machines, haul it past the police, outgrow the family you started with, and take over districts, planets and more. Co-op crews of 2-5. Details: `CORE-LOOP.md`; decisions from 2026-10-09 in `DECISIONS.md` ("Identity: a gangster empire" and the rows around it).
+
 ## Idea
 
 An open-source game built by a community. An experiment: how far does a game get when implementation is no longer the bottleneck (AI), and people provide direction, ideas and taste?
@@ -36,7 +40,7 @@ An open-source game built by a community. An experiment: how far does a game get
 
 - Engine: Rust with Bevy, physics in `f64` (Avian). See `DECISIONS.md`.
 - License: MIT, fully open. Original or CC0 assets only.
-- Setting: a strange galaxy, deliberately goofy. Graphics don't matter: simple lighting, simple assets.
+- Setting: a strange galaxy, deliberately goofy, with real brutality where it hits; a crime empire as the goal. Graphics don't matter: simple lighting, simple assets.
 - Aim for the best runtime performance; the simple look helps keep rendering costs down.
 - Gameplay and systems over graphics.
 
