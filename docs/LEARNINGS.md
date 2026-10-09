@@ -35,6 +35,11 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **`spike/combined` is the base for new spikes** (since 2026-10-07, at spike 7). Each spike branches from it; after review it is fast-forwarded to the finished spike and the spike's tag goes on that commit. Why: one name to branch from instead of "whichever spike was last", and the chain stays linear.
 - **Merging spikes: git conflicts are the small part.** Spike 3 + 5 had 2 text conflicts but 4 real interactions (double shift of a reparented child, origin assumptions, a hidden ramp bug, a changed default). How: rerun every test of both spikes on the merge and look for assumptions the other spike broke.
 
+- **Parallel sessions need one base and one way in (2026-10-09 retro).** Branches cut from in-between states (`fix/x` on `feat/y` on an unmerged `night/extras`) while `main` lagged made every playtest merge conflict, and a file split running beside feature work collided with all of them. How: lanes start from `origin/main`, finish into one round branch, one PR per round; splits and moves run alone. Rules: code repo skill `exo-orchestrate`.
+- **A shared target dir lies when lanes build different commits.** A lane built an older `flight_core` into `~/.cache/exo-1-target` between two commands of another lane: 27 compile errors on a branch that was fine, and one lane ran another lane's binary. How: every lane gets its own target dir (btrfs reflink copy, instant); `WORKSPACE.md` keeps a preset `CARGO_TARGET_DIR`.
+- **Killing a background shell does not kill its cargo.** `pkill` on the shell left the test run going, and the next run wrote into the same log and target dir: a mixed log with failures from neither. How: stop cargo itself, check `pgrep -af cargo` is clear before the rerun.
+- **Reports belong on the issue, not in the chat.** Copy-pasting session reports between terminals made the initiator the message bus. How: each lane ends with one comment on its issue; the coordinator reads it with `gh`.
+
 ## Planet and terrain
 
 - Derivative flat normals (`cross(dFdx, dFdy)`) are zero on sub-pixel triangles; `normalize()` gives NaN and it survives `mix(..., 0)`. Guard the length.
