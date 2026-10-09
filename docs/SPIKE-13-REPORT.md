@@ -16,7 +16,7 @@ Branch `spike/ifcs` in the code repo at 9e74a73 (not pushed; based on `main` 1c2
 - F7 in the game (`flight_model` in `bindings.json`, with a fallback to F7 for old files). The HUD names the model (`CLASSIC`, `AXIS`, `AXIS PRECISION` near the ground); F3 adds felt G, precision share and saturation. `ship_axis.json` hot-reloads.
 - Scenario `flight-models`: every manoeuvre starts from the same pose (400 m above the start point, level, at rest, full charge), once per model, numbers side by side. 14 core tests in `crates/flight_core/tests/axis.rs`. `cargo t` and `cargo scenario` pass (exit 0) at the spike's last commit.
 
-## Results
+## Results (first version, 9e74a73)
 
 Same pose for every manoeuvre (400 m above the start point; landing from 100 m), placeholder values. From `flight-models.txt`:
 
@@ -82,12 +82,42 @@ Precision mode after that (placeholders, commit 47fedf8 on `spike/ifcs`): full b
 
 Star Citizen switches its landing mode by hand (a toggle, which also limits the turn rate), ours comes on by itself near the ground. That difference is a likely reason it felt slow; see TODO d.
 
+## Second playtest and tuning (2026-10-09, f988387)
+
+Initiator: "Also mit langsam habe ich träge gemeint. Der detach modus wird deutlich schneller und ist dann aber schwer wieder zu korrigieren. Vorallem im All müssen die Düsen irgendwie Leistungsfähiger sein." "Das flugmodell in SC ist echt super und da wollen wir ran." "Dann landemodus manuell" (decided for the spike). Further work in a new session; this spike counts as successful.
+
+What the records say (structure and ratios only; read by two subagents):
+- Star Citizen: all thrusters share one curve that lowers thrust with air density (vacuum about 1.8x full atmosphere); the flight computer's caps do not depend on density. One speed limiter per ship, no coupled/decoupled split (so decoupled is likely capped too); drift is corrected with the space brake or by coupling again. Turn rates have a curve over speed with a peak at mid speed; nothing ties the nose to the velocity. Angular decay is about 3-4x the linear one on fighters. Landing mode is engaged by the player (landing gear); the distance band only shapes the caps inside it. Gravity compensation is a pilot toggle, default on; hover is coupled flight with it on (hover bikes have their own spring model).
+- No Man's Sky: separate parameter sets for space and planet instead of a blend: cruise about 1.5x, thrust 2x, boost top speed about 7.7x in space. Boosting cuts turning hard, the velocity follows the nose quickly, a descent limiter and look-ahead rays protect the ground; normal ships cannot hover (a minimum speed on planets), landing is a scripted assist.
+
+What changed (all values still placeholders in `ship_axis.json`):
+- Landing mode by hand (K, binding with fallback). Without it, low flight is not capped; the descent is always held to what the upward thrust can stop above the ground, with the braking the limit's curve asks for (it touched down at 6 m/s while it only capped the goal).
+- Thrust per direction is now the vacuum value; at air density 1 it is half (`atmosphere_thrust`), so near the ground it is as before and in space twice as strong.
+- Speed caps in space (`space`: cruise 300, boost 600/400 m/s), blended by density with the atmosphere caps (150, 350/200).
+- Decoupled thrust stops at the same caps per axis; X still stops a decoupled ship.
+- Livelier: linear decay 3/s (was 2), angular decay 12/s (was 8), angular acceleration 8/8/14 rad/s² (was 6/6/10), turn rates over speed (0.85 at rest, 1 at half the cruise cap, 0.8 at the cap).
+- G-safety turn cap switchable (`cap_turns`); on by default, as in the playtested version. Backward tolerance 6 g (4 g held the brake in space to 39 m/s²).
+
+Numbers (axis model; classic unchanged): W from rest at 400 m 1.4 s to 50 m/s, 186 m/s after 15 s (the cap at that height). In space 300 m/s, 90 % after 4.5 s (classic 350 m/s, 3.3 s). Decoupled W for 15 s in space: 301 m/s (classic runs away to 456 m/s); X then stops it in 6.0 s / 769 m (classic 3.2 s / 694 m). Landing from 100 m in landing mode: 6.6 s, 3.0 m/s at touchdown.
+
+Turn at cruise speed (400 m up, full stick, 5 s), turn cap on and off:
+
+| | Classic | Axis, cap on | Axis, cap off |
+|---|---:|---:|---:|
+| heading change (deg) | 694 | 62 | 391 |
+| yaw rate at the end (deg/s) | 143 | 12.5 | 84 |
+| largest slip (deg) | 180 | 29 | 179 |
+| speed at the end (m/s) | 14 | 205 | 136 |
+
+With the cap off the axis model turns like the classic one, only slower: the side thrust cannot turn the velocity at that rate, the ship spins around it. With the cap on it stays on its line but turns slowly at speed.
+
 ## Open for the initiator
 
 - TODO(initiator) a) Every value in `ship_axis.json` (caps, accelerations, decays, band, G tolerances).
 - TODO(initiator) b) One speed cap for every direction (their structure: strafe and climb as fast as forward, only slower to reach) or a cap per axis (ours today).
-- TODO(initiator) c) Turning: G-safety caps the nose (axis) or the nose turns freely and the velocity lags behind (classic). If capped: by the pilot's tolerance only (slips 36° here) or also by what the side thrusters can give (no slip, slower turns)?
-- TODO(initiator) d) Precision mode: a climb that is not capped, the landing share (touchdown speed), the stopping-distance rule.
+- TODO(initiator) c) Turning: G-safety caps the nose (`cap_turns: true`, playtested) or the nose turns at its rate and the velocity lags behind (`false`, closer to Star Citizen's records, spins around at speed). A middle way would be more side thrust or a softer cap.
+- TODO(initiator) d) Landing mode (now by hand, K): the key, the band, the touchdown speed.
+- TODO(initiator) g) Space: blend by air density (now) or separate sets as in No Man's Sky; how much faster; a NAV mode as in Star Citizen instead?
 - TODO(initiator) e) The model's name and its HUD word.
 - TODO(initiator) f) If not the whole model: which parts to carry into the classic one. Candidates: the angular acceleration cap, the G-safety turn cap, acceleration per direction, the stopping-distance rule.
 - Not built: jerk limits, proximity sensing beyond the stopping distance, turn-rate changes over speed, nav mode.
