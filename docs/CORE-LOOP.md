@@ -123,5 +123,5 @@ Playtests start at greybox with 3-5 people, in this order: flight and landing; t
 
 - Planet radius: see `DECISIONS.md`.
 - How much combat, and of what kind?
-- Is production (making goods) part of the MVP or only hauling and trading?
+- ~~Is production (making goods) part of the MVP?~~ Not in milestone D; see "Production (loop D)" in `DECISIONS.md` (2026-10-09).
 - Tone and name of the "strange galaxy" (and the game; the working title is not final, see `DECISIONS.md`).
