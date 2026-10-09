@@ -183,3 +183,12 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **Wake bodies only over a collision patch.** The patch came 0.17 s after the walker; waking earlier, crates fell 0.14 m before it caught them. A slower stream would lose them.
 - **Do not let a body rest on a moving ship.** With the ramp hitting crates, a crate rode along at takeoff as a planet-frame body in contact with the ship. Anything on the ship, ramp included, stays in the ship's own model.
 - **Box stacks on a heightfield are not free.** Three stacked crates bounced and fell after about 1 s with Avian defaults; cause not found.
+
+## Flight models (spike 13, 2026-10-09)
+
+- **Limit each mode's request, then blend the modes.** Blending coupled and decoupled requests first and clamping the sum kept the coupled braking saturated almost to the end of the 4 s blend (41 % of the speed left instead of 66 %). Why: a large error stays above the limit until its weight is tiny. How: clamp each mode's thrust to what the thrusters give, then blend.
+- **A ground band needs the stopping distance, in the ship's attitude.** 150 m/s down with 15 m/s² to brake needs about 740 m; an 80 m precision band started far too late. How: compare the band with the clearance less sink² / (2 × braking thrust), and take the braking thrust along the planet's up in ship space (rolled on its side it is the side thrust).
+- **A push along the hull's own axis slides a landed ship.** Ctrl held on a slope pushed along the tilted ship's down; its share along the ground slid the ship 63 m. How: on the ground with no sideways input, settle along the planet's up and strip sideways speed.
+- **A turn cap from the rate's sign alone is wrong in reverse.** Which tolerance a turn loads depends on rate × velocity (nose up while flying backwards pulls the velocity down), plus what the thrusters already hold against gravity. How: build the needed acceleration as a vector and scale the rates to keep it inside the limit box.
+- **Read a touchdown speed before the contact flag.** The flag comes a step after the contact, and Avian's speculative contacts have cut the approach by then (1.56 m/s shown for 2.0 m/s). How: keep the last 0.25 s of sink and take the largest.
+- **One speed cap for every direction changes the feel more than any limit.** With a single cruise cap (stick in a ball), strafing and climbing reach four to five times the classic model's per-axis speeds; only the lower acceleration makes them slower to reach.
