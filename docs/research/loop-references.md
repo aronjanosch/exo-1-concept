@@ -7,14 +7,14 @@ Same rule as `star-citizen-datamining.md` and `no-mans-sky.md`: read the *struct
 Local sources (all under `research/local/`, gitignored, never committed):
 
 - `schedule-i/`: decompiled Unity project. Method bodies are stripped and no ScriptableObject values are in the dump, so only schemas, enums and constants can be read. Code paths below are written `S1/…` for `schedule-i/Scripts/Assembly-CSharp/ScheduleOne/…`.
-- `sc-logistics/`: Star Citizen DataCore XML, git HEAD "4.7.2 build 11674325", branch `PU`. **The mission, contract, reputation and shop folders are in the git tree but not checked out** (sparse, partial clone); see section 2.0.
+- `sc-logistics/`: Star Citizen DataCore XML, git HEAD "4.7.2 build 11674325", branch `PU`. The mission, contract, reputation, faction, shop and cargo folders were added to the sparse checkout on 2026-10-09; what the data still lacks is in section 2.0.
 - `nms/exml/`: No Man's Sky records as MXML; how they were unpacked is in `no-mans-sky.md` section 2.
 
 ## The short answer
 
-- All three games use **one lifecycle for every job** and build variety from a small set of templates plus data pools, not from a full simulation. Schedule I runs contracts on the quest state machine; No Man's Sky builds board missions from hand-authored templates filled from item and reward pools; Star Citizen names its hauling contracts by shape × good × distance × grade.
-- **Pay is graded, not binary** wherever it can be read: Schedule I scores what is handed over against what was asked; Star Citizen tags partial completion, an exceptional-time bonus, expiry and abandon-by-cargo-state; No Man's Sky draws board pay from tiered pick lists.
-- **Unlocks hang on the unlocked thing** (a rank requirement on the region or shop item) in Schedule I; No Man's Sky adds explicit unlock trees and reputation-gated shops; Star Citizen gates by reputation scopes and completion tags.
+- All three games use **one lifecycle for every job** and build variety from a small set of templates plus data pools, not from a full simulation. Schedule I runs contracts on the quest state machine; No Man's Sky builds board missions from hand-authored templates filled from item and reward pools; Star Citizen fills generic templates from generators (one career contract per job, with a standing band and cargo orders).
+- **Pay is graded, not binary** wherever it can be read: Schedule I scores what is handed over against what was asked; Star Citizen pays partial delivery in percent bands with separate reputation multipliers and fails on the deadline; No Man's Sky draws board pay from tiered pick lists.
+- **Unlocks hang on the unlocked thing** (a rank requirement on the region or shop item) in Schedule I; No Man's Sky adds explicit unlock trees and reputation-gated shops; Star Citizen gates by standing bands per career scope, plus once-only intro contracts and rehire contracts sealed by completion tags; standings themselves carry no unlock payload.
 - **Demand is person- or contract-driven in the games that work for short loops**: Schedule I's customers, Sunless Skies' prospects. No Man's Sky has price multipliers per system class but switched its per-sale drift table off.
 - For route events the clearest public models are Left 4 Dead's intensity phases, RimWorld's storytellers, and Deep Rock Galactic's one-warning-plus-one-anomaly modifiers with shown hazard pay.
 
@@ -78,45 +78,103 @@ Growing (`S1/Growing/Plant.cs`, additives), cooking (`StationRecipe` asset: ingr
 
 ### 2.0. What is readable
 
-The local checkout is sparse and a partial clone: the folders `contracts/`, `missionbroker/`, `missiondata/`, `missiontype/`, `missiongiver/`, `reputation/`, `commoditytypedatabase/`, `globalshopparams/`, `Shops/`, `inventorycontainers/`, `cargomanifest/` and `refiningprocess/` are listed in the git tree but their contents are not on disk. Reading them needs `git sparse-checkout add …` plus a network fetch from the public repo; not done, waiting for the initiator's OK. What follows is from file names in the tree (`git ls-tree -r --name-only HEAD -- <dir>`), the tag database, localisation keys and the records that are on disk. `star-citizen-datamining.md` lists these folders as present; that holds for the remote, not this checkout.
+The local checkout is a sparse, partial clone of the public repo. On 2026-10-09 the folders for contracts, missions, reputation, factions, shops and cargo were added to it (`git sparse-checkout add …`, fetched from the public repo, still only under `research/local/`). Readable now: `contracts/`, `missionbroker/`, `missiondata/`, `missiontype/`, `missiongiver/`, `missionfailureconditions/`, `missionscenarios/`, `contractawardconfig/`, `reputation/`, `reputationvaluesettings/`, `factions/`, `Shops/`, `globalshopparams/`, `globalcargoloadingparams/`, `inventorycontainers/`, `cargomanifest/`, `commodityconfiguration/`, `refiningprocess/`, `playertrade/`.
 
-### 2a. Contract structure (from tree file names and tags)
+Not in the data at all (presumably in code): the money formula of a calculated reward, per-SCU or distance pay, the shop price curve, refining times and yields, and the per-commodity records (`commoditytypedatabase/` and `resourcetypedatabase/` are only index records whose targets are not in the repo). The shop JSON looks like an older snapshot *(inference: it still names a station that was removed)*.
 
-- `contracts/`: contract templates, contract generators arranged as guild → company → job type, a module hierarchy, difficulty profiles (one general, one for logistics, event variants with a boost), contract rewards, global mission settings.
-- `missionbroker/pu_missions/cargo/`: hauling file names follow `haulcargo_<shape>_<commodity>_<distance>_<grade>`. Shapes: A to B, single to multi (2–4 drops), multi to single, round delivery, linear chain. Grades: small, supply, bulk. Regions: per planet, cross-system, interstellar. *(inference: the generator is a product of these axes)*
-- `missiontype/pu/`: hauling split by distance (local, planetary, solar, interstellar), plus courier, mercenary, salvage, mining, priority per faction, service beacon.
-- `missiongiver/`: one per hauling company, bounty department or contact. `missionscenarios/`: event chains with progress records. `missionfailureconditions/globalmissionfailureconditions.xml`.
-- Tag tree (`TagDatabase.TagDatabase.xml`, `Missions/…`):
-  - hauling distance and type (fragile, express);
-  - end states: complete (exceptional time, partial, time expired), fail (cargo destroyed, out of time), abandon (after collection, cargo lost, cargo returned). A graded result *(inference: these drive pay and reputation modifiers)*;
-  - item size from hand-carried through box sizes to grades; mission tier (four levels), difficulty (three), legality, a favour currency, main vs. sub objectives, mission phases;
-  - delivery modules (spawn pickup box, pickup, dropoff, dead drop, detach item, quantum, time, upload, vehicle): contracts appear to be assembled from modules *(inference)*;
-  - completion tags per tier (intro, rehire): a prerequisite chain to the next tier *(inference)*;
-  - about 80 location types (lockers, shipping hubs, places that buy prohibited goods).
-- `reputation/`: scopes per career (hauling, courier, smuggling …), reward amounts as a size ladder positive and negative, states (failed most recent mission, success streak, failure streak), standings, perks, a global result modifier record.
+### 2a. Two contract systems side by side
 
-### 2b. Contract text and UI (localisation, `global.ini`)
+1. **Legacy broker entries**: one flat record per mission with fixed reward and its own objectives (`missionbroker/pu_missions/cargo/*.xml`, `missionbroker/pu_missions/delivery/*.xml`).
+2. **Generator → template**: a template (`contracts/contracttemplates/*.xml`) is a reusable skeleton with properties, objective tokens and a flow state machine; a generator (`contracts/contractgenerator/**`) instantiates templates through *career contract* entries that fill the properties, set availability and set rewards.
 
-- Contract text is templated with variables (location, contractor, destination, items 1–5, pickups and dropoffs 1–n, timed, danger, max cargo size, max box size, cargo grade, payment, scrip, combat pay, reward, reputation rank).
-- Hauling texts come per company in intro and rehire variants.
-- Contract manager tabs: offers, accepted, history, beacons; fields availability, deadline, contracted by, reward, bonuses, distance, verified/unverified. Players can create beacons (a max-amount key).
-- Reputation UI: standing, stances (ally, neutral, hostile), two scope axes, rising/falling velocity, item discount; rank ladders of seven steps per career.
+The two are bridged: a generator can wrap broker entries directly (`ContractGeneratorHandler_Legacy` → `ContractLegacy missionBrokerEntry=…`, e.g. in `contracts/contractgenerator/interstellartransport_guild/covalex industries/covalex_hauling.xml`). Only about half of the cargo broker entries are referenced by a generator; the rest look unused *(inference)*.
+
+### 2b. Generator: how it is cut
+
+- Folder per guild → company → job file; one file holds a list of handlers, usually one per distance band or per rank.
+- **Handler** (`ContractGeneratorHandler_Career`):
+  - fixes one faction and one reputation scope for all its contracts;
+  - `required_active_scenarios`: runs only while a named event scenario is active;
+  - `defaultAvailability` (`ContractAvailability`): max players per instance, once only, can re-accept after abandoning or failing with cooldown and variation, personal cooldown, notify on available, plus prerequisites;
+  - `contractParams`: mission type, text keys, the contractor, and comms tag sets for accept, abandon and complete.
+- **Career contract** (one job): a template link, a `minStanding`/`maxStanding` band, parameter overrides (all concrete locations, cargo orders and display tokens), sub-contract variants with their own extra prerequisites, `generationParams` (max instances overall and per player, respawn time and variation), `contractLifeTime` (how long the offer stays on the board), and `contractResults` with a `timeToComplete` and a difficulty.
+- **Prerequisite types**: locality (which system), completed contract tags (required or excluded, with counts; used to chain ranks), reputation band, location, crime level, location property. Most carry `includePrerequisiteWhenSharing`: whether party members must meet it too.
+- **Locations are tag searches** (`DataSetMatchCondition_TagSearch` with positive and negative tags against `TagDatabase.TagDatabase.xml`). Hauling pickups and dropoffs require a tag meaning "can host cargo missions". Other job types filter by distance (`…ExcludeNearbyLocationsDef`, `…ExcludeDistantLocationsDef`, each with a range in km relative to another property); hauling instead gets its distance band from hand-picked location tags per route class. A further condition keeps two stops from resolving to the same place.
+- **Random choices** are options with a weighting and dependent properties (choosing one option can set further properties).
+
+### 2c. Template and broker entry fields
+
+- **Template** (`contracts/contracttemplates/haulcargo_atob.xml`):
+  - contract class: has complete button, handles abandon, can be shared, show allied markers, only owner can complete; auto-fail if sent to prison, became criminal, left prison;
+  - deadline (`MissionDeadline`): completion time, auto end, result after the timer (almost always failed), when to show the timer, end-reason text key;
+  - display: mission type, illegal flag, show lifetime, pre-show objectives;
+  - modifiers: security clearance, faction hostility, hostile mission;
+  - properties: each a variable name for the logic plus a text token for the UI, shipped empty and filled by the generator (contractor, route, grade, max box size, rank, pickup, dropoff, hauling orders);
+  - objective tokens, partial-payout bands, the flow state machine and comms on start and end.
+- **Broker entry** (`missionbroker/pu_missions/cargo/haulcargo_rounddelivery.xml`) is a flat superset: giver, difficulty, lawful flag, where offered, initially active, request only, invitation chaining, buy-in with refund on withdraw, instance and player limits, can be shared, once only, respawn and lifetime, re-accept and cooldowns, a fixed reward with max, bonuses, currency and a reputation bonus record, reputation per result, deadline, completion tags (also on fail or abandon), required tags, missions, journal entries and area tags, a date schedule.
+
+### 2d. Hauling specifics
+
+- Hauling uses a native objective handler (`ObjectiveHandler_Hauling`) that owns a list of **hauling orders**; one order is one pickup → dropoff leg. Order kinds: a resource with min/max SCU and a max container size, an entity class with min/max count, a property the generator fills, a mission item, alternatives, and "drop off whatever was collected".
+- **Two authoring styles**: baked templates (commodity and SCU range inside the template, one template per shape × grade × good, hence hundreds of files), and property-driven templates where the career contract supplies the orders (several goods per contract make a mixed load, each with its own container cap).
+- **Shapes are the topology of the order list**: A→B (one order), one-to-N (N orders from one pickup), N-to-one, round (A→B→C→A with rising volume per leg), linear chain (A→B→C→D), open delivery. Round and chain exist only as unreferenced broker entries *(inference: not offered live)*. Combat variants add a second objective token that spawns an encounter beside the cargo token.
+- **Grade** is a display token paired with a max box size token; the binding constraint is the max container size on each order, i.e. the biggest box the cargo is packed into. Which ship takes which box is one field on the ship's cargo grid (2g).
+- **Return-goods branch** (`contracts/contracttemplates/haulcargo.xml`): if the player abandons while carrying the cargo, a second objective starts that asks to bring it back; finishing it counts as abandoned, failing it counts as failed.
+
+### 2e. Rewards, difficulty, results
+
+- Results are a list of result objects, each with a five-slot mask saying which mission results fire it (slot names are not in the data; slot one is success, one slot carries every negative reputation result *(inference)*). Result kinds include calculated reward, reputation amount, completion tags, item rewards (fixed or weighted, `contracts/contractrewards/iawr_*.xml`), blueprint pools, badges, scenario points, journal entries, buy-in refund.
+- **Calculated reward has no parameters in the data.** Its inputs are, by elimination, the contract's `timeToComplete`, buy-in amount and difficulty *(inference: formula in code)*.
+- **Difficulty** (`ContractDifficulty`) is four rated axes, each on a seven-step scale: mechanical skill, mental load, risk of loss, game knowledge. A difficulty profile (`contracts/contractdifficultyprofiles/*.xml`) is only four weights on those axes; the logistics profile leans on mental load and risk, boosted variants raise the weights.
+- **Partial completion** (`partialRewardPayout`): bands of percent delivered, each with a money multiplier and separate reputation multipliers per scope. Hauling uses four bands, with nothing paid for the lowest **[from file]**. An objective opts in with a percent-of-mission contribution *(inference: share of SCU delivered)*. Lost or damaged cargo therefore shows up only as a lower delivered share; there is no explicit time-bonus or cargo-damage knob in these folders.
+- **Failure**: the global failure record is nearly empty. Real wiring is per template: deadline → failed; prison or crime → failed; and the flow state machine (conditions on token state, property set, and/or/not → state change actions).
+- **Modules**: `contracts/modulehierarchy/*_mmh.xml` is a tree of scripts a mission may spawn (cargo recovery → ship fight). Hauling needs no module: pickup, dropoff and time are orders, location properties and the deadline.
+- **Givers and scenarios**: a giver (`missiongiver/**`) has a faction, headquarters, invitation and visit timeouts, short/medium/long cooldowns, allies and enemies. Event scenarios (`missionscenarios/*.xml`) have a schedule, cycles and progress tracks with tiered rewards; contracts feed them points.
+
+### 2f. Reputation as the unlock system
+
+- Reputation is a number per **faction × scope**. A scope (`reputation/scopes/*.xml`, cut by career: hauling, courier, bounty, security, salvage, racing, smuggling …, many cloned per organisation) has a ceiling, an initial value and an ordered ladder of standings. Ladders are short and roughly geometric (each rank needs several times the previous one); a separate symmetric "affinity" ladder runs from hated to exalted.
+- A **standing** (`reputation/standings/**`) is a threshold plus a drift rule (amount per hours) and a `gated` flag. Blacklisted standings drift back up on their own (a timeout); some high ranks decay over time. `gated` sits on entry ranks *(inference: you cannot climb past it by points alone, only by an intro or rehire contract)*.
+- **Standings carry no unlock payload.** What they unlock is defined on the consumer: a contract's standing band, a perk list (`reputation/perks/*.xml`, item rewards at a standing, barely used), or a payout bonus record that adds a fraction of the money reward per standing (`reputation/rewards/missionrewards_bonusuec/`). No shop discount coupling was found.
+- **Reward amounts** (`reputation/rewards/missionrewards_reputation/`) are a symmetric size ladder, roughly doubling per step, used positive for success and negative for fail and abandon.
+- **States** (`reputation/states/`, updated by `reputation/globalmissionresultmodparams.xml`): succeeded/failed/abandoned most recent and previous, has done any mission, success streak, fail streak. Abandon counts as a failure for streaks. No consumers of these states were found in the data.
+- **Factions** come in two layers: the AI and law record (`factions/*.xml`: default reaction, lawful/unlawful/security/police, allies, enemies, can arrest) and the reputation-facing organisation (`factions/factionreputation/*.xml`: which scopes it shows, allies and enemies, a hostility threshold on the faction scope, sandbox triggers that cost reputation for harming people).
+- **Gating patterns** in the generators:
+  - *tiers*: contracts of rising difficulty share a maximum standing and raise the minimum;
+  - *intro*: a once-only contract at the entry rank, sealed afterwards by a completion tag it writes;
+  - *rehire*: after a failure drops the player below entry, the score drifts back to the gated entry rank and a rehire contract is the way back onto the ladder *(inference from the structure)*.
+
+### 2g. Cargo, loading and shops
+
+- One volume unit everywhere, in three scales (standard, centi, micro) for cargo, ore and fuel alike.
+- **Boxes**: one crate entity per box size (`entities/scitem/ships/scu_cargo_template_*scu.xml`, listed in `globalshopparams/globalshopcommoditydata.xml`), each a rigid body, pushable and carryable.
+- **Cargo grids** (`inventorycontainers/cargogrid/*.xml`): interior dimensions, cell size, min and max permitted item size, item-type filters. Capacity is geometric (volume ÷ one box cube). The **max permitted item size is the whole "which ship takes which box" rule**. Destruction knobs say how much cargo survives a ship kill. Station freight elevators are grids too (`freightelevator_cargogrid_*.xml`). Per-location storage with lawful and impound flags: `inventorycontainers/landingzoneinventory.xml`.
+- **Loading** (`globalcargoloadingparams/globalcargoloadingdata.xml`): manual loading time per unit; auto-loading with a base time plus a time per box size (big boxes take longer, but less per unit); an auto-load fee with a base plus a price per box size (big boxes cheaper per unit, `globalshopcommoditydata.xml`); loading-area discipline (move time limit, revoke delay, forfeit buffer: cargo left too long is lost). Strings: auto-load needs the ship stowed.
+- **Cargo damage** (`commodityconfiguration/commoditydamageconfig*.xml`): impact damage above a minimum speed, scaling with speed squared, after a grace period; volatile cargo explodes with radius, force and chain damage to other cargo.
+- **Shop entries** (`Shops/shopinventories/*.json`): exactly six fields: item id, buy price, sell price, current stock, max stock, rental offerings. An entry either sells or buys, never both. No base price, restock rate or curve per entry.
+- **Supply and demand bands** (`globalshopparams/globalshopcommoditydata.xml`): six thresholds on the stock fill ratio for supply and mirrored ones for demand; the kiosk shows the band, not a number *(inference: price moves with fill, curve in code)*.
+- **Global shop knobs**: a resale cut depending on whether the shop stocks that item type, per-type overrides that make most gear nearly worthless to resell, wear and shop-fullness curves (`globalshopsellingdata.xml`); licence-tier price modifiers and a per-hour buy limit (`globalshopbuyingdata.xml`); max quantity per purchase and a list of transaction errors that spells out the model (insufficient funds or stock, buy limit, price mismatch, invalid box size, player in vehicle during cargo transfer) (`globalshopterminaldata.xml`).
+- **AI cargo** (`cargomanifest/`): fill mode (random, even, custom), min/max share of the hold, weighted resource list; generic manifests are a small matrix legal/illegal/mixed × value low/medium/high × fill tier; extra sets per faction and per scenario.
+- **Player trade** (`playertrade/playertradeglobalparams.xml`): money transfer only, with a service fee rate; two currencies.
+- **Money sinks visible**: resale loss (the largest), auto-load fees, cargo forfeiture, cargo destruction, refining cost tier, transfer fee, licence modifiers, impound.
+
+### 2h. Refining (a production reference)
+
+`refiningprocess/processingtype-*.xml`: a process is only speed (fast, normal, slow) × care (careful, normal, wasteful) as enums, nine combinations. Times and yields are not in the data; the localisation describes each as a trade-off between speed, cost and yield (careful = high yield, fast = high cost).
+
+### 2i. Contract text and UI (localisation, `global.ini`)
+
+- Contract text is templated with variables (location, contractor, destination, items 1–5, pickups and dropoffs 1–n, timed, danger, max cargo size, max box size, cargo grade, payment, combat pay, reward, reputation rank). Hauling texts come per company in intro and rehire variants.
+- Contract manager tabs: offers, accepted, history, beacons; fields availability, deadline, contracted by, reward, bonuses, distance. Players can create beacons.
+- Reputation UI: standing, stances (ally, neutral, hostile), rising/falling velocity; rank ladders per career.
 - Rewards land in the player's home inventory.
+- Tag tree (`TagDatabase.TagDatabase.xml`, `Missions/…`): end-state tags (exceptional time, partial, time expired; cargo destroyed, out of time; abandon after collection, cargo lost, cargo returned), mission tier, difficulty, legality, location types. No consumer of the exceptional-time or cargo-destroyed tags was found in the contract records.
 
-### 2c. Cargo and loading (on disk)
-
-- One volume unit everywhere, polymorphic in three scales (standard, centi, micro) for cargo, ore and fuel alike.
-- Boxes: `entities/scitem/ships/scu_cargo_template_*scu.xml`, each a rigid body, pushable and carryable with a placement range.
-- Cargo grids: `entities/scitem/ships/cargogrid/<mfr>/*.xml`, capacity behind a container record (not checked out).
-- Typed resource containers with inclusive/exclusive resource lists and random quality (`entities/scitem/ships/utility/mining/miningpods/*`).
-- Loading platforms (`entities/loadingplatformmanager.xml`: has cargo grid, has loading gate), freight elevator kiosks (`entities/softlock_terminal_*_freightelevatorkiosk_*.xml`; strings: warehouse capacity, overload, contract completes on delivery to the warehouse), ATC cargo comms with load/unload timers (`communicationname/cargotransfer*.xml`, `waitinginqueuecargo.xml`).
-- Shops: `entities/entityclassdefinition.scshop.xml` (accepted currency, inventory type, which inventories may trade). Commodity kiosk strings show demand levels, average value per unit, estimated loading time, auto-load and a "dynamic event affected this item" flag. Prices are in `Shops/*.json` and `globalshopparams/`, not checked out.
-
-### 2d. Pads, fuel, harvestables, travel
+### 2j. Pads, fuel, harvestables, travel
 
 - `landingpadsize/*.xml`: six size classes, each with an id, a ship bounding box and a ground-vehicle box (zero on some classes, so no vehicles there). The same records serve as docking class for ATC timing overrides (`entities/scitem/entityclassdefinition.atc_datamanager.xml`) and as the largest-ship limit of a jump point (`entities/jumppoints/jumppoint_permanent.xml`).
 - Fuel: `fuelparams/evathrusterfuel.xml` is suit fuel only. Ship fuel is a resource network (`itemresourcenetwork/itemresourcenetworkglobal.xml`: power, fuel, coolant, shield, quantum fuel, gas …), burnt per thrust (`fuelBurnRatePer10KNewton` on thrusters), stored in tanks (`entities/scitem/ships/fueltanks/*`), refilled by intakes; quantum travel costs fuel per jump (`quantumdrive/*`: fuel requirement, cooldown, calibration, speed).
-- `harvestable/`: four layers linked by id: provider presets per planet or region (groups with probability, elements with relative probability and clustering), harvestable presets (entity class, respawn-in-slot time, polymorphic harvest conditions, despawn with a wait for nearby players), clustering presets, slot presets for caves and facilities with depth scaling and loot constraints. Yields sit on entity classes and loot tables, not checked out.
+- `harvestable/`: four layers linked by id: provider presets per planet or region (groups with probability, elements with relative probability and clustering), harvestable presets (entity class, respawn-in-slot time, polymorphic harvest conditions, despawn with a wait for nearby players), clustering presets, slot presets for caves and facilities with depth scaling and loot constraints. Yields sit on entity classes and loot tables, not in this repo.
 - `ssolarsystem/*.xml` (position, default location, landing zone inventory); `starmap/pu/**` marks which objects can host player-created missions (`exposeForPlayerCreatedMissions`), plus jurisdiction and respawn type; `jumppoints/globaljumpdriveparams.xml` has a jump state enum (idle, checks, tuning, requesting, waiting, entering, transiting, exiting, failing).
 
 ## 3. No Man's Sky
@@ -218,33 +276,34 @@ Options only, with trade-offs and which game does what. Nothing is decided here.
 ### 5a. Contract types
 
 - **A. One delivery template with modifiers.** A pickup → dropoff job; variety from modifiers (fragile, timed, heavy, risky). *For:* one state machine, one scenario, fastest to playtest; matches the A1 baseline of three templates. *Against:* may feel samey after a few rounds. *Who:* Sea of Thieves cargo runs (one shape, handling rules per cargo type); Deep Rock Galactic (modifiers on a fixed mission type).
-- **B. A few shapes × parameters.** Shapes such as A→B, one-to-many, many-to-one, chain; parameters distance, load size, time. *For:* lots of variety from little data; distance and size map directly onto flight and the cargo limit. *Against:* multi-stop shapes need more HUD (several targets) and more tests. *Who:* Star Citizen hauling (shape × good × distance × grade, section 2a); No Man's Sky board (fixed templates filled from item pools, 3b).
+- **B. A few shapes × parameters.** Shapes such as A→B, one-to-many, many-to-one, chain; parameters distance, load size, time. *For:* lots of variety from little data; distance and size map directly onto flight and the cargo limit. *Against:* multi-stop shapes need more HUD (several targets) and more tests. *Who:* Star Citizen hauling (shapes as topology of the order list, grade as max box size, distance band per route class, section 2d); No Man's Sky board (fixed templates filled from item pools, 3b).
 - **C. Person-driven orders.** Named givers with preferences who order regularly; the relationship decides what gets offered. *For:* gives places and characters personality, goofy text has a home; demand without a market simulation. *Against:* more content per giver; relationship systems need tuning. *Who:* Schedule I customers (1b); Sunless Skies prospects.
 
 ### 5b. Money
 
 - **A. Fixed pay per contract, flat prices.** Profit only from contracts; goods have one price. *For:* trivial to tune and explain; no spreadsheet play. *Against:* no trading layer at all. *Who:* Sunless Skies (flat port prices, margin in contracts); Sea of Thieves.
 - **B. Base price × place multiplier.** Places sell some goods cheap and need others; optional temporary surges from events. *For:* a small trading layer with readable routes. *Against:* dominant routes appear unless there are sinks or rotating surges. *Who:* No Man's Sky trading classes with surge multipliers (3d); Starsector lesson in `CORE-LOOP.md`.
-- **C. Graded payout.** Pay = base × result (on time, partial, damaged, bonus lines). Combines with A or B. *For:* rewards skill in flying and handling cargo, ties pay to the flight feel. *Against:* needs clear feedback on why pay was cut. *Who:* Star Citizen end-state tags (2a); Schedule I match score and bonus lines (1c); Sea of Thieves crate condition; ETS damage.
-- Sinks (any option): running costs (fuel, repairs), one-time purchases, fines. *Who:* Schedule I (wages, fees, fines, 1c); Star Citizen fuel per thrust and per jump (2d).
+- **C. Graded payout.** Pay = base × result (on time, partial, damaged, bonus lines). Combines with A or B. *For:* rewards skill in flying and handling cargo, ties pay to the flight feel. *Against:* needs clear feedback on why pay was cut. *Who:* Star Citizen partial-payout bands (2e); Schedule I match score and bonus lines (1c); Sea of Thieves crate condition; ETS damage.
+- Sinks (any option): running costs (fuel, repairs), one-time purchases, fines. *Who:* Schedule I (wages, fees, fines, 1c); Star Citizen fuel per thrust and per jump (2j), auto-load fees per box, resale loss, cargo forfeiture (2g).
 
 ### 5c. Unlocks
 
 - **A. Rank from XP, requirement on the unlocked thing.** Places, contracts and shop items carry a minimum rank. *For:* one number, easy data (a field per entry). *Against:* grind if XP is slow; one global axis. *Who:* Schedule I (`MapRegionData.RankRequirement`, 1d).
-- **B. Standing per giver or faction.** Each giver's standing unlocks their better jobs and shop items. *For:* choices about whom to work for; fits person-driven contracts. *Against:* several axes to balance; co-op desync risk if standing is per player. *Who:* No Man's Sky standing and rep shops (3e); Star Citizen reputation scopes (2a); Sunless Skies affiliations.
+- **B. Standing per giver or faction.** Each giver's standing unlocks their better jobs and shop items. *For:* choices about whom to work for; fits person-driven contracts. *Against:* several axes to balance; co-op desync risk if standing is per player. *Who:* No Man's Sky standing and rep shops (3e); Star Citizen faction × scope ladders with drift, intro and rehire contracts (2f); Sunless Skies affiliations.
 - **C. Buy unlocks with money.** Places or licences are purchases. *For:* money has a direct use, strong sink. *Against:* money then carries two jobs (progress and running costs). *Who:* Schedule I property prices; No Man's Sky unlock trees paid in a currency (3e).
 - Across all: unlocks that add mechanics or larger loads rather than power keep mixed co-op groups working (Sea of Thieves interview, section 4).
+- Across all, for co-op: Star Citizen marks each prerequisite with whether party members must meet it too, and contracts with max players and whether only the owner can complete (2b, 2c). That is one way to decide what a shared job asks of the guests.
 
 ### 5d. Production yes or no
 
 - **A. No production in the MVP.** Hauling and maybe trading only. *For:* smallest scope, keeps the focus on flight; matches "pick up, gather, haul" in `CORE-LOOP.md`. *Against:* less "build an empire" feel than Schedule I.
-- **B. Gathering only.** Collect raw goods at places (pick up, mine) and sell or deliver them. *For:* a second verb without stations or recipes; uses the same cargo code. *Against:* respawn and distribution need tuning. *Who:* Star Citizen harvestables (provider presets, respawn per slot, 2d).
-- **C. Light production.** One or two conversion steps (raw → product) at an owned place. *For:* the Schedule I management feel, quality as a lever on pay. *Against:* recipes, stations, UI, more balancing; Schedule I's known burnout comes from automation late on. *Who:* Schedule I growing, cooking, mixing (1f); No Man's Sky fleet expeditions as an automated loop (3f).
+- **B. Gathering only.** Collect raw goods at places (pick up, mine) and sell or deliver them. *For:* a second verb without stations or recipes; uses the same cargo code. *Against:* respawn and distribution need tuning. *Who:* Star Citizen harvestables (provider presets, respawn per slot, 2j).
+- **C. Light production.** One or two conversion steps (raw → product) at an owned place. *For:* the Schedule I management feel, quality as a lever on pay. *Against:* recipes, stations, UI, more balancing; Schedule I's known burnout comes from automation late on. *Who:* Schedule I growing, cooking, mixing (1f); No Man's Sky fleet expeditions as an automated loop (3f); Star Citizen refining as one speed × care choice trading time, cost and yield (2h).
 
 ### 5e. Content schema
 
 - **A. Flat records, one file per object.** Commodity, location, mission template as in the first sketch in `CORE-LOOP.md`; references by id. *For:* simple to validate and mod. *Against:* variety must be written out by hand.
-- **B. Templates plus pools.** A mission template references pools (goods, destinations by filter, text fragments, reward tiers); the generator draws from them. *For:* lots of variety from little data; text fragments fit the goofy tone. *Against:* harder to validate and to test deterministically (needs seeds). *Who:* No Man's Sky (item pools, scan-event filters, numbered text lists, board reward tiers, 3b); Star Citizen (templates, generators, difficulty profiles, 2a).
+- **B. Templates plus pools.** A mission template references pools (goods, destinations by filter, text fragments, reward tiers); the generator draws from them. *For:* lots of variety from little data; text fragments fit the goofy tone. *Against:* harder to validate and to test deterministically (needs seeds). *Who:* No Man's Sky (item pools, scan-event filters, numbered text lists, board reward tiers, 3b); Star Citizen (templates with empty properties, generators fill them; locations as tag searches; weighted options, 2a–2c).
 - **C. Requirements on the unlocked thing vs. a central unlock table.** A sub-choice for either A or B. *Who:* Schedule I puts rank on each region and item (1d); No Man's Sky keeps unlock trees as their own records (3e).
 - Across all: the save stores offer fields plus a link to the giver (Schedule I `ContractData`, 1a); a completed-job log lets other systems ask "what was delivered where lately" (Schedule I receipts).
 
@@ -252,4 +311,4 @@ Options only, with trade-offs and which game does what. Nothing is decided here.
 
 - **A. Timer with cooldown and weights.** About one event per interval, picked by weight per route, with a cooldown per template. *For:* simple, already in `CORE-LOOP.md`, easy to test with a fixed seed. *Against:* can feel mechanical; events may stack with whatever else is happening.
 - **B. Intensity director.** Track a tension value (damage, time since last event, cargo value); events build up, peak, then a forced quiet phase. *For:* pacing adapts to the players; avoids stacking. *Against:* more tuning, harder to explain in a test. *Who:* Left 4 Dead director phases; RimWorld storytellers (points budget, time since last event).
-- **C. Modifiers fixed at contract time.** The contract shows its hazards up front (one warning, one upside) with a pay bonus; events during flight come from those. *For:* the player chooses risk knowingly; ties events to pay. *Against:* fewer surprises in flight. *Who:* Deep Rock Galactic warnings and anomalies; Star Citizen danger variable and difficulty profiles (2a, 2b); No Man's Sky fleet expedition events with outcome rewards (3f).
+- **C. Modifiers fixed at contract time.** The contract shows its hazards up front (one warning, one upside) with a pay bonus; events during flight come from those. *For:* the player chooses risk knowingly; ties events to pay. *Against:* fewer surprises in flight. *Who:* Deep Rock Galactic warnings and anomalies; Star Citizen difficulty rated on four axes with a weight profile feeding pay, combat variants that add an encounter token (2d, 2e); No Man's Sky fleet expedition events with outcome rewards (3f).
