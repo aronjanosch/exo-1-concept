@@ -76,6 +76,8 @@ Loose list of what we learned while working, for humans and agents. Source mater
   - Tests at macro vertices miss what bilinear blending does between them. A river one vertex wide goes dry at every diagonal step (the cell's other two corners keep the bank height), and a bank vertex with a water level above its own ground ends a water sheet in the air. A read-only review subagent found both.
   - Every height change moves the sites (their candidates are filtered by height and slope). The ruin moved to a coast and the `site-walk` scenario started in the sea. How: scenarios pick their path from the data (here the first dry, walkable heading), not a fixed direction.
   - A leak check that compares world counts across swaps to alternating planets breaks once the planets differ (lake meshes). Compare with the first swap to the same planet.
+  - Long rivers need one sea, not a sea level. Hearth's area below the sea level is 1055 separate pockets (the largest 8 km²); every pocket ended a river, so the longest river was 0.82 km whatever the lake values. Counting only seas from 0.5 km² as sea gave 7.5 km. How: count the connected areas below the sea level before tuning river values.
+  - Crossing a sink: cutting the sill down to the sink's floor made 40-77 m gorges; filling the sink with sediment to its spill point kept the deepest cut at 8 m. A fill right at the sea level freckles with sea between the vertices; fill at least 2 m above it.
 
 ## Ships, walking inside, origin shift (spikes 3 and 5)
 
