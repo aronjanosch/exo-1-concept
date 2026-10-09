@@ -23,6 +23,7 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Parallel agents spoil timings.** Benchmarks run while subagents compile give noisy numbers; rerun when the machine is quiet.
 - **Frame times under vsync measure the display, not the game.** Every phase of the warp read 6.94 ms on a 144 Hz screen; without vsync the same run read 1.4 ms. How: measure with `--no-vsync` (`PresentMode::AutoNoVsync`) and leave screenshot frames out.
 - **Two worktrees on different commits must not share a target dir at the same time.** Own crates are fingerprinted without the workspace path, so a build in the second worktree overwrote `warp_core` and the first one then failed with type errors from the stale artifacts. How: build a comparison commit in its own target dir, or `touch` the sources after switching back.
+- **One target dir per session (initiator, 2026-10-09).** Parallel sessions on one `CARGO_TARGET_DIR` mixed each other's artifacts. How: every session builds in its own dir, e.g. `~/.cache/exo-1-target-rivers`; `WORKSPACE.md` still names the shared one.
 
 ## Git and spike states
 
@@ -62,6 +63,14 @@ Loose list of what we learned while working, for humans and agents. Source mater
   - Frame times on a shared machine: parallel builds or a Blender run raised ground frame times 1.5-2x. Check the load average and other game windows before trusting a run.
   - Two worktrees of different commits on one `CARGO_TARGET_DIR` confuse cargo: path crates get the same artifact names, freshness is by mtime, so a build in one tree used the other tree's `planet_core` and `target/debug/exo_app` stayed the other tree's binary. Use a separate target dir for an old commit, or touch the sources and check the binary afterwards.
   - WGSL: `patch` is a reserved word; the shader fails at pipeline build with only a log line, and the material silently draws nothing different.
+
+- **Rivers and lakes from drainage (#72, 2026-10-09):**
+  - Size the river threshold by the landmass, not by Earth. Hearth is an archipelago with many pits below sea level; the largest rain-weighted catchment of any land vertex is 3.3 km². A 1.5 km² threshold gave 1.2 km of river, 0.25 km² gave about 37 km. How: read `largest_catchment_km2` in the bake stats before choosing.
+  - Filling every sink turns a noise terrain into a lake district: Hearth first got 199 lakes, Cinder (almost no sea) 195 lakes on 11 % of its surface. A dry planet needs an evaporation budget (lake area at most inflow / evaporation) and lakes that never spill; the water around them must then route into them, not to their spill point (a second flood with them as outlets).
+  - The drainage cost is the algorithm, not the optimisation level: 1.58 M macro vertices took 1.1 s in the dev profile and 0.93 s in release, about 0.3 s per priority flood. Packing heap keys into a u64, a FIFO for pit cells (Barnes 2014), a fast neighbour path and the steepest descent inside the flood loop took it from 5.3 s to about 1 s.
+  - Tests at macro vertices miss what bilinear blending does between them. A river one vertex wide goes dry at every diagonal step (the cell's other two corners keep the bank height), and a bank vertex with a water level above its own ground ends a water sheet in the air. A read-only review subagent found both.
+  - Every height change moves the sites (their candidates are filtered by height and slope). The ruin moved to a coast and the `site-walk` scenario started in the sea. How: scenarios pick their path from the data (here the first dry, walkable heading), not a fixed direction.
+  - A leak check that compares world counts across swaps to alternating planets breaks once the planets differ (lake meshes). Compare with the first swap to the same planet.
 
 ## Ships, walking inside, origin shift (spikes 3 and 5)
 
