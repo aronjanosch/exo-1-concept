@@ -22,8 +22,7 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Gitignored local files are missing in a new worktree.** `WORKSPACE.md` does not come along. How: symlink it into the new worktree; it stays ignored. Delete the original and the link breaks.
 - **Parallel agents spoil timings.** Benchmarks run while subagents compile give noisy numbers; rerun when the machine is quiet.
 - **Frame times under vsync measure the display, not the game.** Every phase of the warp read 6.94 ms on a 144 Hz screen; without vsync the same run read 1.4 ms. How: measure with `--no-vsync` (`PresentMode::AutoNoVsync`) and leave screenshot frames out.
-- **Two worktrees on different commits must not share a target dir at the same time.** Own crates are fingerprinted without the workspace path, so a build in the second worktree overwrote `warp_core` and the first one then failed with type errors from the stale artifacts. How: build a comparison commit in its own target dir, or `touch` the sources after switching back.
-- **One target dir per session (initiator, 2026-10-09).** Parallel sessions on one `CARGO_TARGET_DIR` mixed each other's artifacts. How: every session builds in its own dir, e.g. `~/.cache/exo-1-target-rivers`; `WORKSPACE.md` still names the shared one.
+- **One cargo target dir per session or lane (initiator, 2026-10-09); never two commits in one.** Registry crates are fingerprinted without the workspace path, so a shared `CARGO_TARGET_DIR` makes a fresh worktree build in 8.7 s instead of 6 min (only the own crates rebuild; sccache gave nothing). But own crates are fingerprinted without the path too, and freshness is by mtime: a worktree or lane on another commit overwrote `warp_core` and `flight_core` or `planet_core` in the shared dir, which gave type errors and 27 compile errors on a branch that was fine, a binary from the other tree, and one lane running another lane's binary. How: every session or lane builds in its own dir (btrfs reflink copy, instant, e.g. `~/.cache/exo-1-target-rivers`; `WORKSPACE.md` names the shared preset); a comparison commit gets its own dir, or `touch` the sources and check the binary afterwards; no two cargo runs at once in one dir.
 
 ## Git and spike states
 
@@ -36,7 +35,6 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Merging spikes: git conflicts are the small part.** Spike 3 + 5 had 2 text conflicts but 4 real interactions (double shift of a reparented child, origin assumptions, a hidden ramp bug, a changed default). How: rerun every test of both spikes on the merge and look for assumptions the other spike broke.
 
 - **Parallel sessions need one base and one way in (2026-10-09 retro).** Branches cut from in-between states (`fix/x` on `feat/y` on an unmerged `night/extras`) while `main` lagged made every playtest merge conflict, and a file split running beside feature work collided with all of them. How: lanes start from `origin/main`, finish into one round branch, one PR per round; splits and moves run alone. Rules: code repo skill `exo-orchestrate`.
-- **A shared target dir lies when lanes build different commits.** A lane built an older `flight_core` into `~/.cache/exo-1-target` between two commands of another lane: 27 compile errors on a branch that was fine, and one lane ran another lane's binary. How: every lane gets its own target dir (btrfs reflink copy, instant); `WORKSPACE.md` keeps a preset `CARGO_TARGET_DIR`.
 - **Killing a background shell does not kill its cargo.** `pkill` on the shell left the test run going, and the next run wrote into the same log and target dir: a mixed log with failures from neither. How: stop cargo itself, check `pgrep -af cargo` is clear before the rerun.
 - **Reports belong on the issue, not in the chat.** Copy-pasting session reports between terminals made the initiator the message bus. How: each lane ends with one comment on its issue; the coordinator reads it with `gh`.
 
@@ -66,7 +64,6 @@ Loose list of what we learned while working, for humans and agents. Source mater
   - Rock-by-slope thresholds from other games (25-40 degrees) showed no rock at all: our noise terrain has almost no slopes that steep. Look at the slope distribution before choosing thresholds.
   - The 1 mm collision test mixed the generator's error (0.3 mm) with the scene's f32-rounded frame origin (up to 1.3 mm on new terrain). Assert the two separately.
   - Frame times on a shared machine: parallel builds or a Blender run raised ground frame times 1.5-2x. Check the load average and other game windows before trusting a run.
-  - Two worktrees of different commits on one `CARGO_TARGET_DIR` confuse cargo: path crates get the same artifact names, freshness is by mtime, so a build in one tree used the other tree's `planet_core` and `target/debug/exo_app` stayed the other tree's binary. Use a separate target dir for an old commit, or touch the sources and check the binary afterwards.
   - WGSL: `patch` is a reserved word; the shader fails at pipeline build with only a log line, and the material silently draws nothing different.
 
 - **Rivers and lakes from drainage (#72, 2026-10-09):**
@@ -78,31 +75,6 @@ Loose list of what we learned while working, for humans and agents. Source mater
   - A leak check that compares world counts across swaps to alternating planets breaks once the planets differ (lake meshes). Compare with the first swap to the same planet.
   - Long rivers need one sea, not a sea level. Hearth's area below the sea level is 1055 separate pockets (the largest 8 km²); every pocket ended a river, so the longest river was 0.82 km whatever the lake values. Counting only seas from 0.5 km² as sea gave 7.5 km. How: count the connected areas below the sea level before tuning river values.
   - Crossing a sink: cutting the sill down to the sink's floor made 40-77 m gorges; filling the sink with sediment to its spill point kept the deepest cut at 8 m. A fill right at the sea level freckles with sea between the vertices; fill at least 2 m above it.
-
-## Ships, walking inside, origin shift (spikes 3 and 5)
-
-- Walker as a child of the ship, velocity relative to the ship, ship ignoring the walker's layer: holds up to about 400 m/s with roll (mm drift).
-- Thin slabs (ramps) over uneven terrain let a capsule slip underneath; boarding on slopes needs its own design and test session.
-- **Check the obvious collider before blaming precision.** The 16 km "precision wall" was the parked ship standing in the walk path. How: log slide collisions (collider, normal, contact height) before drawing conclusions.
-- **A safety net can hide the test.** The CPU height fallback kept the walker on the ground while the collision ring had silently built no patches. How: count frames where the net is the only thing holding the body.
-- **Origin shift breaks silently wherever world and planet coordinates mix.** Example: a density function got a planet position and subtracted the centre again; the sky turned black only once the planet left the origin. How: one conversion function, type or name every position as world or planet-relative, and test with the planet away from the origin.
-- **Physics survives far from the origin, the picture does not.** Walking and landing worked up to 197 km from the origin; the error is in the float32 `view * model` on the GPU (about 2.5 px at 100 km for something 2 m from the camera). Measure in pixels, not only in physics.
-- **A difference of two far positions has the float resolution of the far distance.** Measuring steps relative to a planet 100 km away showed fake 7.8 mm stairs. How: measure in the frame where the body lives, or in doubles.
-- **To reproduce a bug on film, search headless with the same fixed frame rate first.** The test bot reacts per frame, so the frame rate changes what happens: the ship tumble ended in space at 60 fps (3 of 3) but landed at 30 fps.
-
-## Flight feel
-
-Prototype findings; the values were candidates, never accepted tuning.
-
-- **Flight assistance and throttle retention are separate choices.** Continuing to move can mean commanded cruise or inertial drift. Ask which release behavior the initiator wants before implementing.
-- **Keep transcript numbers as research notes.** The supplied video summaries warn of ASR errors and omit original links and dates. They support exploring control principles, not adopting exact speeds, ratios or keybindings.
-- **Curvature needs a force budget, not just a turning nose.** During acceleration a large target-velocity error consumed all thrust and the ship climbed in a nominally level run. Reserve curvature and drag support first, then spend the rest on velocity correction.
-- **Use terrain clearance for the local speed envelope.** Preview terrain over braking time and reduce clearance by the descent stopping distance; sparse samples still cannot guarantee obstacle avoidance.
-- **New speed targets change existing bot timeouts.** A slower vertical target silently turned a phase into a different test. Extend phase budgets and check attained altitude in the report.
-- **Passing motion checks does not establish flight feel.** Raising cruise speed while keeping the braking force lengthens the stopping time proportionally; the initiator felt abrupt starts and heavy steering. Responsive steering and quick release stops are different preferences.
-- **Nose, aim and trajectory are distinct feedback.** Measure and display ship attitude separately from camera attitude: a chase camera looking 10 degrees below the nose made level camera flight a climb and read as "automatic climbing".
-- **Finite gravity needs finite planet follow too.** If gravity fades out with altitude, scale the follow force, the angular transport and the terrain preview with the same envelope. A partial follow must integrate a turning velocity in the preview.
-- **Small-planet orbit speeds collide with ordinary cruise values.** On a 5 km planet with 9.81 m/s² the circular speed is about 221 m/s and escape about 313 m/s. Model calculation, not a decision to simulate orbits.
 
 ## Client authority and network (spikes 4 and 10)
 
@@ -122,11 +94,6 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **Count holds only when the stream resumes.** The last 0.15 s before an owner leaves would otherwise look like an underrun.
 - **`proton run` hides stdout.** Write result files with relative paths; `Z:` paths made a run exit 1 without a message.
 
-## Builds and Windows (spike 7)
-
-- **Cross-build Windows from Linux with llvm-mingw.** Target `x86_64-pc-windows-gnullvm`, linker `x86_64-w64-mingw32-clang` from `mise install github:mstorsjo/llvm-mingw`; no root, no Microsoft SDK licence.
-- **Proton costs little for compute.** The Windows build under Proton Experimental reproduced the checksum and took 0.62 ms per chunk against 0.59 ms native. Headless only; rendering under Proton is untested.
-
 ## Bevy and Avian (spike 9)
 
 - **Avian moves child colliders one physics step late.** `update_child_collider_position` runs at the start of the next step, so between steps spatial queries see a ship's cabin colliders one tick behind the body (6.7 m at 400 m/s); the walker fell through the floor at speed. How: query in the frame derived from a child collider's own `Position`/`Rotation` and its `ColliderTransform`; keep walker coordinates ship-relative.
@@ -139,7 +106,6 @@ Prototype findings; the values were candidates, never accepted tuning.
 
 ## Agent tooling for Rust and Bevy (spike 9b)
 
-- **A shared `CARGO_TARGET_DIR` makes a fresh worktree build in 8.7 s instead of 6 min.** Why: registry crates are fingerprinted without the workspace path; only the own crates rebuild. How: one target dir for all worktrees; no two cargo runs at once. A new crate and two profiles built in 1.3 minutes. sccache gave nothing in fresh worktrees (394 s warm against 368 s without it; 119 of 378 crates miss by path, cause open).
 - **A mise shim cannot be `build.rustc-wrapper`.** Cargo runs rustc in directories without the mise config, and the shim fails with "No version is set for shim". Put the real tool directory on `PATH` (`mise activate`).
 - **rust-analyzer for the Claude Code plugin:** pacman's rustup has no `rust-analyzer` proxy, so install it with `mise use -g rust-analyzer@latest`. `cargo.targetDir` is a workspace-scope key and works from the user config `~/.config/rust-analyzer/rust-analyzer.toml` (`[cargo] targetDir = true`): flycheck and build scripts go to `target/rust-analyzer/` and never lock the agents' target dir. rust-analyzer looks for `Cargo.toml` only in the session root and one level below; the Cargo workspace sits at the repo root, so start the session there.
 - **mold saves 0.18 s on a 1.1 s dynamic-link rebuild**, not worth a setting. `-fuse-ld=mold` with an absolute path fails with gcc 16; use the name with mold on `PATH`.
@@ -162,6 +128,23 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **Code that never ran in a window hides look bugs no check finds.** Round 1's cabin "window" was an opaque plate in front of a solid wall, and the tunnel streaks sat inside the closed cabin; both compiled and passed every check. How: the first windowed run is part of the work, with a screenshot of every phase and a look at each.
 - **Scripted actions must not depend on a phase being long enough.** A 2.2 s walk fit a 2.2 s cruise by luck; when it did not, the key stayed held and the walker pressed into the wall (422 depenetrations). How: let a started action finish on its own clock and release every key at the end of the step.
 - **A drop point on a path that was checked at the start is free of planets**, so an emergency exit only has to check other ships there; moving the point on along the path until it is clear keeps it on the checked curve.
+
+## Crates as Avian bodies (spike 12, 2026-10-09)
+
+- **Keep the game's own state in one struct and copy the Avian pose into it after each step.** Why: grab, interaction, rendering and budget kept reading `CrateBody` unchanged; only the step moved to Avian. How: apply forces before the step, copy pose and velocity back after it, and pass velocity the game set itself (a throw) into `LinearVelocity` when it differs.
+- **Collision filters decide more than geometry.** The ramp collider was walker-only (filter `NONE`), so a crate body fell through it at once. Check both sides' masks before blaming the solver.
+- **Wake bodies only over a collision patch.** The patch came 0.17 s after the walker; waking earlier, crates fell 0.14 m before it caught them. A slower stream would lose them.
+- **Do not let a body rest on a moving ship.** With the ramp hitting crates, a crate rode along at takeoff as a planet-frame body in contact with the ship. Anything on the ship, ramp included, stays in the ship's own model.
+- **Box stacks on a heightfield are not free.** Three stacked crates bounced and fell after about 1 s with Avian defaults; cause not found.
+
+## Flight models (spike 13, 2026-10-09)
+
+- **Limit each mode's request, then blend the modes.** Blending coupled and decoupled requests first and clamping the sum kept the coupled braking saturated almost to the end of the 4 s blend (41 % of the speed left instead of 66 %). Why: a large error stays above the limit until its weight is tiny. How: clamp each mode's thrust to what the thrusters give, then blend.
+- **A ground band needs the stopping distance, in the ship's attitude.** 150 m/s down with 15 m/s² to brake needs about 740 m; an 80 m precision band started far too late. How: compare the band with the clearance less sink² / (2 × braking thrust), and take the braking thrust along the planet's up in ship space (rolled on its side it is the side thrust).
+- **A push along the hull's own axis slides a landed ship.** Ctrl held on a slope pushed along the tilted ship's down; its share along the ground slid the ship 63 m. How: on the ground with no sideways input, settle along the planet's up and strip sideways speed.
+- **A turn cap from the rate's sign alone is wrong in reverse.** Which tolerance a turn loads depends on rate × velocity (nose up while flying backwards pulls the velocity down), plus what the thrusters already hold against gravity. How: build the needed acceleration as a vector and scale the rates to keep it inside the limit box.
+- **Read a touchdown speed before the contact flag.** The flag comes a step after the contact, and Avian's speculative contacts have cut the approach by then (1.56 m/s shown for 2.0 m/s). How: keep the last 0.25 s of sink and take the largest.
+- **One speed cap for every direction changes the feel more than any limit.** With a single cruise cap (stick in a ball), strafing and climbing reach four to five times the classic model's per-axis speeds; only the lower acceleration makes them slower to reach.
 
 ## Figures in Blender by script (walker blockouts, 2026-10-08)
 
@@ -192,23 +175,6 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **Strong smoothing can erase the haircut.** Five passes flattened the side part; two passes at factor 0.4 kept its broad swept shape. The mop needed a separate crown-height adjustment relative to the scalp.
 - **A file load invalidates the executing context's screen.** After `open_mainfile` inside an MCP command, `bpy.context.screen` was `None`; get the new screen from `bpy.context.window_manager.windows[0].screen` before setting viewport angles.
 
-## Crates as Avian bodies (spike 12, 2026-10-09)
-
-- **Keep the game's own state in one struct and copy the Avian pose into it after each step.** Why: grab, interaction, rendering and budget kept reading `CrateBody` unchanged; only the step moved to Avian. How: apply forces before the step, copy pose and velocity back after it, and pass velocity the game set itself (a throw) into `LinearVelocity` when it differs.
-- **Collision filters decide more than geometry.** The ramp collider was walker-only (filter `NONE`), so a crate body fell through it at once. Check both sides' masks before blaming the solver.
-- **Wake bodies only over a collision patch.** The patch came 0.17 s after the walker; waking earlier, crates fell 0.14 m before it caught them. A slower stream would lose them.
-- **Do not let a body rest on a moving ship.** With the ramp hitting crates, a crate rode along at takeoff as a planet-frame body in contact with the ship. Anything on the ship, ramp included, stays in the ship's own model.
-- **Box stacks on a heightfield are not free.** Three stacked crates bounced and fell after about 1 s with Avian defaults; cause not found.
-
-## Flight models (spike 13, 2026-10-09)
-
-- **Limit each mode's request, then blend the modes.** Blending coupled and decoupled requests first and clamping the sum kept the coupled braking saturated almost to the end of the 4 s blend (41 % of the speed left instead of 66 %). Why: a large error stays above the limit until its weight is tiny. How: clamp each mode's thrust to what the thrusters give, then blend.
-- **A ground band needs the stopping distance, in the ship's attitude.** 150 m/s down with 15 m/s² to brake needs about 740 m; an 80 m precision band started far too late. How: compare the band with the clearance less sink² / (2 × braking thrust), and take the braking thrust along the planet's up in ship space (rolled on its side it is the side thrust).
-- **A push along the hull's own axis slides a landed ship.** Ctrl held on a slope pushed along the tilted ship's down; its share along the ground slid the ship 63 m. How: on the ground with no sideways input, settle along the planet's up and strip sideways speed.
-- **A turn cap from the rate's sign alone is wrong in reverse.** Which tolerance a turn loads depends on rate × velocity (nose up while flying backwards pulls the velocity down), plus what the thrusters already hold against gravity. How: build the needed acceleration as a vector and scale the rates to keep it inside the limit box.
-- **Read a touchdown speed before the contact flag.** The flag comes a step after the contact, and Avian's speculative contacts have cut the approach by then (1.56 m/s shown for 2.0 m/s). How: keep the last 0.25 s of sink and take the largest.
-- **One speed cap for every direction changes the feel more than any limit.** With a single cruise cap (stick in a ball), strafing and climbing reach four to five times the classic model's per-axis speeds; only the lower acceleration makes them slower to reach.
-
 ## Mesh orientation checks (2026-10-09)
 
 - **Check closed islands separately.** A small inverted TV screen or limb can hide inside a positive whole-model signed volume. Check consistent edge winding, nonmanifold edges and signed volume per island before edge splitting; allow intentional open shells. Verify exported triangle normals against corner normals as well.
@@ -216,3 +182,37 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **Skin can fold acute branch junctions.** Norb's wrist/thumb branch produced folded and detached hands. Recalculating normals alone passed the volume checks while a live face-orientation view still showed the fold. Keep the arm and palm as one connected Skin surface and use rounded thumb primitives at the skeleton positions. The repaired human variants have 5,648 triangles (spiked hair 5,646).
 - **Decimation can leave a collapsed face pair.** The spiked hair contained two opposite faces sharing the same vertices, enclosing no volume. Remove only that exact remnant, then validate the final mesh.
 - **Make Blender errors fail the command.** Use `--python-exit-code 1` for generators and Blender regression tests so a Python validation failure cannot look like a successful export.
+
+## Godot era (historic)
+
+Findings from the Godot spikes 1 to 8. The engine is gone (see `DECISIONS.md`, "Engine"); keep what transfers (precision, origin shift, flight feel), do not copy Godot specifics.
+
+### Ships, walking inside, origin shift (spikes 3 and 5, Godot)
+
+- Walker as a child of the ship, velocity relative to the ship, ship ignoring the walker's layer: holds up to about 400 m/s with roll (mm drift).
+- Thin slabs (ramps) over uneven terrain let a capsule slip underneath; boarding on slopes needs its own design and test session.
+- **Check the obvious collider before blaming precision.** The 16 km "precision wall" was the parked ship standing in the walk path. How: log slide collisions (collider, normal, contact height) before drawing conclusions.
+- **A safety net can hide the test.** The CPU height fallback kept the walker on the ground while the collision ring had silently built no patches. How: count frames where the net is the only thing holding the body.
+- **Origin shift breaks silently wherever world and planet coordinates mix.** Example: a density function got a planet position and subtracted the centre again; the sky turned black only once the planet left the origin. How: one conversion function, type or name every position as world or planet-relative, and test with the planet away from the origin.
+- **Physics survives far from the origin, the picture does not.** Walking and landing worked up to 197 km from the origin; the error is in the float32 `view * model` on the GPU (about 2.5 px at 100 km for something 2 m from the camera). Measure in pixels, not only in physics.
+- **A difference of two far positions has the float resolution of the far distance.** Measuring steps relative to a planet 100 km away showed fake 7.8 mm stairs. How: measure in the frame where the body lives, or in doubles.
+- **To reproduce a bug on film, search headless with the same fixed frame rate first.** The test bot reacts per frame, so the frame rate changes what happens: the ship tumble ended in space at 60 fps (3 of 3) but landed at 30 fps.
+
+### Flight feel (Godot prototypes)
+
+Prototype findings; the values were candidates, never accepted tuning.
+
+- **Flight assistance and throttle retention are separate choices.** Continuing to move can mean commanded cruise or inertial drift. Ask which release behavior the initiator wants before implementing.
+- **Keep transcript numbers as research notes.** The supplied video summaries warn of ASR errors and omit original links and dates. They support exploring control principles, not adopting exact speeds, ratios or keybindings.
+- **Curvature needs a force budget, not just a turning nose.** During acceleration a large target-velocity error consumed all thrust and the ship climbed in a nominally level run. Reserve curvature and drag support first, then spend the rest on velocity correction.
+- **Use terrain clearance for the local speed envelope.** Preview terrain over braking time and reduce clearance by the descent stopping distance; sparse samples still cannot guarantee obstacle avoidance.
+- **New speed targets change existing bot timeouts.** A slower vertical target silently turned a phase into a different test. Extend phase budgets and check attained altitude in the report.
+- **Passing motion checks does not establish flight feel.** Raising cruise speed while keeping the braking force lengthens the stopping time proportionally; the initiator felt abrupt starts and heavy steering. Responsive steering and quick release stops are different preferences.
+- **Nose, aim and trajectory are distinct feedback.** Measure and display ship attitude separately from camera attitude: a chase camera looking 10 degrees below the nose made level camera flight a climb and read as "automatic climbing".
+- **Finite gravity needs finite planet follow too.** If gravity fades out with altitude, scale the follow force, the angular transport and the terrain preview with the same envelope. A partial follow must integrate a turning velocity in the preview.
+- **Small-planet orbit speeds collide with ordinary cruise values.** On a 5 km planet with 9.81 m/s² the circular speed is about 221 m/s and escape about 313 m/s. Model calculation, not a decision to simulate orbits.
+
+### Builds and Windows (spike 7, Godot extension)
+
+- **Cross-build Windows from Linux with llvm-mingw.** Target `x86_64-pc-windows-gnullvm`, linker `x86_64-w64-mingw32-clang` from `mise install github:mstorsjo/llvm-mingw`; no root, no Microsoft SDK licence.
+- **Proton costs little for compute.** The Windows build under Proton Experimental reproduced the checksum and took 0.62 ms per chunk against 0.59 ms native. Headless only; rendering under Proton is untested.
