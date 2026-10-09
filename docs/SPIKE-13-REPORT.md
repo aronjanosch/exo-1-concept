@@ -2,7 +2,7 @@
 
 **In one line:** the axis model flies in the game next to the classic one (F7), lands and holds like it, and with its placeholder values it feels very different: one speed cap for every direction makes strafing and climbing four to five times faster, and G-safety slows a full turn at cruise speed to 17 °/s, where the classic model spins at 143 °/s and loses its speed. Which parts to keep is the initiator's call.
 
-Branch `spike/ifcs` in the code repo (based on `main` 1c295ee, `origin/main` merged in at 54accef), last state f988387 with the freeze tag `spike/13-ifcs` (2026-10-09, after the second playtest; the first numbers below are from 9e74a73). Brief: `SPIKE-13-BRIEF.md`. Measured headless at 60 Hz with `cargo dev --headless --scenario=flight-models`, values as shipped in `content/tuning/ship_axis.json` (all placeholders). No frame timings, no windowed run: F7 is checked through the bindings and the HUD readout headless; the HUD text element itself was not looked at in a window.
+Branch `spike/ifcs` in the code repo (based on `main` 1c295ee, `origin/main` merged in at 54accef), last state f988387 with the freeze tag `spike/13-ifcs` (2026-10-09, after the second playtest; the first numbers below are from 9e74a73). Brief: `archive/SPIKE-13-BRIEF.md`. Measured headless at 60 Hz with `cargo dev --headless --scenario=flight-models`, values as shipped in `content/tuning/ship_axis.json` (all placeholders). No frame timings, no windowed run: F7 is checked through the bindings and the HUD readout headless; the HUD text element itself was not looked at in a window.
 
 ## What the spike built
 

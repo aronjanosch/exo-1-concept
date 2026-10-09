@@ -1,6 +1,6 @@
 # Spike 11 report — two planets and a warp
 
-Date: 2026-10-08. Brief: `SPIKE-11-BRIEF.md`. Code: branch `spike/11-warp` in the code repo (worktree `~/projects/exo-1-spike11`, from `main` at `c953922`), local only, freeze tag `spike/11-warp`. Machine: the roost container (8 cores, no GPU, no display). Tags: **measured**, **calculated**, **assumed**, **open**.
+Date: 2026-10-08. Brief: `archive/SPIKE-11-BRIEF.md`. Code: branch `spike/11-warp` in the code repo (worktree `~/projects/exo-1-spike11`, from `main` at `c953922`), local only, freeze tag `spike/11-warp`. Machine: the roost container (8 cores, no GPU, no display). Tags: **measured**, **calculated**, **assumed**, **open**.
 
 ## Answer in one line
 
@@ -89,7 +89,7 @@ A warping ship was replayed through the real snapshot path (wire format, interpo
 
 ## Round 2
 
-Date: 2026-10-08. Brief: `SPIKE-11-ROUND-2-BRIEF.md`. Same branch `spike/11-warp`, worktree `~/Work/exo-1-spike11`, commits `a908f4a` (drive, registry, network, scenario) and `0d4b9ef` (what the first windowed run showed), plus README. Machine: the initiator's desktop (RTX 5070 Ti, Vulkan, Hyprland), windowed runs floating 1600 × 900 on workspace 7, no screensaver on it.
+Date: 2026-10-08. Brief: `archive/SPIKE-11-ROUND-2-BRIEF.md`. Same branch `spike/11-warp`, worktree `~/Work/exo-1-spike11`, commits `a908f4a` (drive, registry, network, scenario) and `0d4b9ef` (what the first windowed run showed), plus README. Machine: the initiator's desktop (RTX 5070 Ti, Vulkan, Hyprland), windowed runs floating 1600 × 900 on workspace 7, no screensaver on it.
 
 ### Answer in one line
 

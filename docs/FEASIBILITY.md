@@ -1,6 +1,6 @@
 # Feasibility — EXO-1 (working title)
 
-Status: DRAFT. Result of research passes on 2026-10-03. Facts are marked **[verified]** (checked in a primary source), **[calculated]**, or **[unverified]** (general knowledge, secondary sources or guess). Unverified points must be checked in a spike or in the primary source before we rely on them. Links that could not be fetched are collected in `SOURCES-TO-CHECK.md`.
+Status: HISTORIC, not maintained. The engine and network sections are the Godot-era reasoning of 2026-10-03; the engine is Bevy now and authority is client authority (`DECISIONS.md`). Still useful for the planet, precision and large-world reasoning. Result of research passes on 2026-10-03. Facts are marked **[verified]** (checked in a primary source), **[calculated]**, or **[unverified]** (general knowledge, secondary sources or guess). Unverified points must be checked in a spike or in the primary source before we rely on them. Links that could not be fetched are collected in `SOURCES-TO-CHECK.md`.
 
 Decisions taken from this research live in `DECISIONS.md`; where they differ, `DECISIONS.md` wins. Since then: client authority instead of host authority (2026-10-06), fully Rust with Bevy once spike 9 passes (2026-10-07), so the Godot sections below are the reasoning of 2026-10-03.
 

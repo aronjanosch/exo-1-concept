@@ -2,7 +2,7 @@
 
 **In one line:** the three-state model works for holding, carrying and waking. Two things are open: stacks of three are not stable yet, and the ramp. For the ramp, the simple answer is to keep it out of Avian: a crate on the ramp stays a `CrateBody`, as today.
 
-Branch `spike/avian-crates` (ef24e65, pushed; based on `night/extras` 531fd02). Brief: `SPIKE-12-BRIEF.md`. Measured headless on the NAS: behaviour only, no timings. The switch `EXO_AVIAN_CRATES=0` runs the old model for comparison.
+Branch `spike/avian-crates` (ef24e65, pushed; based on `night/extras` 531fd02). Brief: `archive/SPIKE-12-BRIEF.md`. Measured headless on the NAS: behaviour only, no timings. The switch `EXO_AVIAN_CRATES=0` runs the old model for comparison.
 
 ## What the spike built
 

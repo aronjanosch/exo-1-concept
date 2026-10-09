@@ -1,6 +1,6 @@
 # Spike 9 report — Bevy validation
 
-Date: 2026-10-07. Brief: `SPIKE-9-BRIEF.md`. Code: branch `spike/bevy` in worktree `~/Work/exo-1-spike9` (from `origin/spike/planet-gen`, `0bfd853`), `spikes/bevy/`, local only, freeze tag `spike/9-bevy`. Raw outputs: `spikes/bevy/results/`. Machine: Ryzen 7 5800X (16 threads), RTX 5070 Ti, 144 Hz monitor, Hyprland. Tags: **measured**, **calculated**, **assumed**.
+Date: 2026-10-07. Brief: `archive/SPIKE-9-BRIEF.md`. Code: branch `spike/bevy` in worktree `~/Work/exo-1-spike9` (from `origin/spike/planet-gen`, `0bfd853`), `spikes/bevy/`, local only, freeze tag `spike/9-bevy`. Raw outputs: `spikes/bevy/results/`. Machine: Ryzen 7 5800X (16 threads), RTX 5070 Ti, 144 Hz monitor, Hyprland. Tags: **measured**, **calculated**, **assumed**.
 
 ## Answer in one line
 

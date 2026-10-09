@@ -1,6 +1,6 @@
 # Spike 10 report — network in Bevy
 
-Date: 2026-10-07. Brief: `SPIKE-10-BRIEF.md`. Code: branch `spike/bevy-network` (worktree `~/Work/exo-1-spike10`, from tag `spike/9-bevy`), `spikes/bevy/`, local only, freeze tag `spike/10-bevy-network`. Details and commands: `spikes/bevy/NETWORK.md`. Raw results: `spikes/bevy/results/` (`net-matrix.json`, `net/`, `contacts.json`, `foreign/`). Machine: Ryzen 7 5800X, localhost only. Tags: **measured**, **assumed**, **open**.
+Date: 2026-10-07. Brief: `archive/SPIKE-10-BRIEF.md`. Code: branch `spike/bevy-network` (worktree `~/Work/exo-1-spike10`, from tag `spike/9-bevy`), `spikes/bevy/`, local only, freeze tag `spike/10-bevy-network`. Details and commands: `spikes/bevy/NETWORK.md`. Raw results: `spikes/bevy/results/` (`net-matrix.json`, `net/`, `contacts.json`, `foreign/`). Machine: Ryzen 7 5800X, localhost only. Tags: **measured**, **assumed**, **open**.
 
 ## Answer in one line
 

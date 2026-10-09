@@ -1,6 +1,6 @@
 # Spike 1 report — planet
 
-Date: 2026-10-03. Brief: `SPIKE-1-BRIEF.md`. Code: `~/Work/exo-1`, branch `spike/planet` (throwaway, not committed), details and controls in `spikes/planet/README.md`.
+Date: 2026-10-03. Brief: `archive/SPIKE-1-BRIEF.md`. Code: `~/Work/exo-1`, branch `spike/planet` (throwaway, not committed), details and controls in `spikes/planet/README.md`.
 
 ## Result
 
