@@ -45,6 +45,20 @@ Not in this run: #134 (networking), #138 (playtest content, the initiator's), th
 - Design gaps: pick a starting value, mark it `TODO(initiator)` in the data or code, list it in `NIGHT-LOG.md`. Never stop for a design question.
 - Tone for placeholder texts: silly and satirical, invented names and invented goods only (`CORE-LOOP.md`, "Tone"). No real people, brands, drugs or names from other games.
 
+## Guardrails from the research
+
+`DECISIONS.md` row "Borrowed patterns (direction)" and the avoid list in `research/crime-empire-design.md`. What applies to D:
+
+- **Humour in items and mechanics first**, then in short lines; no cutscenes.
+- **Never the same line twice in a row**: every text a player sees often (greetings, briefings, notices, customer lines) comes from a pool, picked by seed without immediate repeats.
+- **No mistake locks a giver or customer for good**: standing and relationship drop and recover with work.
+- **No co-op player waits for another**: without a licence you ride along and carry; banners never block input; the arrival ritual can be skipped.
+- **No staring at a timer**: no waits without something to do.
+- **The exam is the tutorial**, with a grade (pass, honours).
+- **Illegal must not always pay more than legal** later on: keep courier and wholesaler prices in one table (`TODO(initiator)`), so G and H can balance against them.
+
+The four decisions of 2026-10-09 (`DECISIONS.md`: "Where jobs come from (D)", "Customer goods before production (D)", "Flight licence exam (D)", "Courier start (D)") are in the tickets #167, #168, #169, #170 under "Decided".
+
 ## Phase 2: extras, branch `night/d-extras`
 
 When phase 1 is done (or an issue is blocked for good), branch `night/d-extras` from the tip of `night/d-foundation` and keep going there. Pick by value, in this order:
