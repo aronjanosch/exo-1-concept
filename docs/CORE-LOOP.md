@@ -1,6 +1,6 @@
 # Core Loop — EXO-1 (working title)
 
-Status: DRAFT, proposal. The initiator decides the core loop and the pillars (see `VISION.md`). Everything here is a suggestion until confirmed. All numbers are starting values to be tuned in playtests, not rules.
+Status: living proposal. The initiator decides the core loop and the pillars (see `VISION.md`). What is decided is in `DECISIONS.md` and summarised under "Milestone D" below; everything else here is a suggestion until confirmed. All numbers are starting values to be tuned in playtests, not rules.
 
 ## One sentence
 
@@ -26,6 +26,16 @@ Analogy to Schedule I:
 | Expand the empire | Unlock places and contracts, later outposts |
 | Unlock regions | New places and new contracts |
 
+## Milestone D: the first loop (decided, provisional)
+
+The decisions of 2026-10-09 are a starting point that the loop playtest may change (`DECISIONS.md`, "Cargo and the loop"). In short:
+
+- A job is a template with objectives; milestone D builds one objective, *deliver*, with two or three modifiers. Jobs come from a seeded generator and sit on a board at a place; one player accepts, the whole crew can carry and deliver.
+- Money: a fixed reward per job, graded by delivered share, condition and time. The only sink is buying unlocks. No market, no production in D.
+- Progress is shared (crew wallet and unlocks) with a personal layer (freight XP, counted but gating nothing).
+- Encounters (route events) are shown on the job up front; a thin pool of harmless ones runs on every flight. No combat.
+- Each system is its own `*_core` crate on a small kernel, built in seven slow steps. Details and quotes: `DECISIONS.md`, research: `research/loop-references.md`.
+
 ## Pillars (proposal)
 
 1. **Simple and effective:** simple menus, simple assets, minimal HUD; gameplay and systems over graphics.
@@ -38,7 +48,7 @@ Analogy to Schedule I:
 
 - Procedural galaxy
 - Ship tuning and ship building in the MVP (not planned; may come later; the community may build it as part of the experiment)
-- Newtonian full-sim flight (a possible later direction, see below)
+- Full Newtonian simulation (parked); the flight model aims at Star Citizen's feel with limits per axis (`DECISIONS.md`, "Flight model (spike 13)")
 - Simulated full economy, fleet command
 - Roguelike reset, story with cutscenes, voice acting
 - Walkable stations in the MVP (landing leads to the small city)
@@ -55,13 +65,13 @@ Analogy to Schedule I:
 ## Flight and ships (starting values)
 
 - Arcade flight with assist and a generous landing aid; no menus or loading screens between space and ground.
-- Rough target for the first prototype: start to landing about 60-120 seconds, no stretch of more than about 30 seconds without input or an event. Not a rule, tune by feel.
+- Rough target for the first prototype: start to landing about 60-120 seconds, about 30 seconds without input or an event as a guide, 45 or 55 is fine (`DECISIONS.md`, "Travel time"). Not a rule, tune by feel.
 - Later idea (parked): ship classes such as a slow, simple, easy-to-fly ship (like a drone you can control from a phone) versus a fast, heavy FPV-racer-like ship that is harder to fly.
-- Density: roughly one event per minute of flight (starting value), 8-12 hand-written random-event templates (distress call, pirates, drifting cargo, broken freighter), weighted by route with a cooldown. Nothing procedural.
+- Events on a flight are *encounters*, a record each with trigger, weight, cooldown and effect (`DECISIONS.md`, "Encounters"). Starting idea: roughly one per minute, 8-12 hand-written ones (distress call, drifting cargo, broken freighter); pirates only once combat exists.
 
 ## HUD (starting values)
 
-At most about 5 permanent elements (hull and shield, money, cargo, target arrow, speed or altitude), co-op markers at the screen edge. Test it; it may change.
+Decided: at most four permanent elements (mode, speed, altitude near a planet, boost); everything else only when relevant (`DECISIONS.md`, "HUD"). The target arrow and co-op markers come with the loop (build step 7). Test it; it may change.
 
 Ideas from Dead Space's diegetic UI **[verified, secondary article about a GDC 2013 talk, `research/sources/dead-space-ui-medium.md`]**: a holographic locator line pointing to the destination instead of a map (fits our target arrow); status shown on the ship itself (Dead Space shows health as a light bar on the suit); loading and travel wrapped into a believable element (a tram ride) instead of a loading screen; and "usability trumps aesthetics" where the two clash. Diegetic is a style option, not a requirement.
 
@@ -80,36 +90,26 @@ Ideas from Dead Space's diegetic UI **[verified, secondary article about a GDC 2
 
 ## Co-op (simple start)
 
-- One player, one ship in the first spikes; more players once the core works.
+- Milestone B brings friends in: host and join, a roster, one figure for all players (`ROADMAP.md`).
 - Host save must survive reconnects without resetting progress.
 - Later ideas: "warp to friend", parallel tasks, contract quantities that scale with player count.
 
-## MVP scope (A1 baseline)
+## MVP scope (first idea, the milestones in `ROADMAP.md` replace the baseline)
 
 - 1 star system, 1 planet (seamless), 1 small ship
 - 1 dense city (maybe 2-3 districts), 2-3 outposts
 - Arcade flight, landing by button press, seamless atmosphere transition
 - About 6 goods, cargo limit, shared wallet
-- 3 contract templates
+- 3 contract templates (milestone D starts with one objective, *deliver*)
 - Minimal HUD
 - Data schema from day one, even with few entries
 - One player first; 2-5 later
 
 Interiors: small shops stay in the open world; large or complex interiors (for example a sewer) are instanced.
 
-## Content schema (first sketch)
+## Content schema
 
-One file per object, validated (see `FEASIBILITY.md` for format and security rules):
-
-- `commodity`: id, name key, base price, volume, tags, illegal-per-faction
-- `location`: name key, faction, produces and demands (multipliers), menu tabs, flavour text key, coordinates on the planet
-- `planet`: seed, radius, list of locations
-- `faction`: relations, banned goods, penalties (later)
-- `mission_template`: type, text with placeholders, reward formula, required goods, delivery place, time window, expiry, conditions (one state machine for quests and contracts)
-- `event`: trigger, effect on prices or spawns
-- Strings in separate localisation tables
-
-Ship parts and hulls are not part of the MVP schema (tuning is out of scope for now).
+One file per object, validated. The records for milestone D are decided: `commodity`, `site`, `job_template`, `unlock`, `progress_track`, `encounter`, with templates plus pools and strings in localisation tables (`DECISIONS.md`, "Loop content schema"). Planets carry their values per body (`DECISIONS.md`, "World values and scale"). Factions, ship parts and hulls are not part of it yet.
 
 ## Later (after the MVP, by community vote)
 
@@ -122,6 +122,6 @@ Playtests start at greybox with 3-5 people, in this order: flight and landing; t
 ## Open design questions
 
 - Planet radius: see `DECISIONS.md`.
-- How much combat, and of what kind?
-- ~~Is production (making goods) part of the MVP?~~ Not in milestone D; see "Production (loop D)" in `DECISIONS.md` (2026-10-09).
+- How much combat, and of what kind? Not before the loop playtest; later vision in `DECISIONS.md`, "No combat before the loop".
+- ~~Is production (making goods) part of the MVP?~~ Not in milestone D; each of farming and mining gets its own milestone after the loop playtest (`DECISIONS.md`, "Production (loop D)").
 - Tone and name of the "strange galaxy" (and the game; the working title is not final, see `DECISIONS.md`).
