@@ -175,3 +175,11 @@ Prototype findings; the values were candidates, never accepted tuning.
 - **Compare the live study with a fresh script build.** Norb's jaw and side-part smoothing, then the lower mop crown, were explored in live Blender through MCP and transferred to `refine_norb` in the source script. Both reproduction checks compared 2,799 live-study vertex positions with the rebuilt mesh and measured a maximum nearest-vertex distance of 0 m. The human variants remain at 5,430 triangles.
 - **Strong smoothing can erase the haircut.** Five passes flattened the side part; two passes at factor 0.4 kept its broad swept shape. The mop needed a separate crown-height adjustment relative to the scalp.
 - **A file load invalidates the executing context's screen.** After `open_mainfile` inside an MCP command, `bpy.context.screen` was `None`; get the new screen from `bpy.context.window_manager.windows[0].screen` before setting viewport angles.
+
+## Crates as Avian bodies (spike 12, 2026-10-09)
+
+- **Keep the game's own state in one struct and copy the Avian pose into it after each step.** Why: grab, interaction, rendering and budget kept reading `CrateBody` unchanged; only the step moved to Avian. How: apply forces before the step, copy pose and velocity back after it, and pass velocity the game set itself (a throw) into `LinearVelocity` when it differs.
+- **Collision filters decide more than geometry.** The ramp collider was walker-only (filter `NONE`), so a crate body fell through it at once. Check both sides' masks before blaming the solver.
+- **Wake bodies only over a collision patch.** The patch came 0.17 s after the walker; waking earlier, crates fell 0.14 m before it caught them. A slower stream would lose them.
+- **Do not let a body rest on a moving ship.** With the ramp hitting crates, a crate rode along at takeoff as a planet-frame body in contact with the ship. Anything on the ship, ramp included, stays in the ship's own model.
+- **Box stacks on a heightfield are not free.** Three stacked crates bounced and fell after about 1 s with Avian defaults; cause not found.
