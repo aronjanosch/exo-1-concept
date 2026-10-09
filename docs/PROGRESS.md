@@ -20,7 +20,7 @@ Dated log of what happened, for the video track (B1/B2) and for anyone joining l
 - 23:05 Repo scaffold on `main`; spike 1 code on throwaway branch `spike/planet`.
 - Spike 1 (planet): seamless small planet in Godot 4.7.2, walk, board, fly to space and back, land. See `SPIKE-1-REPORT.md`. Covers spike 2 (transition) as well.
 - Spike 3 (leaving the ship), branch `spike/leave-ship`: walking inside a flying ship works up to about 400 m/s; ramp boarding still unreliable. See `SPIKE-3-REPORT.md`.
-- Spike 5 (float limit, origin shift), branch `spike/origin-shift` in a second worktree (`exo-1-origin-shift`): brief in `SPIKE-5-BRIEF.md`, report in `SPIKE-5-REPORT.md`. Physics works up to about 200 km from the origin; the visible limit is GPU float32 (about 1 px at 50-60 km); an origin shift in `_process` fixes it at under 0.4 ms per shift. The 16 km "precision wall" from spike 1 turned out to be the parked ship.
+- Spike 5 (float limit, origin shift), branch `spike/origin-shift` in a second worktree (`exo-1-origin-shift`): brief in `archive/SPIKE-5-BRIEF.md`, report in `SPIKE-5-REPORT.md`. Physics works up to about 200 km from the origin; the visible limit is GPU float32 (about 1 px at 50-60 km); an origin shift in `_process` fixes it at under 0.4 ms per shift. The 16 km "precision wall" from spike 1 turned out to be the parked ship.
 
 **How we worked (video material)**
 
@@ -40,6 +40,6 @@ Dated log of what happened, for the video track (B1/B2) and for anyone joining l
 - 10-04: assisted-flight experiments on `spike/assisted-flight` (findings in `LEARNINGS.md`); spike 4 (client authority, LAN) started on `spike/4-network`.
 - 10-06: spike 4 closed after a two-computer LAN test, tag `spike/4-client-authority` (`SPIKE-4-REPORT.md`); client authority decided. Spike 6 benchmarked the terrain generator, GDScript versus Rust (`SPIKE-6-REPORT.md`); Rust generator and no web export decided.
 - 10-07: spike 7 built the Rust extension for Linux and Windows locally and in CI (`SPIKE-7-REPORT.md`); Linux ships native. `spike/combined` became the base branch for spikes. Spike 8 built the procedural planet in a cloud run (`SPIKE-8-REPORT.md`); walking anywhere decided.
-- 10-07: decision to go fully Rust with Bevy after a validation spike (spike 9, `SPIKE-9-BRIEF.md`), networking as spike 10, EXO-1 re-oriented as a private project (`DECISIONS.md`).
-- 10-07: spike 9b brief (agent tooling for Rust and Bevy: build speed, rust-analyzer, BRP, Bevy skills), starts after spike 9 is frozen (`SPIKE-9B-BRIEF.md`).
-- 10-07: spike 10 brief (network in Bevy, client authority as in spike 4), before the code moves into the new layout (`SPIKE-10-BRIEF.md`).
+- 10-07: decision to go fully Rust with Bevy after a validation spike (spike 9, `archive/SPIKE-9-BRIEF.md`), networking as spike 10, EXO-1 re-oriented as a private project (`DECISIONS.md`).
+- 10-07: spike 9b brief (agent tooling for Rust and Bevy: build speed, rust-analyzer, BRP, Bevy skills), starts after spike 9 is frozen (`archive/SPIKE-9B-BRIEF.md`).
+- 10-07: spike 10 brief (network in Bevy, client authority as in spike 4), before the code moves into the new layout (`archive/SPIKE-10-BRIEF.md`).

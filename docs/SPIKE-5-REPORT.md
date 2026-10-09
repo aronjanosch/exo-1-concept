@@ -1,6 +1,6 @@
 # Spike 5 report — float limit and origin shift
 
-Date: 2026-10-04. Brief: `SPIKE-5-BRIEF.md`. Code: `~/Work/exo-1`, branch `spike/origin-shift` (throwaway, from `spike/planet`, worked in the worktree `~/Work/exo-1-origin-shift`), options in `spikes/planet/README.md`.
+Date: 2026-10-04. Brief: `archive/SPIKE-5-BRIEF.md`. Code: `~/Work/exo-1`, branch `spike/origin-shift` (throwaway, from `spike/planet`, worked in the worktree `~/Work/exo-1-origin-shift`), options in `spikes/planet/README.md`.
 
 Machine: RTX 5070 Ti, Compatibility renderer (OpenGL), 144 Hz window on workspace 7. Labels: **verified** (checked directly), **measured** (test runs), **calculated** (float32 maths on the CPU, same formula as the GPU), **assumed**.
 
