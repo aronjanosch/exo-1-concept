@@ -38,6 +38,16 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Killing a background shell does not kill its cargo.** `pkill` on the shell left the test run going, and the next run wrote into the same log and target dir: a mixed log with failures from neither. How: stop cargo itself, check `pgrep -af cargo` is clear before the rerun.
 - **Reports belong on the issue, not in the chat.** Copy-pasting session reports between terminals made the initiator the message bus. How: each lane ends with one comment on its issue; the coordinator reads it with `gh`.
 
+## Unattended night runs (milestone D, 2026-10-10)
+
+- **Work in small gates while building, the full gate once per issue.** `cargo t` takes 5 to 8 minutes plus 2 to 3 minutes of rebuild whenever `exo_app` changes; eight full runs cost about an hour. How: `cargo nextest run -p <crate>` and `cargo dev --headless --scenario=<name>` while working; the full `cargo t` and `cargo scenario` once per finished issue.
+- **Keep gate output out of the context.** Bash output was 23 % of a 565k-token context. How: redirect gate, scenario and build output to a file in the scratchpad and print only `tail` or `grep`; never `cat` a large file.
+- **The container has 6 GB of memory.** One gate run peaks near 4.9 GB, and an older run was killed by the cgroup limit. How: `CARGO_BUILD_JOBS` at most 4 (as in `env.sh`, not 6) and nextest `--test-threads` 3 to 4.
+- **Read the fixtures before writing expected values.** About ten tests failed on assumptions I could have read: the unlock price, the wallet start, wait times, pixel-centre tolerances. Each cost a rebuild. How: derive expectations from the content in the test, not from literals.
+- **A repeatable job is offered again at once.** Scenario checks that look at the last job of a template see the new offer, not the finished one. How: look for any job of the template in the wanted state.
+- **Push after every finished slice.** The run was cut off after six of eight issues and nothing was lost because each issue was committed, pushed and commented, and `NIGHT-LOG.md` was kept current.
+- **Test hooks are fine for what the brief names.** Take-off and landing are set by hook in the licence scenario, so the exam reads only events and does not break when the flight model changes; the pure state machine behind the events has its own unit tests.
+
 ## Planet and terrain
 
 - Derivative flat normals (`cross(dFdx, dFdy)`) are zero on sub-pixel triangles; `normalize()` gives NaN and it survives `mix(..., 0)`. Guard the length.
