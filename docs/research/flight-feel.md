@@ -69,3 +69,7 @@ Missing from the local extract: the screen-effect shader parameters (only a list
 [18] https://human-factors.arc.nasa.gov/groups/HCSL/publications/Foyle_AHS92.pdf
 [19] https://trid.trb.org/View/1646045
 Camera shake: https://www.gamedeveloper.com/programming/video-sprucing-up-cameras-with-math ; camera mistakes: https://gdcvault.com/play/1020460/50-Camera ; race courses: https://starcitizen.tools/The_Snake_Pit
+
+## Later reads (2026-10-10)
+
+How a flight step chooses thrust direction, brakes, and rotation, from three public repos, mapped onto `flight_core`: `docs/research/flight-controller-notes.md`. Not a decision. The ranked list above is unchanged.
