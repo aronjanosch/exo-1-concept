@@ -49,7 +49,7 @@ Dated log of what happened, for the video track (B1/B2) and for anyone joining l
 - 10-07: spike 9 (Bevy validation, tag `spike/9-bevy`), spike 9b (agent tooling, tag-less branch `spike/bevy-tooling`), spike 10 (network in Bevy, tag `spike/10-bevy-network`); the code moves into the layout of the code repo (Cargo workspace, `crates/`, `content/`).
 - 10-08: spike 11 (two planets and a warp, quantum drive model; `SPIKE-11-REPORT.md`, round 2 made it mergeable). Roadmap order A to E approved, milestone P (planets with character) added. Decisions on flight modes, vjoy, HUD, menu, the walker figure. Design-tool research; model source is a Blender Python script. City look, live Blender through MCP.
 - 10-09: milestone C (grab and cargo) decided, built in a night run; playtest feedback led to spike 12 (crates as Avian bodies, `SPIKE-12-REPORT.md`). Spike 13 (axis flight model next to the classic one, tag `spike/13-ifcs`) with two playtests. Research for milestone D (`research/loop-references.md`), loop decisions (job model, money, progression, schema, encounters, board, failure, save) and the slow build order with one crate per gameplay system. Docs cleaned up: finished briefs and the night run moved to `archive/`, roadmap rewritten.
-- 10-10: flight-controller reference note (`research/flight-controller-notes.md`): coupled thrust direction, a measured Newtonian flight step, and Alpha 2.4 action maps. Nothing stored, no decision.
+- 10-10: flight-controller reference note (`research/flight-controller-notes.md`): coupled thrust direction, a measured Newtonian flight step, Alpha 2.4 action maps, and a GPL block-ship in Bevy. Nothing stored, no decision. The measurement is code-repo issue #183 under epic #143.
 
 ## Spikes at a glance
 

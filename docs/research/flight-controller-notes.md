@@ -49,6 +49,17 @@ The shape that is still worth remembering:
 - A hat can be strafe, and a side direction can add a forward component. That is a binding, not a flight law.
 - The mouse-aim mode has to be turned back on every time the pilot sits down. Mouse-aim stays out of our bindings.
 
+## 4. A block ship in Bevy
+
+Source: `https://github.com/AnthonyTornetta/Cosmos` (GPL-3.0, Rust, Bevy, read 2026-10-10). A multiplayer game where the ship is the blocks you place. GPL: ideas only, no code and no constants. It is not a flight computer. Translation is one impulse along the camera axes, rotation is written straight into angular velocity, and a single speed clamp stops the ship. No per-axis box, no assist, no atmosphere.
+
+What is still worth keeping:
+
+- **Thrust is the sum of the thruster blocks**, plus a little from the ship core so a bare core can still move. Power scales that sum down, and an empty store means no translation. Torque does not come from where the blocks sit. It comes from the mouse offset, and a larger footprint turns more slowly. That size rule is a stand-in for inertia. Our #145 already asks for a real force and torque on the mass; ship power stays with the ship sprints (#174).
+- **The pilot sends a request, the server applies the impulse.** No pilot, the request is cleared. Brake and match-speed are impulses along a velocity error, scaled by mass so the acceleration does not depend on mass, and capped by the thrust sum. The brake therefore keeps the velocity heading. Match-speed chases a focused body inside a distance. The 2016 action maps already name that action. We do not have it; it is a later idea, not this slice.
+- **Gravity is an emitter** (force per kilogram, radius). Close to one of their cube faces it pulls along the face; farther out it pulls toward the body. A gravity-well block is a placed emitter. Our planets stay spheres. Cabin gravity is already decided.
+- **A warp drive can be too small for the ship.** Charge comes from the drive blocks; the jump costs more as the structure gets heavier; past that the state is "too big", not a slower jump. A later upgrade reason (#174), not flight feel.
+
 ## Where this lands on our step
 
 | Idea | Today | Open |
@@ -62,9 +73,10 @@ The shape that is still worth remembering:
 | Strafe versus forward speed | No link | Authority taper, two shapes |
 | Engine spool | Stick ramp (0.3 s placeholder), not a dead time | Per-group delay, reset on release, skipped by boost |
 | New ship | Every field authored | Mass, thrust, caps, a few ratios |
+| Brake along the velocity | X is the assisted goal at zero | Cosmos does this as an impulse along the velocity error, capped by total thrust. Same candidate as the row above |
 
 ## Smallest next step
 
-Not started. A numbers-only comparison on manoeuvres the flight scenario already runs, same thrust box, no gameplay change: sideways at the cap then stick forward; a full stop; a stop while a new direction is held. Columns: time, path length, whether an axis leaves the cap, whether the velocity heading stays put. The initiator decides afterwards whether any of the open rows above become a slice.
+Code repo issue #183, sub-issue of epic #143. A numbers-only comparison, same thrust box, the live step unchanged: sideways at the cap then stick forward; a full stop; a stop while a new direction is held. Columns: time, path length, whether an axis leaves the cap, whether the velocity heading stays put. The initiator decides afterwards whether any open row becomes a slice. The milestone could not be set from this session.
 
-Feel work that these repos do not cover stays in `docs/research/flight-feel.md` (mass and thruster placement, jerk as a shipped tuning lever, atmosphere, G camera). Epic #143 in the code repo.
+#145 (force and mass), #146 (jerk and the boost ramp), #141 (assist on/off) and #178 (a slow first ship) stay as they are. Feel work these repos do not cover stays in `docs/research/flight-feel.md`.
