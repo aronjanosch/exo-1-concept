@@ -48,6 +48,13 @@ Loose list of what we learned while working, for humans and agents. Source mater
 - **Push after every finished slice.** The run was cut off after six of eight issues and nothing was lost because each issue was committed, pushed and commented, and `NIGHT-LOG.md` was kept current.
 - **Test hooks are fine for what the brief names.** Take-off and landing are set by hook in the licence scenario, so the exam reads only events and does not break when the flight model changes; the pure state machine behind the events has its own unit tests.
 
+## Subagent lanes by model (day session D, 2026-10-10)
+
+- **Haiku lanes work for serde-only `*_core` crates, with a diff review.** Board (#126), texts (#131) and `production_core` came back usable, but each needed fixes: rotation that only aged offers, a follow-up reported done that nothing read, tests that `return` early or assert `x || len > 0`, recipes naming a good that does not exist (only fixtures were tested), a glue key list with 5 of 15 keys. How: read the diff, grep for early `return` and `||` in asserts and for fields nothing reads, and run a test against the shipped content before merging.
+- **Haiku's final report is not evidence.** Every report claimed completion; tests were green partly because they checked nothing. How: judge by the diff and by tests you have read.
+- **Bevy glue lanes (`exo_app`) need a stronger model.** The Haiku lane for #135 did about a fifth of the issue, committed without its gate and left four `exo_app` builds running at once in the 6 GB container. The initiator then had the coordinator (Opus) do the glue lanes; #135, #136 and #132 went green on the first full gate. How: give a cheap model only core-crate lanes with `CARGO_BUILD_JOBS=1` and `cargo nextest run -p <crate>`; keep glue lanes with the coordinator, one Bevy build at a time.
+- **Parallel lanes in 6 GB: only one Bevy build at a time.** Core-crate lanes (serde only) build in under 1 GB each and can run beside it in their own worktree and target dir. How: before a full gate, check `pgrep -af cargo` and the cgroup's `memory.current`.
+
 ## Planet and terrain
 
 - Derivative flat normals (`cross(dFdx, dFdy)`) are zero on sub-pixel triangles; `normalize()` gives NaN and it survives `mix(..., 0)`. Guard the length.
