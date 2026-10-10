@@ -40,6 +40,8 @@ Mapping to our crates: `docs/research/star-citizen-vs-exo1-mapping.md`. Highest-
 
 Early feature proposals from that mapping: `docs/research/early-feature-proposals.md` (cabin LAG as data, boost as a capacitor, minimal HUD; plus recorded-but-not-proposed speed ladder, ship power, zero-G suit, core loop). Proposal, not decided.
 
+Flight-controller shape, read 2026-10-10, nothing stored: `docs/research/flight-controller-notes.md`. Three public repos — a coupled thrust-direction test, a frame-counted Newtonian flight step, and Alpha 2.4 joystick action maps. Ideas only; no constants or bindings taken. Not a decision.
+
 ## Starsector, Dead Space, NMS, Gaffer, Godot docs
 
 See `CORE-LOOP.md` and `FEASIBILITY.md`; saved copies in `research/sources/`.

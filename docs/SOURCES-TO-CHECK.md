@@ -16,6 +16,7 @@ Status: list for manual checking, cleaned up on 2026-10-09 (the Godot-specific o
 | Early feature proposals derived from that (LAG as data, boost capacitor, minimal HUD); proposal 2026-10-08 | `docs/research/early-feature-proposals.md` |
 | Godot docs on large world coordinates, Terrain3D double-precision notes, Gaffer on Games snapshot interpolation | `FEASIBILITY.md`, precision and network sync |
 | Godot issues #122707, #112976, proposals #4925, #1281 (read via `gh`) | `FEASIBILITY.md`; corrected the "headless stall" claim |
+| Coupled thrust direction (`deng0/SimpleFlightComputer`), a measured Newtonian flight step (`emcodem/sc_webgl`), Alpha 2.4 action maps (`jllamas/StarCitizenActionMaps`); read 2026-10-10, nothing stored | `docs/research/flight-controller-notes.md` |
 
 ## Still open, by priority
 
