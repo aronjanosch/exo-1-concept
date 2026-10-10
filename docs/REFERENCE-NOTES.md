@@ -40,7 +40,7 @@ Mapping to our crates: `docs/research/star-citizen-vs-exo1-mapping.md`. Highest-
 
 Early feature proposals from that mapping: `docs/research/early-feature-proposals.md` (cabin LAG as data, boost as a capacitor, minimal HUD; plus recorded-but-not-proposed speed ladder, ship power, zero-G suit, core loop). Proposal, not decided.
 
-Flight-controller shape, read 2026-10-10, nothing stored: `docs/research/flight-controller-notes.md`. Four public repos — a coupled thrust-direction test, a frame-counted Newtonian flight step, Alpha 2.4 joystick action maps, and a GPL block-ship in Bevy. Ideas only; no constants, bindings or code taken. Not a decision. The measurement is code-repo issue #183.
+Flight-controller shape, read 2026-10-10, nothing stored: `docs/research/flight-controller-notes.md`. Four public repos — a coupled thrust-direction test, a frame-counted Newtonian flight step, Alpha 2.4 joystick action maps, and a GPL block-ship in Bevy. Ideas only; no constants, bindings or code taken. Not a decision. The handoff is code-repo issue #184. #183 is the same measurement.
 
 ## Starsector, Dead Space, NMS, Gaffer, Godot docs
 

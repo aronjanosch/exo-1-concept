@@ -1,6 +1,6 @@
-# Flight controller: three public references
+# Flight controller: four public references
 
-Research note, 2026-10-10. The initiator asked to keep the useful parts of three public repos. This is not a proposal, not an approved design and not a decision. Nothing from the repos is stored here: no code, no measured constants, no bindings, no ship names. Where a number below is ours, it is a placeholder from `content/tuning/ship.json` in the code repo, tagged as such.
+Focus of the concept repo, 2026-10-10. The initiator asked to keep the useful parts of four public repos. This is not a proposal, not an approved design and not a decision. Nothing from the repos is stored here: no code, no measured constants, no bindings, no ship names. Where a number below is ours, it is a placeholder from `content/tuning/ship.json` in the code repo, tagged as such. The handoff for the next agent is code-repo issue #184 (sub-issue of epic #143). #183 is the same measurement, filed when this session could not edit issues. Work #184.
 
 Our flight step is `flight_core::axis` (spike 13). Assisted flight asks for `(goal − velocity) × linear_decay`, then clamps that vector to a per-axis thrust box (`Dirs::clamp`), also limited by G-safety. With the placeholders (`linear_decay` 3/s, forward 60 m/s², sideways 24 m/s²) the forward axis saturates at a 20 m/s error and the side axes at 8 m/s. Cruise is 150 m/s in atmosphere and 300 m/s in space, so almost every real direction change spends its time saturated. Near the goal the same law eases in exponentially. Assist off is thrust along the stick; the velocity is kept.
 
@@ -77,6 +77,6 @@ What is still worth keeping:
 
 ## Smallest next step
 
-Code repo issue #183, sub-issue of epic #143. A numbers-only comparison, same thrust box, the live step unchanged: sideways at the cap then stick forward; a full stop; a stop while a new direction is held. Columns: time, path length, whether an axis leaves the cap, whether the velocity heading stays put. The initiator decides afterwards whether any open row becomes a slice. The milestone could not be set from this session.
+Code repo issue #184 (sub-issue of epic #143). A numbers-only comparison, same thrust box, the live step unchanged: sideways at the cap then stick forward; a full stop; a stop while a new direction is held. Columns: time, path length, whether an axis leaves the cap, whether the velocity heading stays put. The initiator decides afterwards whether any open row becomes a slice. #183 is the same measurement and is not a second task.
 
 #145 (force and mass), #146 (jerk and the boost ramp), #141 (assist on/off) and #178 (a slow first ship) stay as they are. Feel work these repos do not cover stays in `docs/research/flight-feel.md`.
